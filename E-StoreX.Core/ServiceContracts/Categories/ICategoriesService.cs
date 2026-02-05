@@ -136,6 +136,18 @@ namespace EStoreX.Core.ServiceContracts.Categories
         /// <c>404 Not Found</c> if the category does not exist.
         /// </returns>
         Task<ApiResponse> UpdateCategoryImagesAsync(Guid categoryId, List<IFormFile> files);
-
+        /// <summary>
+        /// Retrieves all categories along with their associated brands.
+        /// </summary>
+        /// <remarks>
+        /// Each category will appear once in the result, and its <see cref="CategoryBrandResponse.BrandResponse"/> 
+        /// will contain a list of brands linked to that category. 
+        /// Photos for both categories and brands are included.
+        /// </remarks>
+        /// <returns>
+        /// A collection of <see cref="CategoryBrandResponse"/> objects, 
+        /// each representing a category and its related brands.
+        /// </returns>
+        Task<IEnumerable<CategoryBrandResponse>> GetCategoriesBrandsAsync();
     }
 }

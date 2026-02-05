@@ -1,5 +1,6 @@
 ﻿using Asp.Versioning;
 using EStoreX.Core.DTO.Common;
+using EStoreX.Core.DTO.Products.Responses;
 using EStoreX.Core.Helper;
 using EStoreX.Core.ServiceContracts.Favourites;
 using Microsoft.AspNetCore.Authorization;
@@ -96,7 +97,7 @@ namespace E_StoreX.API.Controllers.Public
         /// <response code="200">Successfully retrieved the list of favourite products.</response>
         /// <response code="401">User is not authenticated or has an invalid identifier.</response>
         [HttpGet]
-        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(List<ProductResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> GetUserFavourites()
         {

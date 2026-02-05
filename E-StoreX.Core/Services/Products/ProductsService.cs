@@ -219,7 +219,7 @@ namespace EStoreX.Core.Services.Products
             {
                 PageNumber = 1,
                 PageSize = count,
-                SortBy = nameof(Product.SalesCount),
+                SortBy = ProductSortBy.SalesCount, // nameof(Product.SalesCount),
                 SortOrder = SortOrderOptions.DESC
             };
 

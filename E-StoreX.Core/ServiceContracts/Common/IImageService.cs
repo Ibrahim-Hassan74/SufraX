@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using EStoreX.Core.Domain.IdentityEntities;
+using EStoreX.Core.DTO.Common;
+using Microsoft.AspNetCore.Http;
 
 namespace EStoreX.Core.ServiceContracts.Common
 {
@@ -17,5 +19,7 @@ namespace EStoreX.Core.ServiceContracts.Common
         /// <param name="src">the image path</param>
         /// <returns>true / false</returns>
         bool DeleteImageAsync(string src);
+        Task<string> SaveUserAvatarAsync(IFormFile file, string folder, ImageCropDto? crop);
+        Task ImportExternalAvatarAsync(ApplicationUser user, string imageUrl);
     }
 }

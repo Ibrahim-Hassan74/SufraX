@@ -140,8 +140,8 @@ namespace E_StoreX.API.Controllers.Public
             var userId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
             var result = await _ratingService.GetUserRatingForProductAsync(productId, userId);
 
-            if (result == null)
-                return NotFound(ApiResponseFactory.NotFound("No rating found for this product by the user."));
+            //if (result == null)
+            //    return NotFound(ApiResponseFactory.NotFound("No rating found for this product by the user."));
 
             return Ok(result);
         }

@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System.Text;
@@ -33,10 +34,20 @@ namespace EStoreX.Core.Services.Account
         private readonly RoleManager<ApplicationRole> _roleManager;
         private readonly IImageService _imageService;
         private readonly IEntityImageManager<ApplicationUser> _imageManager;
+        private readonly IConfiguration _configuration;
 
-        public AuthenticationService(UserManager<ApplicationUser> userManager, IEmailSenderService emailSender,
+        public AuthenticationService(UserManager<ApplicationUser> userManager,
+            IEmailSenderService emailSender,
             SignInManager<ApplicationUser> signInManager,
-            IHttpContextAccessor httpContextAccessor, IJwtService jwtService, IUnitOfWork unitOfWork, IMapper mapper, IUserManagementService userManagementService, RoleManager<ApplicationRole> roleManager, IEntityImageManager<ApplicationUser> imageManager, IImageService imageService) : base(unitOfWork, mapper)
+            IHttpContextAccessor httpContextAccessor,
+            IJwtService jwtService,
+            IUnitOfWork unitOfWork,
+            IMapper mapper,
+            IUserManagementService userManagementService,
+            RoleManager<ApplicationRole> roleManager,
+            IEntityImageManager<ApplicationUser> imageManager,
+            IImageService imageService,
+            IConfiguration configuration) : base(unitOfWork, mapper)
         {
             _userManager = userManager;
             _emailSender = emailSender;
@@ -47,9 +58,10 @@ namespace EStoreX.Core.Services.Account
             _roleManager = roleManager;
             _imageManager = imageManager;
             _imageService = imageService;
+            _configuration = configuration;
         }
         /// <inheritdoc/>
-        public async Task<ApiResponse> RegisterAsync(RegisterDTO registerDTO)
+        public async Task<ApiResponse> RegisterAsync(RegisterDTO registerDTO, string? clientKey)
         {
             if (registerDTO == null)
                 return ApiResponseFactory.Failure("Invalid registration data.", 400, "Registration data cannot be null.");
@@ -76,7 +88,7 @@ namespace EStoreX.Core.Services.Account
 
             await EnsureRoleExistsAndAssignAsync(user, UserTypeOptions.User.ToString());
 
-            await SendEmail(user);
+            await SendEmail(user, clientKey);
 
             return ApiResponseFactory.Success("Registration successful. Please check your email to confirm your account.");
         }
@@ -103,7 +115,7 @@ namespace EStoreX.Core.Services.Account
 
             if (result.Succeeded)
             {
-                return await CreateSuccessLoginResponseAsync (user, loginDTO.RememberMe);
+                return await CreateSuccessLoginResponseAsync(user, loginDTO.RememberMe);
             }
             else if (result.IsLockedOut)
             {
@@ -153,7 +165,7 @@ namespace EStoreX.Core.Services.Account
 
         }
         /// <inheritdoc/>
-        public async Task<ApiResponse> ForgotPasswordAsync(ForgotPasswordDTO dto)
+        public async Task<ApiResponse> ForgotPasswordAsync(ForgotPasswordDTO dto, string? clientKey)
         {
             ValidationHelper.ModelValidation(dto);
             var user = await _userManager.FindByEmailAsync(dto.Email);
@@ -164,9 +176,9 @@ namespace EStoreX.Core.Services.Account
             if (!await _userManager.IsEmailConfirmedAsync(user))
                 return ApiResponseFactory.Failure("Please confirm your email before resetting password.", 400, "Email is not confirmed.");
 
-            var logins = await _userManager.GetLoginsAsync(user);
-            if (logins.Any())
-                return ApiResponseFactory.Failure("You registered using an external provider (Google/GitHub). Use it to log in.", 400, "External login detected.");
+            //var logins = await _userManager.GetLoginsAsync(user);
+            //if (logins.Any())
+            //    return ApiResponseFactory.Failure("You registered using an external provider (Google/GitHub). Use it to log in.", 400, "External login detected.");
 
             #region Timer
             var existingToken = await _userManager.GetAuthenticationTokenAsync(user, "ResetPassword", "Token");
@@ -174,9 +186,9 @@ namespace EStoreX.Core.Services.Account
             if (!string.IsNullOrEmpty(existingToken))
             {
                 var tokenTimeStr = await _userManager.GetAuthenticationTokenAsync(user, "ResetPassword", "TokenTime");
-                if (!string.IsNullOrEmpty(tokenTimeStr) && DateTime.TryParse(tokenTimeStr, out var tokenTime))
+                if (!string.IsNullOrEmpty(tokenTimeStr) && DateTimeOffset.TryParse(tokenTimeStr, out var tokenTime))
                 {
-                    if (DateTime.UtcNow < tokenTime.AddMinutes(5))
+                    if (DateTimeOffset.UtcNow < tokenTime.AddMinutes(5))
                         return ApiResponseFactory.Failure("A password reset email was already sent recently. Please wait before trying again.", 429, "Reset already requested.");
                 }
             }
@@ -185,35 +197,22 @@ namespace EStoreX.Core.Services.Account
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
             await _userManager.SetAuthenticationTokenAsync(user, "ResetPassword", "Token", token);
-            await _userManager.SetAuthenticationTokenAsync(user, "ResetPassword", "TokenTime", DateTime.UtcNow.ToString());
+            await _userManager.SetAuthenticationTokenAsync(user, "ResetPassword", "TokenTime", DateTimeOffset.UtcNow.ToString());
 
-            var request = _httpContextAccessor.HttpContext?.Request;
-
-            //var phone = IsMobileDevice(request);
-            //string frontendBaseUrl = phone
-            //    ? "https://estorex/reset-password"
-            //    : "https://estorex/reset-password";
-
-            //var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
-
-            //string resetLink = $"{frontendBaseUrl}?userId={Uri.EscapeDataString(user.Id.ToString())}&token={encodedToken}";
-
-            //string baseDeepLink = "https://estorex/reset-password";
-
-            //string dynamicLinkPrefix = "https://estorex.page.link";
+            //var request = _httpContextAccessor.HttpContext?.Request;
 
             var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
 
-            //string fullLink = $"{baseDeepLink}?userId={Uri.EscapeDataString(user.Id.ToString())}&token={encodedToken}";
+            var client = await _unitOfWork.ApiClientRepository.GetByApiKeyAsync(clientKey!);
+            var callback = client?.PasswordResetCallbackUrl ?? "";
 
-            //string resetLink = $"{dynamicLinkPrefix}/?link={Uri.EscapeDataString(fullLink)}&apn=com.yourapp.package&ibi=com.yourapp.ios";
+            var frontendResetUrl = _configuration["FrontURLs:FrontendResetUrl"];
 
-            //string resetLink = $"{request.Scheme}://{request.Host}/reset-password?userId={Uri.EscapeDataString(user.Id.ToString())}&token={encodedToken}";
-            string scheme = string.IsNullOrEmpty(request.Scheme) ? "https" : request.Scheme;
-            string host = request.Host.HasValue ? request.Host.Value : "localhost";
-
-            string resetLink = $"{scheme}://{host}/reset-password?userId={Uri.EscapeDataString(user.Id.ToString())}&token={encodedToken}";
-
+            var resetLink =
+                $"{frontendResetUrl}" +
+                $"?userId={Uri.EscapeDataString(user.Id.ToString())}" +
+                $"&token={Uri.EscapeDataString(encodedToken)}" +
+                $"&callback={Uri.EscapeDataString(callback)}";
 
             string html = EmailTemplateService.GetPasswordResetEmailTemplate(resetLink);
 
@@ -243,7 +242,7 @@ namespace EStoreX.Core.Services.Account
             }
             catch
             {
-                return ApiResponseFactory.Failure("Invalid token format.",400, "The token format is invalid or corrupted.");
+                return ApiResponseFactory.Failure("Invalid token format.", 400, "The token format is invalid or corrupted.");
             }
 
             var storedToken = await _userManager.GetAuthenticationTokenAsync(user, "ResetPassword", "Token");
@@ -253,10 +252,10 @@ namespace EStoreX.Core.Services.Account
 
             var tokenTimeStr = await _userManager.GetAuthenticationTokenAsync(user, "ResetPassword", "TokenTime");
 
-            if (string.IsNullOrEmpty(tokenTimeStr) || !DateTime.TryParse(tokenTimeStr, out var tokenTime))
+            if (string.IsNullOrEmpty(tokenTimeStr) || !DateTimeOffset.TryParse(tokenTimeStr, out var tokenTime))
                 return ApiResponseFactory.Failure("Token validation failed.", 400, "The token timestamp is invalid.");
 
-            if (DateTime.UtcNow > tokenTime.AddMinutes(5))
+            if (DateTimeOffset.UtcNow > tokenTime.AddMinutes(5))
                 return ApiResponseFactory.Failure("Reset password link has expired.", 400, "The reset password link has expired. Please request a new one.");
 
             return ApiResponseFactory.Success("The reset password token is valid.");
@@ -304,7 +303,7 @@ namespace EStoreX.Core.Services.Account
             {
                 principal = _jwtService.GetPrincipalFromJwtToken(model.Token);
             }
-            catch (SecurityTokenException)
+            catch (SecurityTokenException ex)
             {
                 return ApiResponseFactory.Failure("Invalid token.", 400, "Access token is invalid.");
             }
@@ -320,8 +319,12 @@ namespace EStoreX.Core.Services.Account
             if (user is null)
                 return ApiResponseFactory.Failure("User not found.", 404, "User does not exist.");
 
-            if (user.RefreshToken != model.RefreshToken || user.RefreshTokenExpirationDateTime <= DateTime.UtcNow)
+            if (user.RefreshToken != model.RefreshToken ||
+                user.RefreshTokenExpirationDateTime <= DateTimeOffset.UtcNow)
+            {
                 return ApiResponseFactory.Failure("Invalid refresh token.", 400, "Refresh token is invalid or expired.");
+            }
+
 
             bool rememberMe = bool.TryParse(principal.FindFirst("remember_me")?.Value, out var rm) && rm;
 
@@ -374,7 +377,7 @@ namespace EStoreX.Core.Services.Account
                 if (user != null)
                 {
                     user.RefreshToken = null;
-                    user.RefreshTokenExpirationDateTime = DateTime.MinValue;
+                    user.RefreshTokenExpirationDateTime = DateTimeOffset.MinValue;
                     await _userManager.UpdateAsync(user);
                 }
             }
@@ -419,11 +422,11 @@ namespace EStoreX.Core.Services.Account
         public async Task<ApiResponse> ExternalLoginCallbackAsync(string remoteError = "")
         {
             if (!string.IsNullOrEmpty(remoteError))
-                return ApiResponseFactory.Failure($"Error from external login provider: {remoteError}", 400, remoteError);
+                return ApiResponseFactory.Failure($"External provider error: {remoteError}", 400, remoteError);
 
             var info = await _signInManager.GetExternalLoginInfoAsync();
             if (info == null)
-                return ApiResponseFactory.Failure("Error loading external login information.", 400, "Error loading external login information.");
+                return ApiResponseFactory.Failure("Failed to load external login info.", 400, "external_login_info_missing");
 
             var user = await _userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey);
             if (user != null)
@@ -431,37 +434,56 @@ namespace EStoreX.Core.Services.Account
                 return await CreateSuccessLoginResponseAsync(user, false);
             }
 
-
             var email = info.Principal.FindFirstValue(ClaimTypes.Email);
 
             if (string.IsNullOrEmpty(email))
             {
-                var uniqueName = info.Principal.FindFirstValue(ClaimTypes.Name)
-                                 ?? info.Principal.FindFirstValue(ClaimTypes.NameIdentifier);
+                var fallback =
+                    info.Principal.FindFirstValue(ClaimTypes.Name)
+                    ?? info.Principal.FindFirstValue(ClaimTypes.NameIdentifier);
 
-                if (string.IsNullOrEmpty(uniqueName))
+                if (string.IsNullOrEmpty(fallback))
                 {
                     return ApiResponseFactory.Failure(
-                        "External provider did not supply enough information to create an account.",
+                        "External provider did not supply email or username.",
                         400,
-                        "Missing email and username from external provider."
+                        "missing_identity_data"
                     );
                 }
-                email = $"{uniqueName}@{info.LoginProvider.ToLower()}.placeholder.local";
+
+                email = fallback;
             }
-
-
 
             user = await _userManager.FindByEmailAsync(email);
 
             if (user != null)
             {
-                return ApiResponseFactory.Failure(
-                    "This email is already registered. Please log in with your email and password, then link your external account from account settings.",
-                    409,
-                    "Account already exists without external login."
-                );
+                if (!user.EmailConfirmed)
+                {
+                    return ApiResponseFactory.Failure(
+                        "Please confirm your email before linking an external login.",
+                        403,
+                        "email_not_confirmed"
+                    );
+                }
+
+                var linkResult = await _userManager.AddLoginAsync(user, info);
+                if (!linkResult.Succeeded)
+                {
+                    return ApiResponseFactory.Failure(
+                        "Failed to link external provider to existing account.",
+                        500,
+                        linkResult.Errors.Select(e => e.Description).ToArray()
+                    );
+                }
+
+                return await CreateSuccessLoginResponseAsync(user, false);
             }
+
+            var profileImageUrl =
+                info.Principal.FindFirstValue("picture")   
+                ?? info.Principal.FindFirstValue("avatar_url")
+                ?? info.Principal.FindFirstValue("urn:google:picture");
 
             user = new ApplicationUser
             {
@@ -471,11 +493,16 @@ namespace EStoreX.Core.Services.Account
                 EmailConfirmed = true
             };
 
-            var createResult = await _userManager.CreateAsync(user);
+            var randomPassword = PasswordGenerator.Generate(32);
+
+            var createResult = await _userManager.CreateAsync(user, randomPassword);
             if (!createResult.Succeeded)
             {
-                return ApiResponseFactory.Failure("Failed to create account from external login.", 500, 
-                    createResult.Errors.Select(e => e.Description).ToArray());
+                return ApiResponseFactory.Failure(
+                    "Failed to create account from external login.",
+                    500,
+                    createResult.Errors.Select(e => e.Description).ToArray()
+                );
             }
 
             await EnsureRoleExistsAndAssignAsync(user, UserTypeOptions.User.ToString());
@@ -483,12 +510,28 @@ namespace EStoreX.Core.Services.Account
             var loginResult = await _userManager.AddLoginAsync(user, info);
             if (!loginResult.Succeeded)
             {
-                return ApiResponseFactory.Failure("Failed to link external login.", 500, 
-                    loginResult.Errors.Select(e => e.Description).ToArray());
+                return ApiResponseFactory.Failure(
+                    "Failed to link external login.",
+                    500,
+                    loginResult.Errors.Select(e => e.Description).ToArray()
+                );
+            }
+
+            if (!string.IsNullOrEmpty(profileImageUrl))
+            {
+                try
+                {
+                    await _imageService.ImportExternalAvatarAsync(user, profileImageUrl);
+                    await _userManager.UpdateAsync(user);
+                }
+                catch
+                {
+                }
             }
 
             return await CreateSuccessLoginResponseAsync(user, false);
         }
+
 
         private bool IsMobileDevice(HttpRequest? request)
         {
@@ -506,27 +549,58 @@ namespace EStoreX.Core.Services.Account
                 src.Contains("flutter");
         }
 
-        private async Task SendEmail(ApplicationUser user)
+        //private async Task SendEmail(ApplicationUser user)
+        //{
+        //    var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
+        //    user.LastEmailConfirmationToken = token;
+
+        //    await _userManager.UpdateAsync(user);
+
+        //    var request = _httpContextAccessor.HttpContext?.Request;
+        //    var scheme = request?.Scheme ?? "https";
+        //    var host = request?.Host.Value ?? "localhost:5000";
+
+        //    string redirectUrl = $"{scheme}://{host}/email-confirmed";
+
+        //    string confirmationLink = $"{scheme}://{host}/api/v2/frontend/confirm-email?userId={user.Id}&token={Uri.EscapeDataString(token)}&redirectTo={Uri.EscapeDataString(redirectUrl)}";
+
+        //    string html = EmailTemplateService.GetConfirmationEmailTemplate(confirmationLink);
+
+        //    var emailDTO = new EmailDTO(user.Email, "Confirm Your Email", html);
+        //    await _emailSender.SendEmailAsync(emailDTO);
+        //}
+
+        private async Task SendEmail(ApplicationUser user, string? apiKey)
         {
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 
             user.LastEmailConfirmationToken = token;
-
             await _userManager.UpdateAsync(user);
 
-            var request = _httpContextAccessor.HttpContext?.Request;
-            var scheme = request?.Scheme ?? "https";
-            var host = request?.Host.Value ?? "localhost:5000";
+            var frontendBaseUrl = _configuration["FrontURLs:BaseUrl"];
 
-            string redirectUrl = $"{scheme}://{host}/email-confirmed";
+            var redirectUrl = "";
 
-            string confirmationLink = $"{scheme}://{host}/api/v2/frontend/confirm-email?userId={user.Id}&token={Uri.EscapeDataString(token)}&redirectTo={Uri.EscapeDataString(redirectUrl)}";
+            if (!string.IsNullOrEmpty(apiKey))
+            {
+                var client = await _unitOfWork.ApiClientRepository.GetByApiKeyAsync(apiKey);
+                redirectUrl = client?.AccountActivationCallbackUrl ?? "";
+            }
+
+            var confirmationLink =
+                $"{frontendBaseUrl}/auth/confirm-email" +
+                $"?userId={user.Id}" +
+                $"&token={Uri.EscapeDataString(token)}" +
+                $"&redirectTo={Uri.EscapeDataString(redirectUrl)}";
 
             string html = EmailTemplateService.GetConfirmationEmailTemplate(confirmationLink);
 
             var emailDTO = new EmailDTO(user.Email, "Confirm Your Email", html);
+
             await _emailSender.SendEmailAsync(emailDTO);
         }
+
         private async Task EnsureRoleExistsAndAssignAsync(ApplicationUser user, string roleName)
         {
             if (!await _roleManager.RoleExistsAsync(roleName))
@@ -534,7 +608,7 @@ namespace EStoreX.Core.Services.Account
 
             await _userManager.AddToRoleAsync(user, roleName);
         }
-        private async Task<ApiSuccessResponse> CreateSuccessLoginResponseAsync (ApplicationUser user, bool rememberMe)
+        private async Task<ApiSuccessResponse> CreateSuccessLoginResponseAsync(ApplicationUser user, bool rememberMe)
         {
             var tokenResponse = await _jwtService.CreateJwtToken(user, rememberMe) as ApiSuccessResponse;
             user.RefreshToken = tokenResponse?.RefreshToken;
@@ -551,10 +625,10 @@ namespace EStoreX.Core.Services.Account
         {
             var user = await _userManager.FindByIdAsync(userId);
 
-            if(user == null)
+            if (user == null)
                 return ApiResponseFactory.NotFound("User not found");
 
-            var deleted  = await _userManager.DeleteAsync(user);
+            var deleted = await _userManager.DeleteAsync(user);
 
             if (!deleted.Succeeded)
                 return ApiResponseFactory.InternalServerError("Failed to delete account", deleted.Errors.Select(e => e.Description).ToList());
@@ -563,7 +637,7 @@ namespace EStoreX.Core.Services.Account
         }
 
         /// <inheritdoc/>
-        public async Task<ApiResponse> ResendConfirmationEmailAsync(string email)
+        public async Task<ApiResponse> ResendConfirmationEmailAsync(string email, string? apiKey = null)
         {
             if (string.IsNullOrEmpty(email))
                 return ApiResponseFactory.BadRequest("Email is required.");
@@ -576,9 +650,9 @@ namespace EStoreX.Core.Services.Account
                 return ApiResponseFactory.Conflict("Account already confirmed.");
 
             var tokenTimeStr = await _userManager.GetAuthenticationTokenAsync(user, "EmailConfirmation", "TokenTime");
-            if (!string.IsNullOrEmpty(tokenTimeStr) && DateTime.TryParse(tokenTimeStr, out var tokenTime))
+            if (!string.IsNullOrEmpty(tokenTimeStr) && DateTimeOffset.TryParse(tokenTimeStr, out var tokenTime))
             {
-                if (DateTime.UtcNow < tokenTime.AddMinutes(5))
+                if (DateTimeOffset.UtcNow < tokenTime.AddMinutes(5))
                 {
                     return ApiResponseFactory.Failure(
                         "Confirmation email already sent recently. Please wait before requesting again.",
@@ -591,14 +665,49 @@ namespace EStoreX.Core.Services.Account
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 
             await _userManager.SetAuthenticationTokenAsync(user, "EmailConfirmation", "Token", token);
-            await _userManager.SetAuthenticationTokenAsync(user, "EmailConfirmation", "TokenTime", DateTime.UtcNow.ToString("o"));
+            await _userManager.SetAuthenticationTokenAsync(user, "EmailConfirmation", "TokenTime", DateTimeOffset.UtcNow.ToString("o"));
 
-            await SendEmail(user);
+            await SendEmail(user, apiKey);
 
             return ApiResponseFactory.Success("Confirmation email resent successfully.");
         }
 
-        public async Task<ApiResponse> UploadUserPhotoAsync(Guid userId, IFormFile file)
+        //public async Task<ApiResponse> UploadUserPhotoAsync(Guid userId, IFormFile file)
+        //{
+        //    var user = await _userManager.Users
+        //        .Include(u => u.Photo)
+        //        .FirstOrDefaultAsync(u => u.Id == userId);
+
+        //    if (user == null)
+        //        return ApiResponseFactory.NotFound("User not found.");
+
+        //    if (file == null)
+        //        return ApiResponseFactory.BadRequest("No file provided.");
+
+        //    if (user.Photo != null)
+        //    {
+        //        _imageService.DeleteImageAsync(user.Photo.ImageName);
+        //        await _unitOfWork.PhotoRepository.DeleteAsync(user.Photo.Id);
+        //        user.Photo = null;
+        //    }
+
+        //    var folderName = user.UserName.Replace(" ", "").ToLowerInvariant();
+
+        //    var formFileCollection = new FormFileCollection { file };
+        //    var imagePaths = await _imageService.AddImageAsync(formFileCollection, $"Users/{folderName}");
+
+        //    user.Photo = new Photo
+        //    {
+        //        ImageName = imagePaths.First(),
+        //        UserId = userId
+        //    };
+
+        //    await _unitOfWork.CompleteAsync();
+        //    await _userManager.UpdateAsync(user);
+
+        //    return ApiResponseFactory.Success("User photo uploaded successfully.");
+        //}
+        public async Task<ApiResponse> UploadUserPhotoAsync(Guid userId, UploadUserPhotoDto dto)
         {
             var user = await _userManager.Users
                 .Include(u => u.Photo)
@@ -607,8 +716,15 @@ namespace EStoreX.Core.Services.Account
             if (user == null)
                 return ApiResponseFactory.NotFound("User not found.");
 
-            if (file == null)
+            var file = dto.File;
+            if (file == null || file.Length == 0)
                 return ApiResponseFactory.BadRequest("No file provided.");
+
+            if (!file.ContentType.StartsWith("image/"))
+                return ApiResponseFactory.BadRequest("Invalid image type.");
+
+            if (file.Length > 5 * 1024 * 1024)
+                return ApiResponseFactory.BadRequest("Image size exceeds limit.");
 
             if (user.Photo != null)
             {
@@ -619,12 +735,15 @@ namespace EStoreX.Core.Services.Account
 
             var folderName = user.UserName.Replace(" ", "").ToLowerInvariant();
 
-            var formFileCollection = new FormFileCollection { file };
-            var imagePaths = await _imageService.AddImageAsync(formFileCollection, $"Users/{folderName}");
+            var imagePath = await _imageService.SaveUserAvatarAsync(
+                file,
+                $"Users/{folderName}",
+                dto.Crop
+            );
 
             user.Photo = new Photo
             {
-                ImageName = imagePaths.First(),
+                ImageName = imagePath,
                 UserId = userId
             };
 
@@ -633,6 +752,7 @@ namespace EStoreX.Core.Services.Account
 
             return ApiResponseFactory.Success("User photo uploaded successfully.");
         }
+
 
         public async Task<ApiResponse> DeleteUserPhotoAsync(Guid userId)
         {

@@ -24,7 +24,7 @@ namespace EStoreX.Core.ServiceContracts.Account
         /// registration was successful (StatusCode 200) or failed with details 
         /// (e.g., StatusCode 400 or 409 if username/email is already in use).
         /// </returns>
-        Task<ApiResponse> RegisterAsync(RegisterDTO registerDTO);
+        Task<ApiResponse> RegisterAsync(RegisterDTO registerDTO, string? clientKey);
 
         /// <summary>
         /// Authenticates a user with the provided login credentials.
@@ -64,7 +64,7 @@ namespace EStoreX.Core.ServiceContracts.Account
         /// reset email was sent successfully (StatusCode 200) or failed due to 
         /// invalid email or unconfirmed account.
         /// </returns>
-        Task<ApiResponse> ForgotPasswordAsync(ForgotPasswordDTO dto);
+        Task<ApiResponse> ForgotPasswordAsync(ForgotPasswordDTO dto, string? clientKey);
 
         /// <summary>
         /// Verifies the validity of a reset password token for a specific user.
@@ -206,7 +206,7 @@ namespace EStoreX.Core.ServiceContracts.Account
         ///   </item>
         /// </list>
         /// </returns>
-        Task<ApiResponse> ResendConfirmationEmailAsync(string email);
+        Task<ApiResponse> ResendConfirmationEmailAsync(string email, string? apiKey = null);
         /// <summary>
         /// Uploads or replaces the authenticated user's profile photo.
         /// </summary>
@@ -231,7 +231,7 @@ namespace EStoreX.Core.ServiceContracts.Account
         /// <response code="404">
         /// Not Found – User does not exist. Returns <see cref="ApiErrorResponse"/>.
         /// </response>
-        Task<ApiResponse> UploadUserPhotoAsync(Guid userId, IFormFile file);
+        Task<ApiResponse> UploadUserPhotoAsync(Guid userId, UploadUserPhotoDto dto);
         /// <summary>
         /// Deletes the authenticated user's profile photo.
         /// </summary>

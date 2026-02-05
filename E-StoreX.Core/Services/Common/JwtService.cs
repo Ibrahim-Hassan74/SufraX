@@ -27,7 +27,7 @@ namespace EStoreX.Core.Services.Common
         public async Task<ApiResponse> CreateJwtToken(ApplicationUser user, bool rememberMe)
         {
             // Create a DateTime object representing the token expiration time by adding the number of minutes specified in the configuration to the current UTC time.
-            DateTime expiration = DateTime.Now.AddMinutes(Convert.ToDouble(_configuration["Jwt:EXPIRATION_MINUTES"]));
+            DateTime expiration = DateTime.UtcNow.AddMinutes(Convert.ToDouble(_configuration["Jwt:EXPIRATION_MINUTES"]));
             var refreshTokenExpiryMinutes = rememberMe
                     ? Convert.ToDouble(_configuration["RefreshToken:LONG_EXPIRATION_MINUTES"])
                     : Convert.ToDouble(_configuration["RefreshToken:EXPIRATION_MINUTES"]);   
@@ -77,6 +77,8 @@ namespace EStoreX.Core.Services.Common
             JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
             string token = tokenHandler.WriteToken(tokenGenerator);
 
+            var refreshTokenExpiry = DateTimeOffset.UtcNow.AddMinutes(refreshTokenExpiryMinutes);
+
             // Create and return an AuthenticationResponse object containing the token, user email, user name, and token expiration time.
             return new ApiSuccessResponse()
             {
@@ -85,7 +87,7 @@ namespace EStoreX.Core.Services.Common
                 UserName = user.DisplayName,
                 Expiration = expiration,
                 RefreshToken = GenerateRefreshToken(),
-                RefreshTokenExpirationDateTime = DateTime.UtcNow.AddMinutes(refreshTokenExpiryMinutes),
+                RefreshTokenExpirationDateTime = refreshTokenExpiry,
             };
         }
 
@@ -107,8 +109,8 @@ namespace EStoreX.Core.Services.Common
             {
                 ValidateIssuer = true,
                 ValidateAudience = true,
-                ValidateLifetime = true,
                 ValidateIssuerSigningKey = true,
+                ValidateLifetime = false,
                 ValidIssuer = _configuration["Jwt:Issuer"],
                 ValidAudiences = _configuration.GetSection("Jwt:Audiences").Get<List<string>>(),
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"])),

@@ -1,7 +1,12 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Domain.Entities.Product;
+using EStoreX.Core.Domain.IdentityEntities;
+using EStoreX.Core.DTO.Common;
+using EStoreX.Core.ServiceContracts.Common;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.FileProviders;
-using EStoreX.Core.ServiceContracts.Common;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
 
 namespace EStoreX.Core.Services.Common
 {
@@ -47,6 +52,38 @@ namespace EStoreX.Core.Services.Common
             return saveImageSrc;
         }
 
+        public async Task<string> SaveUserAvatarAsync(IFormFile file, string folder, ImageCropDto? crop)
+        {
+            var rootPath = Path.Combine(_webHostEnvironment.WebRootPath, "Images", folder);
+            if (!Directory.Exists(rootPath))
+                Directory.CreateDirectory(rootPath);
+
+            var fileName = $"{Guid.NewGuid()}.jpg";
+            var fullPath = Path.Combine(rootPath, fileName);
+
+            using var image = Image.Load(file.OpenReadStream());
+
+            if (crop != null)
+            {
+                image.Mutate(x =>
+                    x.Crop(new Rectangle(
+                        crop.X,
+                        crop.Y,
+                        crop.Width,
+                        crop.Height
+                    )));
+            }
+
+            image.Mutate(x => x.Resize(512, 512));
+
+            image.Metadata.ExifProfile = null;
+
+            await image.SaveAsJpegAsync(fullPath);
+
+            return Path.Combine("Images", folder, fileName)
+                .Replace("\\", "/");
+        }
+
         public bool DeleteImageAsync(string src)
         {
             if (string.IsNullOrWhiteSpace(src))
@@ -71,5 +108,35 @@ namespace EStoreX.Core.Services.Common
 
             return true;
         }
+
+        public async Task ImportExternalAvatarAsync(ApplicationUser user, string imageUrl)
+        {
+            using var http = new HttpClient();
+            var bytes = await http.GetByteArrayAsync(imageUrl);
+
+            var fileName = "avatar.jpg";
+            var stream = new MemoryStream(bytes);
+
+            var formFile = new FormFile(stream, 0, bytes.Length, "file", fileName)
+            {
+                Headers = new HeaderDictionary(),
+                ContentType = "image/jpeg"
+            };
+
+            var folderName = user.UserName.Replace(" ", "").ToLowerInvariant();
+
+            var imagePath = await SaveUserAvatarAsync(
+                formFile,
+                $"Users/{folderName}",
+                crop: null
+            );
+
+            user.Photo = new Photo
+            {
+                ImageName = imagePath,
+                UserId = user.Id
+            };
+        }
+
     }
 }

@@ -124,7 +124,7 @@ namespace E_StoreX.API.Controllers.Admin
                 new CategoryBrand { CategoryId = categoryId, BrandId = brandId });
 
             if (!result)
-                return BadRequest(ApiResponseFactory.BadRequest("Failed to assign brand to category."));
+                return NotFound(ApiResponseFactory.BadRequest("check you brand and category Ids."));
 
             return NoContent();
         }

@@ -938,6 +938,19 @@
             <response code="400">No files were provided.</response>
             <response code="404">Product not found.</response>
         </member>
+        <member name="M:E_StoreX.API.Controllers.Admin.ProductsController.SetFeaturedStatus(System.Guid,System.Boolean)">
+            <summary>
+            Updates the featured status of a product.
+            </summary>
+            <param name="id">The unique identifier of the product.</param>
+            <param name="isFeatured">Boolean value to set whether the product is featured or not.</param>
+            <returns>
+            <c>200 OK</c> if the product status was updated successfully;  
+            <c>404 Not Found</c> if the product does not exist.
+            </returns>
+            <response code="200">Product featured status updated successfully.</response>
+            <response code="404">Product not found or invalid ID.</response>
+        </member>
         <member name="T:E_StoreX.API.Controllers.Admin.RatingsController">
             <summary>
             API controller for managing ratings in the admin area.  
@@ -1845,6 +1858,22 @@
             <response code="200">Category images retrieved successfully.</response>
             <response code="404">No images found for the given category.</response>
         </member>
+        <member name="M:E_StoreX.API.Controllers.Public.CategoriesController.GetCategoriesWithBrands">
+            <summary>
+            Retrieves all categories along with their associated brands.
+            </summary>
+            <remarks>
+            Each category will appear once in the result, and its <see cref="P:EStoreX.Core.DTO.Categories.Responses.CategoryBrandResponse.BrandResponse"/> 
+            will contain a list of brands linked to that category. 
+            Photos for both categories and brands are included.
+            </remarks>
+            <returns>
+            <c>200 OK</c> with a list of categories and their associated brands;  
+            <c>404 Not Found</c> if no categories with brands exist.
+            </returns>
+            <response code="200">Categories with brands retrieved successfully.</response>
+            <response code="404">No categories with brands found.</response>
+        </member>
         <member name="T:E_StoreX.API.Controllers.Public.CustomControllerBase">
             <summary>
             Base controller for the E-StoreX API, providing common functionality for all controllers.
@@ -2272,19 +2301,6 @@
             </returns>
             <response code="200">Featured products retrieved successfully.</response>
             <response code="404">No featured products found.</response>
-        </member>
-        <member name="M:E_StoreX.API.Controllers.Public.ProductsController.SetFeaturedStatus(System.Guid,System.Boolean)">
-            <summary>
-            Updates the featured status of a product.
-            </summary>
-            <param name="id">The unique identifier of the product.</param>
-            <param name="isFeatured">Boolean value to set whether the product is featured or not.</param>
-            <returns>
-            <c>200 OK</c> if the product status was updated successfully;  
-            <c>404 Not Found</c> if the product does not exist.
-            </returns>
-            <response code="200">Product featured status updated successfully.</response>
-            <response code="404">Product not found or invalid ID.</response>
         </member>
         <member name="T:E_StoreX.API.Controllers.Public.RatingsController">
             <summary>

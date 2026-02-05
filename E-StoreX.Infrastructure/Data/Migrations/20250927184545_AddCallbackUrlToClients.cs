@@ -12,7 +12,7 @@ namespace EStoreX.Infrastructure.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<string>(
-                name: "CallbackUrl",
+                name: "OAuthCallbackUrl",
                 table: "ApiClients",
                 type: "nvarchar(max)",
                 nullable: true);
@@ -21,7 +21,7 @@ namespace EStoreX.Infrastructure.Migrations
                 table: "ApiClients",
                 keyColumn: "Id",
                 keyValue: new Guid("125e2213-8691-45e9-ab60-d4bfa1367428"),
-                column: "CallbackUrl",
+                column: "OAuthCallbackUrl",
                 value: null);
         }
 
@@ -29,7 +29,7 @@ namespace EStoreX.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "CallbackUrl",
+                name: "OAuthCallbackUrl",
                 table: "ApiClients");
         }
     }

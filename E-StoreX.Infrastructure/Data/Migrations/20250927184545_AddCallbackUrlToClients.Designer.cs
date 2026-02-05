@@ -76,7 +76,7 @@ namespace EStoreX.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("CallbackUrl")
+                    b.Property<string>("OAuthCallbackUrl")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ClientName")

@@ -239,6 +239,7 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 
+
 app.UseHangfireDashboard("/dashboard", new DashboardOptions
 {
     Authorization = new[] { new HangfireAuthorizationFilter(app.Services) },

@@ -13,7 +13,8 @@ namespace EStoreX.Core.DTO.Products.Responses
 
         public Guid? CategoryId { get; set; }
 
-        public string SortBy { get; set; } = nameof(Product.Name);
+        //public string SortBy { get; set; } = nameof(Product.Name);
+        public ProductSortBy? SortBy { get; set; }
         public Guid? BrandId { get; set; }
         public SortOrderOptions SortOrder { get; set; } = SortOrderOptions.ASC;
 

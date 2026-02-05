@@ -12,7 +12,8 @@ namespace EStoreX.Core.Domain.IdentityEntities
         public Address Address { get; set; }
         public string? LastEmailConfirmationToken { get; set; }
         public string? RefreshToken { get; set; }
-        public DateTime RefreshTokenExpirationDateTime { get; set; }
+        //public DateTime RefreshTokenExpirationDateTime { get; set; }
+        public DateTimeOffset RefreshTokenExpirationDateTime { get; set; }
         public virtual Photo? Photo { get; set; }
         public ICollection<Rating> Ratings { get; set; } = new List<Rating>();
         public virtual ICollection<IdentityUserRole<Guid>> UserRoles { get; set; }

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EStoreX.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251002000909_AddIsFeaturedToProducts")]
-    partial class AddIsFeaturedToProducts
+    [Migration("20260204190903_AddOAuthAndSecurityCallbackUrlsToApiClient")]
+    partial class AddOAuthAndSecurityCallbackUrlsToApiClient
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -72,18 +72,33 @@ namespace EStoreX.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("AccountActivationFailureUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AccountActivationSuccessUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ApiKey")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("OAuthCallbackUrl")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ClientName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
+
+                    b.Property<string>("OAuthLoginFailureUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OAuthCallbackUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PasswordResetFailureUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PasswordResetSuccessUrl")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -556,8 +571,8 @@ namespace EStoreX.Infrastructure.Migrations
                     b.Property<string>("RefreshToken")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("RefreshTokenExpirationDateTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset>("RefreshTokenExpirationDateTime")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");

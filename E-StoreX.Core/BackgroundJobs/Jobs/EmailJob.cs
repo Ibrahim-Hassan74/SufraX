@@ -51,6 +51,41 @@ namespace EStoreX.Core.BackgroundJobs.Jobs
             context.WriteLine($"Weekly email job finished at {DateTime.Now}");
         }
 
+        public async Task SendMysteryLaunchEmailsAsync(PerformContext context)
+        {
+            var users = await _userService.GetAllUsersAsync();
+            context.WriteLine($"🚀 Initiating Mystery Launch Sequence at {DateTime.Now}");
+            context.WriteLine($"Targeting {users.Count} potential recipients...");
+
+            int sentCount = 0;
+
+            foreach (var user in users)
+            {
+                if (!user.IsConfirmed)
+                    continue;
+
+                try
+                {
+                    var email = new EmailDTO
+                    {
+                        Email = user.Email,
+                        Subject = "Shhh... It's a Secret 😉",
+                        HtmlMessage = EmailTemplateService.GetTeaserEmailTemplate(user.DisplayName)
+                    };
+
+                    await _emailSender.SendEmailAsync(email);
+                    sentCount++;
+                    context.WriteLine($"✅ Successfully sent to {user.DisplayName}");
+                }
+                catch (Exception ex)
+                {
+                    context.WriteLine($"❌ Failed to send to {user.Email}: {ex.Message}");
+                }
+            }
+
+            context.WriteLine($"✅ Mystery Launch job finished at {DateTime.Now}. Total successful: {sentCount}");
+        }
+
         public async Task SendOrderConfirmationEmailAsync(Guid orderId, PerformContext context)
         {
             var order = await _unitOfWork.OrderRepository.GetByIdAsync(orderId, d => d.DeliveryMethod, u => u.Buyer, i => i.OrderItems, d => d.DeliveryMethod);

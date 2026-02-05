@@ -138,7 +138,7 @@ namespace Repository.Products
                         products = products.Where(p => EF.Functions.FreeText(p.Name, query.SearchString) ||
                         EF.Functions.FreeText(p.Description, query.SearchString) ||
                         ApplicationDbContext.Soundex(p.Name) == ApplicationDbContext.Soundex(query.SearchString) ||
-                        ApplicationDbContext.Soundex(p.Description) == ApplicationDbContext.Soundex(query.SearchString)); 
+                        ApplicationDbContext.Soundex(p.Description) == ApplicationDbContext.Soundex(query.SearchString));
                         break;
                 }
             }
@@ -168,41 +168,78 @@ namespace Repository.Products
 
         private IQueryable<Product> ApplySorting(IQueryable<Product> products, ProductQueryDTO query)
         {
-            var sortBy = query.SortBy ?? nameof(Product.NewPrice);
+            //var sortBy = query.SortBy ?? nameof(Product.NewPrice);
             bool isAscending = query.SortOrder == SortOrderOptions.ASC;
 
-            switch (sortBy)
+            //switch (sortBy)
+            //{
+            //    case var s when s == nameof(Product.Name):
+            //        products = isAscending
+            //            ? products.OrderBy(p => p.Name)
+            //            : products.OrderByDescending(p => p.Name);
+            //        break;
+
+            //    case var s when s == nameof(Product.NewPrice) || s == "Price":
+            //        products = isAscending
+            //            ? products.OrderBy(p => p.NewPrice)
+            //            : products.OrderByDescending(p => p.NewPrice);
+            //        break;
+
+            //    case var s when s == nameof(Product.OldPrice):
+            //        products = isAscending
+            //            ? products.OrderBy(p => p.OldPrice)
+            //            : products.OrderByDescending(p => p.OldPrice);
+            //        break;
+
+            //    case "Category":
+            //        products = isAscending
+            //            ? products.OrderBy(p => p.Category.Name)
+            //            : products.OrderByDescending(p => p.Category.Name);
+            //        break;
+
+            //    case nameof(Product.SalesCount):
+            //        products = isAscending
+            //            ? products.OrderBy(p => p.SalesCount)
+            //            : products.OrderByDescending(p => p.SalesCount);
+            //        break;
+
+            //    default:
+            //        products = isAscending
+            //            ? products.OrderBy(p => p.NewPrice)
+            //            : products.OrderByDescending(p => p.NewPrice);
+            //        break;
+            //}
+
+            switch (query.SortBy ?? ProductSortBy.Price)
             {
-                case var s when s == nameof(Product.Name):
+                case ProductSortBy.Name:
                     products = isAscending
                         ? products.OrderBy(p => p.Name)
                         : products.OrderByDescending(p => p.Name);
                     break;
 
-                case var s when s == nameof(Product.NewPrice):
+                case ProductSortBy.Price:
                     products = isAscending
                         ? products.OrderBy(p => p.NewPrice)
                         : products.OrderByDescending(p => p.NewPrice);
                     break;
-
-                case var s when s == nameof(Product.OldPrice):
+                case ProductSortBy.OldPrice:
                     products = isAscending
-                        ? products.OrderBy(p => p.OldPrice)
-                        : products.OrderByDescending(p => p.OldPrice);
+                    ? products.OrderBy(p => p.OldPrice)
+                    : products.OrderByDescending(p => p.OldPrice);
                     break;
 
-                case "Category":
+                case ProductSortBy.Category:
                     products = isAscending
                         ? products.OrderBy(p => p.Category.Name)
                         : products.OrderByDescending(p => p.Category.Name);
                     break;
 
-                case nameof(Product.SalesCount):
+                case ProductSortBy.SalesCount:
                     products = isAscending
                         ? products.OrderBy(p => p.SalesCount)
                         : products.OrderByDescending(p => p.SalesCount);
                     break;
-
                 default:
                     products = isAscending
                         ? products.OrderBy(p => p.NewPrice)
@@ -228,6 +265,7 @@ namespace Repository.Products
             return await _context.Products
                 .Include(p => p.Photos)
                 .Include(p => p.Category)
+                .Include(p => p.Brand)
                 .Where(p => p.IsFeatured)
                 .ToListAsync();
         }

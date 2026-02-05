@@ -754,5 +754,79 @@ namespace EStoreX.Core.Services.Common
 </html>";
         }
 
+        public static string GetTeaserEmailTemplate(string userName)
+        {
+            return $@"
+<html lang='en'>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <style>
+        body {{ margin: 0; padding: 0; background-color: #f1f5f9; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }}
+        .wrapper {{ width: 100%; background-color: #f1f5f9; padding: 30px 0; }}
+        .main-card {{ width: 95%; max-width: 550px; background-color: #ffffff; margin: 0 auto; border-radius: 24px; overflow: hidden; box-shadow: 0 10px 30px rgba(2, 159, 174, 0.12); border: 1px solid #e2e8f0; }}
+        
+        .hero-header {{ background: linear-gradient(135deg, #029fae 0%, #007d8a 100%); padding: 50px 20px; text-align: center; }}
+        .brand-name {{ color: #ffffff; font-size: 30px; font-weight: 800; letter-spacing: 3px; margin: 0; text-transform: uppercase; }}
+        
+        .content-area {{ padding: 45px 35px; text-align: center; }}
+        .headline {{ font-size: 30px; font-weight: 800; color: #1e293b; line-height: 1.2; margin-bottom: 20px; letter-spacing: -0.5px; }}
+        .sub-text {{ font-size: 16px; line-height: 1.7; color: #475569; margin-bottom: 25px; }}
+        
+        .mystery-box {{ background-color: #f0fdfa; border-radius: 20px; padding: 35px 20px; border: 2px dashed #029fae; margin: 30px 0; }}
+        .secret-text {{ font-weight: 700; color: #029fae; font-size: 22px; text-transform: uppercase; letter-spacing: 1.5px; }}
+        
+        .btn-container {{ margin-top: 35px; }}
+        .primary-btn {{ background-color: #029fae; color: #ffffff !important; padding: 18px 45px; text-decoration: none; border-radius: 50px; font-weight: 700; font-size: 16px; display: inline-block; box-shadow: 0 5px 15px rgba(2, 159, 174, 0.3); }}
+        
+        .footer {{ padding: 35px; text-align: center; color: #94a3b8; font-size: 13px; line-height: 1.6; border-top: 1px solid #f1f5f9; }}
+
+        @media screen and (max-width: 600px) {{
+            .main-card {{ border-radius: 20px; width: 92%; }}
+            .headline {{ font-size: 26px; }}
+            .hero-header {{ padding: 40px 20px; }}
+            .primary-btn {{ width: 85%; box-sizing: border-box; }}
+        }}
+    </style>
+</head>
+<body>
+    <div class='wrapper'>
+        <div class='main-card'>
+            <div class='hero-header'>
+                <h1 class='brand-name'>E-StoreX</h1>
+            </div>
+            
+            <div class='content-area'>
+                <h2 class='headline'>Shhh... It's a Secret. 😉</h2>
+                <p class='sub-text'>Hi {userName},</p>
+                <p class='sub-text'>
+                    Something is happening behind closed doors at <strong>E-StoreX</strong>. 
+                    We aren't ready to show the world yet, but we wanted <strong>you</strong> to be the first to know that it's coming.
+                </p>
+
+                <div class='mystery-box'>
+                    <span class='secret-text'>Coming Soon</span>
+                    <p style='margin-top:12px; color: #64748b; font-size: 14px; line-height: 1.4;'>No spoilers. No leaks.<br>Just greatness.</p>
+                </div>
+
+                <p class='sub-text' style='font-style: italic; font-size: 14px;'>
+                    Keep this email safe. You’ll need it when the clock hits zero.
+                </p>
+
+                <div class='btn-container'>
+                    <a href='#' class='primary-btn'>I'm Ready</a>
+                </div>
+            </div>
+
+            <div class='footer'>
+                <strong>E-StoreX Mystery Launch</strong><br>
+                Curated by Ibrahim Hassan<br>
+                &copy; {DateTime.Now.Year} All Rights Reserved.
+            </div>
+        </div>
+    </div>
+</body>
+</html>";
+        }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using EStoreX.Core.Enums;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
 
 namespace EStoreX.Core.DTO.Account.Requests
@@ -25,6 +27,5 @@ namespace EStoreX.Core.DTO.Account.Requests
         [DataType(DataType.Password)]
         [Compare("Password", ErrorMessage = "Passwords do not match")]
         public string? ConfirmPassword { get; set; }
-        //public UserTypeOptions UserType { get; set; } = UserTypeOptions.User;
     }
 }

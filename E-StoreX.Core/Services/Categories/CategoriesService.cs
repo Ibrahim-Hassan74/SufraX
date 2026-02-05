@@ -1,11 +1,13 @@
 ﻿using AutoMapper;
 using Domain.Entities.Product;
+using EStoreX.Core.DTO.Brands.Response;
 using EStoreX.Core.DTO.Categories.Requests;
 using EStoreX.Core.DTO.Categories.Responses;
 using EStoreX.Core.DTO.Common;
 using EStoreX.Core.Helper;
 using EStoreX.Core.RepositoryContracts.Categories;
 using EStoreX.Core.RepositoryContracts.Common;
+using EStoreX.Core.RepositoryContracts.Products;
 using EStoreX.Core.ServiceContracts.Categories;
 using EStoreX.Core.ServiceContracts.Common;
 using EStoreX.Core.Services.Common;
@@ -64,6 +66,24 @@ namespace EStoreX.Core.Services.Categories
             return res;
         }
 
+        public async Task<IEnumerable<CategoryBrandResponse>> GetCategoriesBrandsAsync()
+        {
+            var categories = await _categoryRepository.GetAllAsync(x => x.Photos,x => x.CategoryBrands);
+            var brands = await _unitOfWork.BrandRepository.GetAllAsync(x => x.Photos,x => x.CategoryBrands);
+            var brandResponse = _mapper.Map<List<BrandResponse>>(brands);
+            var result = categories.Select(category =>
+            {
+                var categoryResponse = _mapper.Map<CategoryResponseWithPhotos>(category);
+                var relatedBrands = brandResponse.Where(b => category.CategoryBrands.Any(cb => cb.BrandId == b.Id)).ToList();
+                return new CategoryBrandResponse
+                {
+                    Categories = categoryResponse,
+                    BrandResponse = relatedBrands
+                };
+            }).ToList();
+            return result;
+        }
+
         public async Task<CategoryResponseWithPhotos?> GetCategoryByIdAsync(Guid id)
         {
             if (id == Guid.Empty)
@@ -101,12 +121,23 @@ namespace EStoreX.Core.Services.Categories
 
         public async Task<bool> AssignBrandToCategoryAsync(CategoryBrand cb)
         {
-            return await _categoryRepository.AssignBrandAsync(cb);
+            if (_unitOfWork.CategoryRepository.GetByIdAsync(cb.CategoryId) is null || 
+                _unitOfWork.BrandRepository.GetByIdAsync(cb.BrandId) is null)
+                return false;
+
+            var res = await _categoryRepository.AssignBrandAsync(cb);
+            await _unitOfWork.CompleteAsync();
+            return res;
         }
 
         public async Task<bool> UnassignBrandFromCategoryAsync(CategoryBrand cb)
         {
-            return await _categoryRepository.UnassignBrandAsync(cb);
+            if (_unitOfWork.CategoryRepository.GetByIdAsync(cb.CategoryId) is null ||
+                _unitOfWork.BrandRepository.GetByIdAsync(cb.BrandId) is null)
+                return false;
+            var res = await _categoryRepository.UnassignBrandAsync(cb);
+            await _unitOfWork.CompleteAsync();
+            return res;
         }
         /// <inheritdoc/>
         public async Task<ApiResponse> GetCategoryImagesAsync(Guid categoryId)

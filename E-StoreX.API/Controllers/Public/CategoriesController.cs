@@ -96,6 +96,29 @@ namespace E_StoreX.API.Controllers.Public
             var response = await _categoriesService.GetCategoryImagesAsync(categoryId);
             return StatusCode(response.StatusCode, response);
         }
-
+        /// <summary>
+        /// Retrieves all categories along with their associated brands.
+        /// </summary>
+        /// <remarks>
+        /// Each category will appear once in the result, and its <see cref="CategoryBrandResponse.BrandResponse"/> 
+        /// will contain a list of brands linked to that category. 
+        /// Photos for both categories and brands are included.
+        /// </remarks>
+        /// <returns>
+        /// <c>200 OK</c> with a list of categories and their associated brands;  
+        /// <c>404 Not Found</c> if no categories with brands exist.
+        /// </returns>
+        /// <response code="200">Categories with brands retrieved successfully.</response>
+        /// <response code="404">No categories with brands found.</response>
+        [HttpGet("brands")]
+        [ProducesResponseType(typeof(IEnumerable<CategoryBrandResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetCategoriesWithBrands()
+        {
+            var result = await _categoriesService.GetCategoriesBrandsAsync();
+            if (result == null || !result.Any())
+                return NotFound(ApiResponseFactory.NotFound("No categories with brands found."));
+            return Ok(result);
+        }
     }
 }

@@ -81,7 +81,8 @@ namespace E_StoreX.API.Controllers.Public
         [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status409Conflict)]
         public async Task<IActionResult> PostRegister([FromBody] RegisterDTO registerDTO)
         {
-            var response = await _authService.RegisterAsync(registerDTO);
+            var clientKey = HttpContext.Request.Headers["X-API-KEY"].FirstOrDefault();
+            var response = await _authService.RegisterAsync(registerDTO, clientKey);
             return StatusCode(response.StatusCode, response);
         }
 
@@ -203,7 +204,8 @@ namespace E_StoreX.API.Controllers.Public
         [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status429TooManyRequests)]
         public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDTO dto)
         {
-            var response = await _authService.ForgotPasswordAsync(dto);
+            var clientKey = HttpContext.Request.Headers["X-API-KEY"].FirstOrDefault();
+            var response = await _authService.ForgotPasswordAsync(dto, clientKey);
             return StatusCode(response.StatusCode, response);
         }
 
@@ -556,6 +558,7 @@ namespace E_StoreX.API.Controllers.Public
 
             if (!Guid.TryParse(clientId, out var id))
                 return BadRequest(ApiResponseFactory.BadRequest());
+
             var response = await _authService.ExternalLoginCallbackAsync(remoteError);
 
             if (response.Success)
@@ -566,7 +569,7 @@ namespace E_StoreX.API.Controllers.Public
                 var queryParams = ApiResponseFactory.BuildAuthQueryParams(res);
 
                 var redirectUrl = Microsoft.AspNetCore.WebUtilities.QueryHelpers.AddQueryString(
-                    client.CallbackUrl,
+                    client.OAuthCallbackUrl,
                     queryParams
                 );
 
@@ -628,7 +631,8 @@ namespace E_StoreX.API.Controllers.Public
             if (string.IsNullOrEmpty(request.Email))
                 return BadRequest(ApiResponseFactory.BadRequest("Email is required"));
 
-            var response = await _authService.ResendConfirmationEmailAsync(request.Email);
+            var clientKey = HttpContext.Request.Headers["X-API-KEY"].FirstOrDefault();
+            var response = await _authService.ResendConfirmationEmailAsync(request.Email, clientKey);
             return StatusCode(response.StatusCode, response);
         }
 
@@ -665,7 +669,7 @@ namespace E_StoreX.API.Controllers.Public
             if (string.IsNullOrEmpty(userIdFromToken))
                 return StatusCode(StatusCodes.Status401Unauthorized, ApiResponseFactory.Unauthorized());
 
-            var result = await _authService.UploadUserPhotoAsync(Guid.Parse(userIdFromToken), dto.File);
+            var result = await _authService.UploadUserPhotoAsync(Guid.Parse(userIdFromToken), dto);
             return StatusCode(result.StatusCode, result);
         }
 
