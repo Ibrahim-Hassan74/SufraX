@@ -1,4 +1,4 @@
-﻿using Asp.Versioning;
+using Asp.Versioning;
 using Domain.Entities.Common;
 using EStoreX.Core.DTO.Account.Requests;
 using EStoreX.Core.DTO.Account.Responses;
@@ -8,8 +8,10 @@ using EStoreX.Core.Helper;
 using EStoreX.Core.ServiceContracts.Account;
 using EStoreX.Core.ServiceContracts.Common;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
+using EStoreX.API.Filters;
 
-namespace E_StoreX.API.Controllers.Admin
+namespace EStoreX.API.Controllers.Admin
 {
     /// <summary>
     /// Provides administrative operations for managing API clients in the E-StoreX platform.
@@ -26,6 +28,7 @@ namespace E_StoreX.API.Controllers.Admin
     {
         private readonly IApiClientService _clientService;
         private readonly IExportService _exportService;
+        private readonly IStringLocalizer<SharedResource> _localizer;
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiClientsController"/> class with the specified API client
         /// service.
@@ -34,10 +37,12 @@ namespace E_StoreX.API.Controllers.Admin
         /// service for API client management.</remarks>
         /// <param name="clientService">The service used to manage API client data and operations. Cannot be <c>null</c>.</param>
         /// <param name="exportService">Service to manage files.</param>
-        public ApiClientsController(IApiClientService clientService, IExportService exportService)
+        /// <param name="localizer">localizer for shared resources.</param>
+        public ApiClientsController(IApiClientService clientService, IExportService exportService, IStringLocalizer<SharedResource> localizer)
         {
             _clientService = clientService;
             _exportService = exportService;
+            _localizer = localizer;
         }
 
         /// <summary>
@@ -56,7 +61,7 @@ namespace E_StoreX.API.Controllers.Admin
         public async Task<ActionResult<RegisterApiClientResponse>> RegisterClient([FromBody] RegisterApiClientRequest request)
         {
             if (string.IsNullOrWhiteSpace(request.ClientName))
-                return BadRequest(ApiResponseFactory.BadRequest("Client name is required."));
+                return BadRequest(ApiResponseFactory.BadRequest(_localizer["ClientNameRequired"].Value));
 
             var client = await _clientService.CreateClientAsync(request.ClientName);
 
@@ -115,8 +120,8 @@ namespace E_StoreX.API.Controllers.Admin
         public async Task<ActionResult<ApiResponse>> ActiveClient(Guid clientId)
         {
             var result = await _clientService.ActiveClientAsync(clientId);
-            if (!result) return ApiResponseFactory.NotFound("Client not found.");
-            return ApiResponseFactory.Success("Client activated successfully.");
+            if (!result) return ApiResponseFactory.NotFound(_localizer["ClientNotFound"].Value);
+            return ApiResponseFactory.Success(_localizer["ClientActivated"].Value);
         }
 
         /// <summary>
@@ -132,8 +137,8 @@ namespace E_StoreX.API.Controllers.Admin
         public async Task<ActionResult<ApiResponse>> DeActivateClient(Guid clientId)
         {
             var result = await _clientService.DeActivateClientAsync(clientId);
-            if (!result) return ApiResponseFactory.NotFound("Client not found.");
-            return ApiResponseFactory.Success("Client deactivated successfully.");
+            if (!result) return ApiResponseFactory.NotFound(_localizer["ClientNotFound"].Value);
+            return ApiResponseFactory.Success(_localizer["ClientDeactivated"].Value);
         }
 
         /// <summary>
@@ -149,7 +154,7 @@ namespace E_StoreX.API.Controllers.Admin
         public async Task<IActionResult> GetClient(Guid clientId)
         {
             var client = await _clientService.GetClientAsync(clientId);
-            if (client == null) return NotFound(ApiResponseFactory.NotFound("Client not found."));
+            if (client == null) return NotFound(ApiResponseFactory.NotFound(_localizer["ClientNotFound"].Value));
             return Ok(client);
         }
         /// <summary>
@@ -165,8 +170,8 @@ namespace E_StoreX.API.Controllers.Admin
         public async Task<IActionResult> RemoveClient(Guid clientId)
         {
             var result = await _clientService.RemoveClientAsync(clientId);
-            if (!result) return NotFound(ApiResponseFactory.NotFound("Client not found."));
-            return Ok(ApiResponseFactory.Success("Client removed successfully."));
+            if (!result) return NotFound(ApiResponseFactory.NotFound(_localizer["ClientNotFound"].Value));
+            return Ok(ApiResponseFactory.Success(_localizer["ClientRemoved"].Value));
         }
         /// <summary>
         /// Updates an API client by its unique identifier.
@@ -179,14 +184,14 @@ namespace E_StoreX.API.Controllers.Admin
         [HttpPut("{clientId:guid}")]
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> UpdateClient(Guid clientId, [FromBody] UpdateClientRequest request)
+        public async Task<IActionResult> UpdateClient([FromRoute] Guid clientId, [FromBody] UpdateClientRequest request)
         {
             var result = await _clientService.UpdateClientAsync(clientId, request);
 
             if (!result)
-                return NotFound(ApiResponseFactory.NotFound("Client not found."));
+                return NotFound(ApiResponseFactory.NotFound(_localizer["ClientNotFound"].Value));
 
-            return Ok(ApiResponseFactory.Success("Client updated successfully."));
+            return Ok(ApiResponseFactory.Success(_localizer["ClientUpdated"].Value));
         }
 
         /// <summary>
@@ -203,9 +208,9 @@ namespace E_StoreX.API.Controllers.Admin
         {
             var client = await _clientService.RotateApiKeyAsync(clientId);
             if (client == null)
-                return NotFound(ApiResponseFactory.NotFound("Client not found."));
+                return NotFound(ApiResponseFactory.NotFound(_localizer["ClientNotFound"].Value));
 
-            return Ok(ApiResponseFactory.Success("API Key rotated successfully.", new { client.ApiKey }));
+            return Ok(ApiResponseFactory.Success(_localizer["ApiKeyRotated"].Value, new { client.ApiKey }));
         }
 
         /// <summary>
@@ -241,7 +246,7 @@ namespace E_StoreX.API.Controllers.Admin
                 ExportType.Csv => File(_exportService.ExportToCsv(clients), "text/csv", "clients.csv"),
                 ExportType.Excel => File(_exportService.ExportToExcel(clients), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "clients.xlsx"),
                 ExportType.Pdf => File(_exportService.ExportToPdf(clients), "application/pdf", "clients.pdf"),
-                _ => BadRequest(ApiResponseFactory.BadRequest("Unsupported export type"))
+                _ => BadRequest(ApiResponseFactory.BadRequest(_localizer["UnsupportedExportType"].Value))
             };
         }
 

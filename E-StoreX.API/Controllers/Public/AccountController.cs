@@ -1,4 +1,4 @@
-﻿using Asp.Versioning;
+using Asp.Versioning;
 using AutoMapper;
 using Domain.Entities.Common;
 using EStoreX.Core.Domain.IdentityEntities;
@@ -13,10 +13,11 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using System.Security.Claims;
 using IAuthService = EStoreX.Core.ServiceContracts.Account.IAuthenticationService;
 
-namespace E_StoreX.API.Controllers.Public
+namespace EStoreX.API.Controllers.Public
 {
     /// <summary>
     /// Controller responsible for handling user authentication-related actions
@@ -29,6 +30,7 @@ namespace E_StoreX.API.Controllers.Public
         private readonly IMapper _mapper;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IApiClientService _clientService;
+        private readonly IStringLocalizer<SharedResource> _localizer;
         /// <summary>
         /// Initializes a new instance of the <see cref="AccountController"/> class.
         /// </summary>
@@ -45,12 +47,16 @@ namespace E_StoreX.API.Controllers.Public
         /// <param name="clientService">
         /// Service to validate client id and platform.
         /// </param>
-        public AccountController(IAuthService authService, IMapper mapper, SignInManager<ApplicationUser> signInManager, IApiClientService clientService)
+        /// <param name="localizer">
+        /// localizer for shared resources.
+        /// </param>
+        public AccountController(IAuthService authService, IMapper mapper, SignInManager<ApplicationUser> signInManager, IApiClientService clientService, IStringLocalizer<SharedResource> localizer)
         {
             _authService = authService;
             _mapper = mapper;
             _signInManager = signInManager;
             _clientService = clientService;
+            _localizer = localizer;
         }
 
         /// <summary>
@@ -169,7 +175,7 @@ namespace E_StoreX.API.Controllers.Public
         {
             if (dto == null || string.IsNullOrEmpty(dto.UserId) || string.IsNullOrEmpty(dto.Token))
             {
-                return BadRequest(ApiResponseFactory.BadRequest("Invalid confirmation data."));// BadRequest();
+                return BadRequest(ApiResponseFactory.BadRequest(_localizer["InvalidConfirmationData"].Value));// BadRequest();
             }
             var response = await _authService.ConfirmEmailAsync(dto);
             return StatusCode(response.StatusCode, response);
@@ -332,8 +338,8 @@ namespace E_StoreX.API.Controllers.Public
             var address = _mapper.Map<Address>(addressDTO);
             bool ok = await _authService.UpdateAddress(email, address);
             if (ok)
-                return Ok(ApiResponseFactory.Success("Address updated successfully."));
-            return BadRequest(ApiResponseFactory.BadRequest("Failed to update address."));
+                return Ok(ApiResponseFactory.Success(_localizer["AddressUpdated"].Value));
+            return BadRequest(ApiResponseFactory.BadRequest(_localizer["AddressUpdateFailed"].Value));
         }
 
         /// <summary>
@@ -365,7 +371,7 @@ namespace E_StoreX.API.Controllers.Public
             var email = User.FindFirst(ClaimTypes.Email)?.Value;
             var shippingAddress = await _authService.GetAddress(email);
             if (shippingAddress == null)
-                return BadRequest(ApiResponseFactory.BadRequest("Failed to get address."));
+                return BadRequest(ApiResponseFactory.BadRequest(_localizer["AddressFetchFailed"].Value));
             return Ok(shippingAddress);
         }
         /// <summary>
@@ -384,7 +390,7 @@ namespace E_StoreX.API.Controllers.Public
         /// <response code="401">
         /// Unauthorized – The user is not authenticated. Returns <see cref="ApiResponse"/>.
         /// </response>
-        [HttpGet("logout")]
+        [HttpPost("logout")]
         [Authorize]
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status401Unauthorized)]
@@ -426,11 +432,11 @@ namespace E_StoreX.API.Controllers.Public
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (string.IsNullOrEmpty(userId))
-                return BadRequest(ApiResponseFactory.BadRequest("User ID not found in claims."));
+                return BadRequest(ApiResponseFactory.BadRequest(_localizer["UserIdNotFound"].Value));
 
             var userResponse = await _authService.GetUserByIdAsync(userId);
             if (userResponse == null)
-                return NotFound(ApiResponseFactory.NotFound("User not found."));
+                return NotFound(ApiResponseFactory.NotFound(_localizer["UserNotFound"].Value));
 
             return Ok(userResponse);
         }
@@ -506,7 +512,7 @@ namespace E_StoreX.API.Controllers.Public
         {
             var providerName = provider.ToString();
             if (string.IsNullOrEmpty(providerName))
-                return BadRequest(ApiResponseFactory.BadRequest("Provider is required."));
+                return BadRequest(ApiResponseFactory.BadRequest(_localizer["ProviderRequired"].Value));
             var redirectUrl = Url.Action(nameof(ExternalLoginCallback), nameof(AccountController)) ?? "api/v1/Account/external-login-callback";
 
             var properties = _signInManager.ConfigureExternalAuthenticationProperties(providerName, redirectUrl);
@@ -598,7 +604,7 @@ namespace E_StoreX.API.Controllers.Public
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (string.IsNullOrEmpty(userId))
-                return Unauthorized(ApiResponseFactory.Unauthorized("Invalid user."));
+                return Unauthorized(ApiResponseFactory.Unauthorized(_localizer["InvalidUser"].Value));
             var result = await _authService.DeleteAccountAsync(userId);
             return StatusCode(result.StatusCode, result);
         }
@@ -629,7 +635,7 @@ namespace E_StoreX.API.Controllers.Public
         public async Task<IActionResult> ResendConfirmationEmail([FromBody] ResendEmailRequest request)
         {
             if (string.IsNullOrEmpty(request.Email))
-                return BadRequest(ApiResponseFactory.BadRequest("Email is required"));
+                return BadRequest(ApiResponseFactory.BadRequest(_localizer["EmailRequired"].Value));
 
             var clientKey = HttpContext.Request.Headers["X-API-KEY"].FirstOrDefault();
             var response = await _authService.ResendConfirmationEmailAsync(request.Email, clientKey);

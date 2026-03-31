@@ -1,4 +1,4 @@
-﻿using Asp.Versioning;
+using Asp.Versioning;
 using EStoreX.Core.DTO.Account.Requests;
 using EStoreX.Core.DTO.Account.Responses;
 using EStoreX.Core.DTO.Common;
@@ -8,8 +8,10 @@ using EStoreX.Core.ServiceContracts.Account;
 using EStoreX.Core.ServiceContracts.Common;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
+using EStoreX.API.Filters;
 
-namespace E_StoreX.API.Controllers.Admin
+namespace EStoreX.API.Controllers.Admin
 {
     /// <summary>
     /// user management controller for administrative operations
@@ -20,15 +22,18 @@ namespace E_StoreX.API.Controllers.Admin
     {
         private readonly IUserManagementService _userManagementService;
         private readonly IExportService _exportService;
+        private readonly IStringLocalizer<SharedResource> _localizer;
         /// <summary>
         /// User management controller constructor
         /// </summary>
         /// <param name="userManagementService">Service responsible for management</param>
         /// <param name="exportService">Service to manage files.</param>
-        public UserManagementController(IUserManagementService userManagementService, IExportService exportService)
+        /// <param name="localizer">localizer for shared resources.</param>
+        public UserManagementController(IUserManagementService userManagementService, IExportService exportService, IStringLocalizer<SharedResource> localizer)
         {
             _userManagementService = userManagementService;
             _exportService = exportService;
+            _localizer = localizer;
         }
         /// <summary>
         /// Retrieves all users (Admin or SuperAdmin only).
@@ -57,7 +62,7 @@ namespace E_StoreX.API.Controllers.Admin
         public async Task<IActionResult> GetUserById(string id)
         {
             var user = await _userManagementService.GetUserByIdAsync(id);
-            if (user == null) return NotFound(ApiResponseFactory.NotFound());
+            if (user == null) return NotFound(ApiResponseFactory.NotFound(_localizer["UserNotFound"].Value));
             return Ok(user);
         }
         /// <summary>
@@ -110,7 +115,7 @@ namespace E_StoreX.API.Controllers.Admin
         {
             var currentUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
             if (string.IsNullOrEmpty(currentUserId))
-                return Unauthorized("User not authenticated.");
+                return Unauthorized(_localizer["UserNotLoggedIn"].Value);
 
             var result = await _userManagementService.DeleteUserAsync(id, currentUserId);
             return StatusCode(result.StatusCode, result);
@@ -216,7 +221,7 @@ namespace E_StoreX.API.Controllers.Admin
                 ExportType.Csv => File(_exportService.ExportToCsv(users), "text/csv", "users.csv"),
                 ExportType.Excel => File(_exportService.ExportToExcel(users), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "users.xlsx"),
                 ExportType.Pdf => File(_exportService.ExportToPdf(users), "application/pdf", "users.pdf"),
-                _ => BadRequest(ApiResponseFactory.BadRequest("Unsupported export type"))
+                _ => BadRequest(ApiResponseFactory.BadRequest(_localizer["UnsupportedExportType"].Value))
             };
         }
 
@@ -233,7 +238,7 @@ namespace E_StoreX.API.Controllers.Admin
         {
             var admins = await _userManagementService.GetAdminsAsync();
             if (admins == null || !admins.Any())
-                return NotFound(ApiResponseFactory.NotFound());
+                return NotFound(ApiResponseFactory.NotFound(_localizer["UserNotFound"].Value));
             return Ok(admins);
         }
 
