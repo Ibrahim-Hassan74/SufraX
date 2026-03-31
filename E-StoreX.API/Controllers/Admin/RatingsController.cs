@@ -1,11 +1,13 @@
-﻿using Asp.Versioning;
+using Asp.Versioning;
 using EStoreX.Core.DTO.Common;
 using EStoreX.Core.DTO.Ratings.Response;
 using EStoreX.Core.Helper;
 using EStoreX.Core.ServiceContracts.Ratings;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
+using EStoreX.API.Filters;
 
-namespace E_StoreX.API.Controllers.Admin
+namespace EStoreX.API.Controllers.Admin
 {
     /// <summary>
     /// API controller for managing ratings in the admin area.  
@@ -15,6 +17,7 @@ namespace E_StoreX.API.Controllers.Admin
     public class RatingsController : AdminControllerBase
     {
         private readonly IRatingService _ratingService;
+        private readonly IStringLocalizer<SharedResource> _localizer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RatingsController"/> class.
@@ -22,9 +25,11 @@ namespace E_StoreX.API.Controllers.Admin
         /// <param name="ratingService">
         /// The rating service that provides operations for managing ratings.
         /// </param>
-        public RatingsController(IRatingService ratingService)
+        /// <param name="localizer">localizer for shared resources.</param>
+        public RatingsController(IRatingService ratingService, IStringLocalizer<SharedResource> localizer)
         {
             _ratingService = ratingService;
+            _localizer = localizer;
         }
 
         /// <summary>
@@ -47,7 +52,7 @@ namespace E_StoreX.API.Controllers.Admin
             var success = await _ratingService.DeleteRatingAsAdminAsync(id);
 
             if (!success)
-                return NotFound(ApiResponseFactory.NotFound("Rating not found."));
+                return NotFound(ApiResponseFactory.NotFound(_localizer["RatingNotFound"].Value));
 
             return NoContent();
         }

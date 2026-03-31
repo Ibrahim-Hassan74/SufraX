@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using EStoreX.Core.Domain.Entities.Rating;
 using EStoreX.Core.DTO.Products.Responses;
 using EStoreX.Core.DTO.Ratings.Requests;
@@ -7,27 +7,30 @@ using EStoreX.Core.RepositoryContracts.Common;
 using EStoreX.Core.RepositoryContracts.Ratings;
 using EStoreX.Core.ServiceContracts.Ratings;
 using EStoreX.Core.Services.Common;
+using Microsoft.Extensions.Localization;
 
 namespace EStoreX.Core.Services.Ratings
 {
     public class RatingService : BaseService ,IRatingService
     {
         private readonly IRatingRepository _ratingRepository;
+        private readonly IStringLocalizer<RatingService> _localizer;
 
-        public RatingService(IUnitOfWork unitOfWork,IMapper mapper) : base(unitOfWork, mapper)
+        public RatingService(IUnitOfWork unitOfWork, IMapper mapper, IStringLocalizer<RatingService> localizer) : base(unitOfWork, mapper)
         {
             _ratingRepository = _unitOfWork.RatingRepository;
+            _localizer = localizer;
         }
         /// <inheritdoc/>
         public async Task<RatingResponse> AddRatingAsync(RatingAddRequest request, Guid userId)
         {
             var existing = await _ratingRepository.GetUserRatingForProductAsync(request.ProductId, userId);
             if (existing != null)
-                throw new InvalidOperationException("User has already rated this product.");
+                throw new InvalidOperationException(_localizer["UserAlreadyRated"].Value);
 
             var product = await _unitOfWork.ProductRepository.GetByIdAsync(request.ProductId);
             if (product == null)
-                throw new KeyNotFoundException("Product not found.");
+                throw new KeyNotFoundException(_localizer["ProductNotFound"].Value);
 
             var rating = _mapper.Map<Rating>(request);
             rating.UserId = userId;

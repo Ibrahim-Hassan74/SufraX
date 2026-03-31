@@ -1,13 +1,15 @@
-﻿using EStoreX.Core.DTO.Common;
+using EStoreX.Core.DTO.Common;
 using EStoreX.Core.DTO.Ratings.Requests;
 using EStoreX.Core.DTO.Ratings.Response;
 using EStoreX.Core.Helper;
 using EStoreX.Core.ServiceContracts.Ratings;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
+using EStoreX.API.Filters;
 using System.Security.Claims;
 
-namespace E_StoreX.API.Controllers.Public
+namespace EStoreX.API.Controllers.Public
 {
     /// <summary>
     /// Handles all operations related to product ratings,
@@ -16,14 +18,17 @@ namespace E_StoreX.API.Controllers.Public
     public class RatingsController : CustomControllerBase
     {
         private readonly IRatingService _ratingService;
+        private readonly IStringLocalizer<SharedResource> _localizer;
 
         /// <summary>
         /// Initializes a new instance of <see cref="RatingsController"/>.
         /// </summary>
         /// <param name="ratingService">The service responsible for rating operations.</param>
-        public RatingsController(IRatingService ratingService)
+        /// <param name="localizer">localizer for shared resources.</param>
+        public RatingsController(IRatingService ratingService, IStringLocalizer<SharedResource> localizer)
         {
             _ratingService = ratingService;
+            _localizer = localizer;
         }
 
         /// <summary>
@@ -63,7 +68,7 @@ namespace E_StoreX.API.Controllers.Public
             var userId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
             var result = await _ratingService.UpdateRatingAsync(id, request, userId);
             if (result == null)
-                return NotFound(ApiResponseFactory.NotFound("Rating not found or not owned by user."));
+                return NotFound(ApiResponseFactory.NotFound(_localizer["RatingNotFoundOrNotOwned"].Value));
             return Ok(result);
         }
 
@@ -85,7 +90,7 @@ namespace E_StoreX.API.Controllers.Public
             var userId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
             var success = await _ratingService.DeleteRatingAsync(id, userId);
             if (!success)
-                return NotFound(ApiResponseFactory.NotFound("Rating not found or not owned by user."));
+                return NotFound(ApiResponseFactory.NotFound(_localizer["RatingNotFoundOrNotOwned"].Value));
             return NoContent();
         }
 
