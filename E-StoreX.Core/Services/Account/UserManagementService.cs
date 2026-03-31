@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using EStoreX.Core.Domain.IdentityEntities;
 using EStoreX.Core.DTO.Account.Requests;
 using EStoreX.Core.DTO.Account.Responses;
@@ -9,6 +9,7 @@ using EStoreX.Core.ServiceContracts.Account;
 using iText.Commons.Actions.Contexts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Localization;
 using Microsoft.EntityFrameworkCore;
 
 namespace EStoreX.Core.Services.Account
@@ -19,17 +20,20 @@ namespace EStoreX.Core.Services.Account
         private readonly RoleManager<ApplicationRole> _roleManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IMapper _mapper;
+        private readonly IStringLocalizer<UserManagementService> _localizer;
 
         public UserManagementService(
             UserManager<ApplicationUser> userManager,
             RoleManager<ApplicationRole> roleManager,
             IMapper mapper,
-            IHttpContextAccessor httpContextAccessor)
+            IHttpContextAccessor httpContextAccessor,
+            IStringLocalizer<UserManagementService> localizer)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _mapper = mapper;
             _httpContextAccessor = httpContextAccessor;
+            _localizer = localizer;
         }
         /// <inheritdoc/>
         public async Task<ApiResponse> AddAdminAsync(CreateAdminDTO dto)
@@ -46,7 +50,7 @@ namespace EStoreX.Core.Services.Account
             var result = await _userManager.CreateAsync(user, dto.Password);
 
             if (!result.Succeeded)
-                return ApiResponseFactory.Failure("Failed to create admin.", 400, result.Errors.Select(x => x.Description).ToArray());
+                return ApiResponseFactory.Failure(_localizer["FailedToCreateAdmin"].Value, 400, result.Errors.Select(x => x.Description).ToArray());
 
             if (!await _roleManager.RoleExistsAsync(UserTypeOptions.Admin.ToString()))
             {
@@ -55,7 +59,7 @@ namespace EStoreX.Core.Services.Account
 
             await _userManager.AddToRoleAsync(user, "Admin");
 
-            return ApiResponseFactory.Success("Admin created successfully.");
+            return ApiResponseFactory.Success(_localizer["AdminCreatedSuccessfully"].Value);
         }
 
         /// <inheritdoc/>
@@ -63,7 +67,7 @@ namespace EStoreX.Core.Services.Account
         {
             var user = await _userManager.FindByIdAsync(dto.UserId);
             if (user == null)
-                return ApiResponseFactory.Failure("User not found.", 404, "User not found.");
+                return ApiResponseFactory.Failure(_localizer["UserNotFound"].Value, 404, _localizer["UserNotFound"].Value);
 
             if (!await _roleManager.RoleExistsAsync(dto.Role.ToString()))
                 await _roleManager.CreateAsync(new ApplicationRole() { Name = dto.Role.ToString() });
@@ -71,8 +75,8 @@ namespace EStoreX.Core.Services.Account
             var result = await _userManager.AddToRoleAsync(user, dto.Role.ToString());
 
             return result.Succeeded
-                ? ApiResponseFactory.Success("Role assigned successfully.")
-                : ApiResponseFactory.Failure("Failed to assign role.", 400, result.Errors.Select(error => error.Description).ToArray());
+                ? ApiResponseFactory.Success(_localizer["RoleAssignedSuccessfully"].Value)
+                : ApiResponseFactory.Failure(_localizer["FailedToAssignRole"].Value, 400, result.Errors.Select(error => error.Description).ToArray());
         }
 
         /// <inheritdoc/>
@@ -80,14 +84,14 @@ namespace EStoreX.Core.Services.Account
         {
             var user = await _userManager.FindByIdAsync(dto.UserId);
             if (user == null)
-                return ApiResponseFactory.Failure("User not found.", 404, "User not found.");
+                return ApiResponseFactory.Failure(_localizer["UserNotFound"].Value, 404, _localizer["UserNotFound"].Value);
 
 
             var result = await _userManager.RemoveFromRoleAsync(user, dto.Role.ToString());
 
             return result.Succeeded
-                ? ApiResponseFactory.Success("Role removed successfully.")
-                : ApiResponseFactory.Failure("Failed to remove role.", 400, result.Errors.Select(error => error.Description).ToArray());
+                ? ApiResponseFactory.Success(_localizer["RoleRemovedSuccessfully"].Value)
+                : ApiResponseFactory.Failure(_localizer["FailedToRemoveRole"].Value, 400, result.Errors.Select(error => error.Description).ToArray());
         }
 
         /// <inheritdoc/>
@@ -95,7 +99,7 @@ namespace EStoreX.Core.Services.Account
         {
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
-                return ApiResponseFactory.Failure("User not found.", 404, "User not found.");
+                return ApiResponseFactory.Failure(_localizer["UserNotFound"].Value, 404, _localizer["UserNotFound"].Value);
 
             var currentUser = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext!.User);
             var currentRoles = await _userManager.GetRolesAsync(currentUser!);
@@ -105,21 +109,21 @@ namespace EStoreX.Core.Services.Account
             if (currentRoles.Contains("Admin"))
             {
                 if (targetRoles.Contains("Admin") || targetRoles.Contains("SuperAdmin"))
-                    return ApiResponseFactory.Failure("Admins cannot activate Admins or SuperAdmins.", 403);
+                    return ApiResponseFactory.Failure(_localizer["AdminsCannotActivateAdmin"].Value, 403);
             }
 
             if (currentRoles.Contains("SuperAdmin"))
             {
                 if (targetRoles.Contains("SuperAdmin"))
-                    return ApiResponseFactory.Failure("SuperAdmins cannot activate other SuperAdmins.", 403);
+                    return ApiResponseFactory.Failure(_localizer["SuperAdminsCannotActivateSuperAdmin"].Value, 403);
             }
 
             user.LockoutEnd = null;
             var result = await _userManager.UpdateAsync(user);
 
             return result.Succeeded
-                ? ApiResponseFactory.Success("User activated successfully.")
-                : ApiResponseFactory.Failure("Failed to activate user.", 400, result.Errors.Select(error => error.Description).ToArray());
+                ? ApiResponseFactory.Success(_localizer["UserActivatedSuccessfully"].Value)
+                : ApiResponseFactory.Failure(_localizer["FailedToActivateUser"].Value, 400, result.Errors.Select(error => error.Description).ToArray());
         }
 
 
@@ -128,7 +132,7 @@ namespace EStoreX.Core.Services.Account
         {
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
-                return ApiResponseFactory.Failure("User not found.", 404, "User not found.");
+                return ApiResponseFactory.Failure(_localizer["UserNotFound"].Value, 404, _localizer["UserNotFound"].Value);
 
             var currentUser = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext!.User);
             var currentRoles = await _userManager.GetRolesAsync(currentUser!);
@@ -139,21 +143,21 @@ namespace EStoreX.Core.Services.Account
             if (currentRoles.Contains("Admin"))
             {
                 if (targetRoles.Contains("Admin") || targetRoles.Contains("SuperAdmin"))
-                    return ApiResponseFactory.Failure("Admins cannot deactivate Admins or SuperAdmins.", 403);
+                    return ApiResponseFactory.Failure(_localizer["AdminsCannotDeactivateAdmin"].Value, 403);
             }
 
             if (currentRoles.Contains("SuperAdmin"))
             {
                 if (targetRoles.Contains("SuperAdmin"))
-                    return ApiResponseFactory.Failure("SuperAdmins cannot deactivate other SuperAdmins.", 403);
+                    return ApiResponseFactory.Failure(_localizer["SuperAdminsCannotDeactivateSuperAdmin"].Value, 403);
             }
 
             user.LockoutEnd = DateTimeOffset.MaxValue;
             var result = await _userManager.UpdateAsync(user);
 
             return result.Succeeded
-                ? ApiResponseFactory.Success("User deactivated successfully.")
-                : ApiResponseFactory.Failure("Failed to deactivate user.", 400, result.Errors.Select(error => error.Description).ToArray());
+                ? ApiResponseFactory.Success(_localizer["UserDeactivatedSuccessfully"].Value)
+                : ApiResponseFactory.Failure(_localizer["FailedToDeactivateUser"].Value, 400, result.Errors.Select(error => error.Description).ToArray());
         }
 
 
@@ -162,11 +166,11 @@ namespace EStoreX.Core.Services.Account
         {
             var targetUser = await _userManager.FindByIdAsync(targetUserId);
             if (targetUser == null)
-                return ApiResponseFactory.Failure("User not found.", 404, "User not found.");
+                return ApiResponseFactory.Failure(_localizer["UserNotFound"].Value, 404, _localizer["UserNotFound"].Value);
 
             var currentUser = await _userManager.FindByIdAsync(currentUserId);
             if (currentUser == null)
-                return ApiResponseFactory.Failure("Unauthorized.", 404);
+                return ApiResponseFactory.Failure(_localizer["Unauthorized"].Value, 404);
 
             var targetRoles = await _userManager.GetRolesAsync(targetUser);
             var currentRoles = await _userManager.GetRolesAsync(currentUser);
@@ -178,19 +182,19 @@ namespace EStoreX.Core.Services.Account
             bool isTargetSuperAdmin = targetRoles.Contains("SuperAdmin");
 
             if (isTargetSuperAdmin && !isCurrentSuperAdmin)
-                return ApiResponseFactory.Failure("Only a Super Admin can delete another Super Admin.", 400);
+                return ApiResponseFactory.Failure(_localizer["OnlySuperAdminCanDeleteSuperAdmin"].Value, 400);
 
             if (isTargetAdmin && !isCurrentSuperAdmin)
-                return ApiResponseFactory.Failure("Only a Super Admin can delete an Admin.", 400);
+                return ApiResponseFactory.Failure(_localizer["OnlySuperAdminCanDeleteAdmin"].Value, 400);
 
             if (!isTargetAdmin && !isTargetSuperAdmin && !(isCurrentAdmin || isCurrentSuperAdmin))
-                return ApiResponseFactory.Failure("Only Admin or Super Admin can delete a user.", 400);
+                return ApiResponseFactory.Failure(_localizer["OnlyAdminCanDeleteUser"].Value, 400);
 
             var result = await _userManager.DeleteAsync(targetUser);
 
             return result.Succeeded
-                ? ApiResponseFactory.Success("User deleted successfully.")
-                : ApiResponseFactory.Failure("Failed to delete user.", 400, result.Errors.Select(e => e.Description).ToArray());
+                ? ApiResponseFactory.Success(_localizer["UserDeletedSuccessfully"].Value)
+                : ApiResponseFactory.Failure(_localizer["FailedToDeleteUser"].Value, 400, result.Errors.Select(e => e.Description).ToArray());
         }
 
 
@@ -200,7 +204,7 @@ namespace EStoreX.Core.Services.Account
         {
             var user = await _userManager.FindByIdAsync(adminUserId);
             if (user == null)
-                return ApiResponseFactory.Failure("User not found.", 404, "User not found.");
+                return ApiResponseFactory.Failure(_localizer["UserNotFound"].Value, 404, _localizer["UserNotFound"].Value);
 
             var currentUser = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext!.User);
             var currentRoles = await _userManager.GetRolesAsync(currentUser!);
@@ -209,20 +213,20 @@ namespace EStoreX.Core.Services.Account
 
             if (currentRoles.Contains("Admin"))
             {
-                return ApiResponseFactory.Failure("Admins cannot delete Admins or SuperAdmins.", 403);
+                return ApiResponseFactory.Failure(_localizer["AdminsCannotDeleteAdmin"].Value, 403);
             }
 
             if (currentRoles.Contains("SuperAdmin"))
             {
                 if (targetRoles.Contains("SuperAdmin"))
-                    return ApiResponseFactory.Failure("SuperAdmins cannot delete other SuperAdmins.", 403);
+                    return ApiResponseFactory.Failure(_localizer["SuperAdminsCannotDeleteSuperAdmin"].Value, 403);
             }
 
             var result = await _userManager.DeleteAsync(user);
 
             return result.Succeeded
-                ? ApiResponseFactory.Success("Admin deleted successfully.")
-                : ApiResponseFactory.Failure("Failed to delete admin.", 400, result.Errors.Select(e => e.Description).ToArray());
+                ? ApiResponseFactory.Success(_localizer["AdminDeletedSuccessfully"].Value)
+                : ApiResponseFactory.Failure(_localizer["FailedToDeleteAdmin"].Value, 400, result.Errors.Select(e => e.Description).ToArray());
         }
 
 

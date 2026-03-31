@@ -33,8 +33,14 @@ namespace EStoreX.Infrastructure.Repository.Account
             }
             else
             {
-                userAddress.Id = address.Id;
-                _context.Addresses.Update(userAddress);
+                userAddress.FirstName = address.FirstName;
+                userAddress.LastName = address.LastName;
+                userAddress.City = address.City;
+                userAddress.Street = address.Street;
+                userAddress.ZipCode = address.ZipCode;
+                userAddress.State = address.State;
+
+                //_context.Addresses.Update(userAddress);
             }
             int res = await _context.SaveChangesAsync();
             return res > 0;

@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Domain.Entities.Common;
 using Domain.Entities.Product;
 using EStoreX.Core.Domain.IdentityEntities;
@@ -17,9 +17,13 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Localization;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
+using System.IdentityModel.Tokens.Jwt;
 using System.Text;
+using Res = EStoreX.Core.Resources.Services.Common.EmailTemplateService;
+using System.Globalization;
 
 namespace EStoreX.Core.Services.Account
 {
@@ -35,6 +39,7 @@ namespace EStoreX.Core.Services.Account
         private readonly IImageService _imageService;
         private readonly IEntityImageManager<ApplicationUser> _imageManager;
         private readonly IConfiguration _configuration;
+        private readonly IStringLocalizer<AuthenticationService> _localizer;
 
         public AuthenticationService(UserManager<ApplicationUser> userManager,
             IEmailSenderService emailSender,
@@ -47,7 +52,8 @@ namespace EStoreX.Core.Services.Account
             RoleManager<ApplicationRole> roleManager,
             IEntityImageManager<ApplicationUser> imageManager,
             IImageService imageService,
-            IConfiguration configuration) : base(unitOfWork, mapper)
+            IConfiguration configuration,
+            IStringLocalizer<AuthenticationService> localizer) : base(unitOfWork, mapper)
         {
             _userManager = userManager;
             _emailSender = emailSender;
@@ -59,16 +65,17 @@ namespace EStoreX.Core.Services.Account
             _imageManager = imageManager;
             _imageService = imageService;
             _configuration = configuration;
+            _localizer = localizer;
         }
         /// <inheritdoc/>
         public async Task<ApiResponse> RegisterAsync(RegisterDTO registerDTO, string? clientKey)
         {
             if (registerDTO == null)
-                return ApiResponseFactory.Failure("Invalid registration data.", 400, "Registration data cannot be null.");
+                return ApiResponseFactory.Failure(_localizer["InvalidRegistrationData"].Value, 400, _localizer["RegistrationDataRequired"].Value);
             ValidationHelper.ModelValidation(registerDTO);
 
             if (await _userManager.FindByEmailAsync(registerDTO.Email) is not null)
-                return ApiResponseFactory.Failure("Email is already registered.", 409, "This email is already in use.");
+                return ApiResponseFactory.Failure(_localizer["EmailAlreadyRegistered"].Value, 409, _localizer["EmailAlreadyInUse"].Value);
 
 
 
@@ -83,32 +90,32 @@ namespace EStoreX.Core.Services.Account
             IdentityResult result = await _userManager.CreateAsync(user, registerDTO.Password);
 
             if (!result.Succeeded)
-                return ApiResponseFactory.Failure("Registration failed.", 400, result.Errors.Select(e => e.Description).ToArray());
+                return ApiResponseFactory.Failure(_localizer["RegistrationFailed"].Value, 400, result.Errors.Select(e => e.Description).ToArray());
 
 
             await EnsureRoleExistsAndAssignAsync(user, UserTypeOptions.User.ToString());
 
             await SendEmail(user, clientKey);
 
-            return ApiResponseFactory.Success("Registration successful. Please check your email to confirm your account.");
+            return ApiResponseFactory.Success(_localizer["RegistrationSuccessfulConfirmEmail"].Value);
         }
         /// <inheritdoc/>
         public async Task<ApiResponse> LoginAsync(LoginDTO loginDTO)
         {
             if (loginDTO == null)
-                return ApiResponseFactory.Failure("Invalid login data.", 400, "Login data cannot be null.");
+                return ApiResponseFactory.Failure(_localizer["InvalidLoginData"].Value, 400, _localizer["LoginDataRequired"].Value);
 
             ValidationHelper.ModelValidation(loginDTO);
 
             var user = await _userManager.FindByEmailAsync(loginDTO.Email);
             if (user == null)
-                return ApiResponseFactory.Failure("User not found.", 404, "No account found with this email.");
+                return ApiResponseFactory.Failure(_localizer["UserNotFound"].Value, 404, _localizer["EmailNotFound"].Value);
 
 
             if (!user.EmailConfirmed)
             {
                 //await SendEmail(user);
-                return ApiResponseFactory.Failure("Email not confirmed.", 403, "You must confirm your email before logging in.");
+                return ApiResponseFactory.Failure(_localizer["EmailNotConfirmed"].Value, 403, _localizer["ConfirmEmailBeforeLogin"].Value);
             }
 
             var result = await _signInManager.PasswordSignInAsync(user, loginDTO.Password, loginDTO.RememberMe, true);
@@ -119,16 +126,16 @@ namespace EStoreX.Core.Services.Account
             }
             else if (result.IsLockedOut)
             {
-                string message = "Your account is temporarily locked due to multiple failed login attempts. Please try again later.";
+                string message = _localizer["AccountLockedOut"].Value;
                 return ApiResponseFactory.Failure(message, 423, message);
             }
             else if (result.IsNotAllowed)
             {
-                return ApiResponseFactory.Failure("User is not allowed to login.", 403, "User is not allowed to login.");
+                return ApiResponseFactory.Failure(_localizer["LoginNotAllowed"].Value, 403, _localizer["LoginNotAllowed"].Value);
             }
             else
             {
-                return ApiResponseFactory.Failure("Invalid login attempt.", 401, "Incorrect email or password.");
+                return ApiResponseFactory.Failure(_localizer["InvalidLoginAttempt"].Value, 401, _localizer["IncorrectEmailOrPassword"].Value);
             }
         }
 
@@ -139,13 +146,13 @@ namespace EStoreX.Core.Services.Account
             ValidationHelper.ModelValidation(dto);
             var user = await _userManager.FindByIdAsync(dto.UserId);
             if (user == null)
-                return ApiResponseFactory.Failure("User not found.", 404, "User with the provided ID does not exist.");
+                return ApiResponseFactory.Failure(_localizer["UserNotFound"].Value, 404, _localizer["UserIdNotFound"].Value);
 
             if (await _userManager.IsEmailConfirmedAsync(user))
-                return ApiResponseFactory.Failure("Email is already confirmed.", 200, "Email already confirmed.");
+                return ApiResponseFactory.Failure(_localizer["EmailAlreadyConfirmed"].Value, 200, _localizer["EmailAlreadyConfirmed"].Value);
 
             if (user.LastEmailConfirmationToken != dto.Token)
-                return ApiResponseFactory.Failure("Invalid or expired confirmation token.", 400, "Token mismatch or already used.");
+                return ApiResponseFactory.Failure(_localizer["InvalidConfirmationToken"].Value, 400, _localizer["TokenMismatch"].Value);
 
             var result = await _userManager.ConfirmEmailAsync(user, dto.Token);
 
@@ -157,11 +164,11 @@ namespace EStoreX.Core.Services.Account
 
                 var updateResult = await _userManager.UpdateAsync(user);
                 if (!updateResult.Succeeded)
-                    return ApiResponseFactory.Failure("Failed to update user after confirmation.", 500, updateResult.Errors.Select(e => e.Description).ToArray());
+                    return ApiResponseFactory.Failure(_localizer["FailedToUpdateUserAfterConfirmation"].Value, 500, updateResult.Errors.Select(e => e.Description).ToArray());
 
-                return ApiResponseFactory.Success("Email confirmed successfully.");
+                return ApiResponseFactory.Success(_localizer["EmailConfirmedSuccessfully"].Value);
             }
-            return ApiResponseFactory.Failure("Failed to confirm email.", 400, result.Errors.Select(e => e.Description).ToArray());
+            return ApiResponseFactory.Failure(_localizer["FailedToConfirmEmail"].Value, 400, result.Errors.Select(e => e.Description).ToArray());
 
         }
         /// <inheritdoc/>
@@ -171,10 +178,10 @@ namespace EStoreX.Core.Services.Account
             var user = await _userManager.FindByEmailAsync(dto.Email);
 
             if (user == null)
-                return ApiResponseFactory.Failure("Incorrect email.", 400, "Email not found.");
+                return ApiResponseFactory.Failure(_localizer["IncorrectEmail"].Value, 400, _localizer["EmailNotFound"].Value);
 
             if (!await _userManager.IsEmailConfirmedAsync(user))
-                return ApiResponseFactory.Failure("Please confirm your email before resetting password.", 400, "Email is not confirmed.");
+                return ApiResponseFactory.Failure(_localizer["ConfirmEmailBeforeReset"].Value, 400, _localizer["EmailNotConfirmed"].Value);
 
             //var logins = await _userManager.GetLoginsAsync(user);
             //if (logins.Any())
@@ -189,7 +196,7 @@ namespace EStoreX.Core.Services.Account
                 if (!string.IsNullOrEmpty(tokenTimeStr) && DateTimeOffset.TryParse(tokenTimeStr, out var tokenTime))
                 {
                     if (DateTimeOffset.UtcNow < tokenTime.AddMinutes(5))
-                        return ApiResponseFactory.Failure("A password reset email was already sent recently. Please wait before trying again.", 429, "Reset already requested.");
+                        return ApiResponseFactory.Failure(_localizer["PasswordResetSentRecently"].Value, 429, _localizer["ResetAlreadyRequested"].Value);
                 }
             }
             #endregion
@@ -214,25 +221,23 @@ namespace EStoreX.Core.Services.Account
                 $"&token={Uri.EscapeDataString(encodedToken)}" +
                 $"&callback={Uri.EscapeDataString(callback)}";
 
-            string html = EmailTemplateService.GetPasswordResetEmailTemplate(resetLink);
-
-            var emailDTO = new EmailDTO(user.Email, "Reset Your Password", html);
-
+            string html = EmailTemplateService.GetPasswordResetEmailTemplate(resetLink, CultureInfo.CurrentUICulture.Name);
+            var emailDTO = new EmailDTO(user.Email, Res.PasswordReset_Subject, html);
             await _emailSender.SendEmailAsync(emailDTO);
 
-            return ApiResponseFactory.Success("A password reset link has been sent to your email.");
+            return ApiResponseFactory.Success(_localizer["PasswordResetLinkSent"].Value);
         }
 
         /// <inheritdoc/>
         public async Task<ApiResponse> VerifyResetPasswordTokenAsync(VerifyResetPasswordDTO dto)
         {
             if (string.IsNullOrWhiteSpace(dto.UserId) || string.IsNullOrWhiteSpace(dto.Token))
-                return ApiResponseFactory.Failure("Invalid verification request.", 400, "UserId and token are required.");
+                return ApiResponseFactory.Failure(_localizer["InvalidVerificationRequest"].Value, 400, _localizer["UserIdAndTokenRequired"].Value);
 
             var user = await _userManager.FindByIdAsync(dto.UserId);
 
             if (user == null)
-                return ApiResponseFactory.Failure("User not found.", 404, "No account found for the provided user ID.");
+                return ApiResponseFactory.Failure(_localizer["UserNotFound"].Value, 404, _localizer["NoAccountForUserId"].Value);
 
             string decodedToken;
 
@@ -242,29 +247,29 @@ namespace EStoreX.Core.Services.Account
             }
             catch
             {
-                return ApiResponseFactory.Failure("Invalid token format.", 400, "The token format is invalid or corrupted.");
+                return ApiResponseFactory.Failure(_localizer["InvalidTokenFormat"].Value, 400, _localizer["TokenFormatInvalid"].Value);
             }
 
             var storedToken = await _userManager.GetAuthenticationTokenAsync(user, "ResetPassword", "Token");
 
             if (storedToken == null || storedToken != decodedToken)
-                return ApiResponseFactory.Failure("Invalid or expired token.", 400, "The token is invalid or has already been used.");
+                return ApiResponseFactory.Failure(_localizer["InvalidOrExpiredToken"].Value, 400, _localizer["TokenInvalidOrUsed"].Value);
 
             var tokenTimeStr = await _userManager.GetAuthenticationTokenAsync(user, "ResetPassword", "TokenTime");
 
             if (string.IsNullOrEmpty(tokenTimeStr) || !DateTimeOffset.TryParse(tokenTimeStr, out var tokenTime))
-                return ApiResponseFactory.Failure("Token validation failed.", 400, "The token timestamp is invalid.");
+                return ApiResponseFactory.Failure(_localizer["TokenValidationFailed"].Value, 400, _localizer["TokenTimestampInvalid"].Value);
 
             if (DateTimeOffset.UtcNow > tokenTime.AddMinutes(5))
-                return ApiResponseFactory.Failure("Reset password link has expired.", 400, "The reset password link has expired. Please request a new one.");
+                return ApiResponseFactory.Failure(_localizer["ResetPasswordLinkExpired"].Value, 400, _localizer["ResetPasswordLinkExpired"].Value);
 
-            return ApiResponseFactory.Success("The reset password token is valid.");
+            return ApiResponseFactory.Success(_localizer["ResetPasswordTokenValid"].Value);
         }
         /// <inheritdoc/>
         public async Task<ApiResponse> ResetPasswordAsync(ResetPasswordDTO dto)
         {
             if (dto == null)
-                return ApiResponseFactory.Failure("Invalid reset password data.", 400, "Request body cannot be null.");
+                return ApiResponseFactory.Failure(_localizer["InvalidResetPasswordData"].Value, 400, _localizer["RequestBodyRequired"].Value);
 
             var verifyResponse = await VerifyResetPasswordTokenAsync(
                 new VerifyResetPasswordDTO
@@ -283,19 +288,19 @@ namespace EStoreX.Core.Services.Account
 
 
             if (!resetResult.Succeeded)
-                return ApiResponseFactory.Failure("Failed to reset password.", 400, resetResult.Errors.Select(e => e.Description).ToArray());
+                return ApiResponseFactory.Failure(_localizer["FailedToResetPassword"].Value, 400, resetResult.Errors.Select(e => e.Description).ToArray());
 
             await _userManager.RemoveAuthenticationTokenAsync(user, "ResetPassword", "Token");
             await _userManager.RemoveAuthenticationTokenAsync(user, "ResetPassword", "TokenTime");
 
-            return ApiResponseFactory.Success("Password has been reset successfully.");
+            return ApiResponseFactory.Success(_localizer["PasswordResetSuccessful"].Value);
         }
 
         /// <inheritdoc/>
         public async Task<ApiResponse> RefreshTokenAsync(TokenModel model)
         {
             if (model is null || string.IsNullOrWhiteSpace(model.Token) || string.IsNullOrWhiteSpace(model.RefreshToken))
-                return ApiResponseFactory.Failure("Invalid token model.", 400, "Token and refresh token are required.");
+                return ApiResponseFactory.Failure(_localizer["InvalidTokenModel"].Value, 400, _localizer["TokenAndRefreshRequired"].Value);
 
             ClaimsPrincipal? principal;
 
@@ -305,24 +310,24 @@ namespace EStoreX.Core.Services.Account
             }
             catch (SecurityTokenException ex)
             {
-                return ApiResponseFactory.Failure("Invalid token.", 400, "Access token is invalid.");
+                return ApiResponseFactory.Failure(_localizer["InvalidToken"].Value, 400, _localizer["AccessTokenInvalid"].Value);
             }
 
             if (principal is null)
-                return ApiResponseFactory.Failure("Invalid token.", 400, "Access token is invalid.");
+                return ApiResponseFactory.Failure(_localizer["InvalidToken"].Value, 400, _localizer["AccessTokenInvalid"].Value);
 
             var email = principal.FindFirstValue(ClaimTypes.Email);
             if (string.IsNullOrWhiteSpace(email))
-                return ApiResponseFactory.Failure("Invalid token.", 400, "Email claim is missing in token.");
+                return ApiResponseFactory.Failure(_localizer["InvalidToken"].Value, 400, _localizer["EmailClaimMissing"].Value);
 
             var user = await _userManager.FindByEmailAsync(email);
             if (user is null)
-                return ApiResponseFactory.Failure("User not found.", 404, "User does not exist.");
+                return ApiResponseFactory.Failure(_localizer["UserNotFound"].Value, 404, _localizer["EmailNotFound"].Value);
 
             if (user.RefreshToken != model.RefreshToken ||
                 user.RefreshTokenExpirationDateTime <= DateTimeOffset.UtcNow)
             {
-                return ApiResponseFactory.Failure("Invalid refresh token.", 400, "Refresh token is invalid or expired.");
+                return ApiResponseFactory.Failure(_localizer["InvalidRefreshToken"].Value, 400, _localizer["RefreshTokenInvalidOrExpired"].Value);
             }
 
 
@@ -339,7 +344,7 @@ namespace EStoreX.Core.Services.Account
 
             authResponse.Success = true;
             authResponse.StatusCode = 200;
-            authResponse.Message = "Token refreshed successfully.";
+            authResponse.Message = _localizer["TokenRefreshedSuccessfully"].Value;
 
             return authResponse;
         }
@@ -384,7 +389,7 @@ namespace EStoreX.Core.Services.Account
 
             await _signInManager.SignOutAsync();
 
-            return ApiResponseFactory.Success("Logged out successfully.");
+            return ApiResponseFactory.Success(_localizer["LoggedOutSuccessfully"].Value);
         }
         /// <inheritdoc/>
         public async Task<ApplicationUserResponse?> GetUserByIdAsync(string userId)
@@ -393,11 +398,11 @@ namespace EStoreX.Core.Services.Account
         public async Task<ApiResponse> UpdateUserProfileAsync(UpdateUserDTO dto)
         {
             if (dto == null)
-                return ApiResponseFactory.Failure("Invalid update data.", 400, "Update data cannot be null.");
+                return ApiResponseFactory.Failure(_localizer["InvalidUpdateData"].Value, 400, _localizer["UpdateDataRequired"].Value);
 
             var user = await _userManager.FindByIdAsync(dto.UserId);
             if (user == null)
-                return ApiResponseFactory.Failure("User not found.", 404, "No user found with the provided ID.");
+                return ApiResponseFactory.Failure(_localizer["UserNotFound"].Value, 404, _localizer["NoAccountForUserId"].Value);
 
             if (!string.IsNullOrWhiteSpace(dto.DisplayName))
                 user.DisplayName = dto.DisplayName;
@@ -407,26 +412,26 @@ namespace EStoreX.Core.Services.Account
 
             var updateResult = await _userManager.UpdateAsync(user);
             if (!updateResult.Succeeded)
-                return ApiResponseFactory.Failure("Failed to update profile.", 400, updateResult.Errors.Select(e => e.Description).ToArray());
+                return ApiResponseFactory.Failure(_localizer["FailedToUpdateProfile"].Value, 400, updateResult.Errors.Select(e => e.Description).ToArray());
 
             if (!string.IsNullOrWhiteSpace(dto.CurrentPassword) && !string.IsNullOrWhiteSpace(dto.NewPassword))
             {
                 var passwordResult = await _userManager.ChangePasswordAsync(user, dto.CurrentPassword, dto.NewPassword);
                 if (!passwordResult.Succeeded)
-                    return ApiResponseFactory.Failure("Failed to change password.", 400, passwordResult.Errors.Select(e => e.Description).ToArray());
+                    return ApiResponseFactory.Failure(_localizer["FailedToChangePassword"].Value, 400, passwordResult.Errors.Select(e => e.Description).ToArray());
             }
 
-            return ApiResponseFactory.Success("Profile updated successfully.");
+            return ApiResponseFactory.Success(_localizer["ProfileUpdatedSuccessfully"].Value);
         }
         /// <inheritdoc/>
         public async Task<ApiResponse> ExternalLoginCallbackAsync(string remoteError = "")
         {
             if (!string.IsNullOrEmpty(remoteError))
-                return ApiResponseFactory.Failure($"External provider error: {remoteError}", 400, remoteError);
+                return ApiResponseFactory.Failure(_localizer["ExternalProviderError", remoteError].Value, 400, remoteError);
 
             var info = await _signInManager.GetExternalLoginInfoAsync();
             if (info == null)
-                return ApiResponseFactory.Failure("Failed to load external login info.", 400, "external_login_info_missing");
+                return ApiResponseFactory.Failure(_localizer["FailedToLoadExternalLoginInfo"].Value, 400, "external_login_info_missing");
 
             var user = await _userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey);
             if (user != null)
@@ -445,7 +450,7 @@ namespace EStoreX.Core.Services.Account
                 if (string.IsNullOrEmpty(fallback))
                 {
                     return ApiResponseFactory.Failure(
-                        "External provider did not supply email or username.",
+                        _localizer["ExternalProviderMissingIdentityData"].Value,
                         400,
                         "missing_identity_data"
                     );
@@ -461,7 +466,7 @@ namespace EStoreX.Core.Services.Account
                 if (!user.EmailConfirmed)
                 {
                     return ApiResponseFactory.Failure(
-                        "Please confirm your email before linking an external login.",
+                        _localizer["ConfirmEmailBeforeLinking"].Value,
                         403,
                         "email_not_confirmed"
                     );
@@ -471,7 +476,7 @@ namespace EStoreX.Core.Services.Account
                 if (!linkResult.Succeeded)
                 {
                     return ApiResponseFactory.Failure(
-                        "Failed to link external provider to existing account.",
+                        _localizer["FailedToLinkExternalProvider"].Value,
                         500,
                         linkResult.Errors.Select(e => e.Description).ToArray()
                     );
@@ -499,7 +504,7 @@ namespace EStoreX.Core.Services.Account
             if (!createResult.Succeeded)
             {
                 return ApiResponseFactory.Failure(
-                    "Failed to create account from external login.",
+                    _localizer["FailedToCreateAccountFromExternal"].Value,
                     500,
                     createResult.Errors.Select(e => e.Description).ToArray()
                 );
@@ -511,7 +516,7 @@ namespace EStoreX.Core.Services.Account
             if (!loginResult.Succeeded)
             {
                 return ApiResponseFactory.Failure(
-                    "Failed to link external login.",
+                    _localizer["FailedToLinkExternalLogin"].Value,
                     500,
                     loginResult.Errors.Select(e => e.Description).ToArray()
                 );
@@ -594,10 +599,8 @@ namespace EStoreX.Core.Services.Account
                 $"&token={Uri.EscapeDataString(token)}" +
                 $"&redirectTo={Uri.EscapeDataString(redirectUrl)}";
 
-            string html = EmailTemplateService.GetConfirmationEmailTemplate(confirmationLink);
-
-            var emailDTO = new EmailDTO(user.Email, "Confirm Your Email", html);
-
+            string html = EmailTemplateService.GetConfirmationEmailTemplate(confirmationLink, CultureInfo.CurrentUICulture.Name);
+            var emailDTO = new EmailDTO(user.Email, Res.Confirmation_Subject, html);
             await _emailSender.SendEmailAsync(emailDTO);
         }
 
@@ -615,7 +618,7 @@ namespace EStoreX.Core.Services.Account
             user.RefreshTokenExpirationDateTime = tokenResponse.RefreshTokenExpirationDateTime;
             await _userManager.UpdateAsync(user);
             tokenResponse.Success = true;
-            tokenResponse.Message = "Login successful.";
+            tokenResponse.Message = _localizer["LoginSuccessful"].Value;
             tokenResponse.StatusCode = 200;
             return tokenResponse;
         }
@@ -626,28 +629,28 @@ namespace EStoreX.Core.Services.Account
             var user = await _userManager.FindByIdAsync(userId);
 
             if (user == null)
-                return ApiResponseFactory.NotFound("User not found");
+                return ApiResponseFactory.NotFound(_localizer["UserNotFound"].Value);
 
             var deleted = await _userManager.DeleteAsync(user);
 
             if (!deleted.Succeeded)
-                return ApiResponseFactory.InternalServerError("Failed to delete account", deleted.Errors.Select(e => e.Description).ToList());
+                return ApiResponseFactory.InternalServerError(_localizer["FailedToDeleteAccount"].Value, deleted.Errors.Select(e => e.Description).ToList());
 
-            return ApiResponseFactory.Success("Account deleted successfully");
+            return ApiResponseFactory.Success(_localizer["AccountDeletedSuccessfully"].Value);
         }
 
         /// <inheritdoc/>
         public async Task<ApiResponse> ResendConfirmationEmailAsync(string email, string? apiKey = null)
         {
             if (string.IsNullOrEmpty(email))
-                return ApiResponseFactory.BadRequest("Email is required.");
+                return ApiResponseFactory.BadRequest(_localizer["EmailIsRequired"].Value);
 
             var user = await _userManager.FindByEmailAsync(email);
             if (user == null)
-                return ApiResponseFactory.NotFound("User not found.");
+                return ApiResponseFactory.NotFound(_localizer["UserNotFound"].Value);
 
             if (await _userManager.IsEmailConfirmedAsync(user))
-                return ApiResponseFactory.Conflict("Account already confirmed.");
+                return ApiResponseFactory.Conflict(_localizer["AccountAlreadyConfirmed"].Value);
 
             var tokenTimeStr = await _userManager.GetAuthenticationTokenAsync(user, "EmailConfirmation", "TokenTime");
             if (!string.IsNullOrEmpty(tokenTimeStr) && DateTimeOffset.TryParse(tokenTimeStr, out var tokenTime))
@@ -655,7 +658,7 @@ namespace EStoreX.Core.Services.Account
                 if (DateTimeOffset.UtcNow < tokenTime.AddMinutes(5))
                 {
                     return ApiResponseFactory.Failure(
-                        "Confirmation email already sent recently. Please wait before requesting again.",
+                        _localizer["ConfirmationEmailSentRecently"].Value,
                         StatusCodes.Status429TooManyRequests,
                         "TOO_MANY_REQUESTS"
                     );
@@ -669,7 +672,7 @@ namespace EStoreX.Core.Services.Account
 
             await SendEmail(user, apiKey);
 
-            return ApiResponseFactory.Success("Confirmation email resent successfully.");
+            return ApiResponseFactory.Success(_localizer["ConfirmationEmailResentSuccessfully"].Value);
         }
 
         //public async Task<ApiResponse> UploadUserPhotoAsync(Guid userId, IFormFile file)
@@ -714,17 +717,17 @@ namespace EStoreX.Core.Services.Account
                 .FirstOrDefaultAsync(u => u.Id == userId);
 
             if (user == null)
-                return ApiResponseFactory.NotFound("User not found.");
+                return ApiResponseFactory.NotFound(_localizer["UserNotFound"].Value);
 
             var file = dto.File;
             if (file == null || file.Length == 0)
-                return ApiResponseFactory.BadRequest("No file provided.");
+                return ApiResponseFactory.BadRequest(_localizer["NoFileProvided"].Value);
 
             if (!file.ContentType.StartsWith("image/"))
-                return ApiResponseFactory.BadRequest("Invalid image type.");
+                return ApiResponseFactory.BadRequest(_localizer["InvalidImageType"].Value);
 
             if (file.Length > 5 * 1024 * 1024)
-                return ApiResponseFactory.BadRequest("Image size exceeds limit.");
+                return ApiResponseFactory.BadRequest(_localizer["ImageSizeExceedsLimit"].Value);
 
             if (user.Photo != null)
             {
@@ -750,7 +753,7 @@ namespace EStoreX.Core.Services.Account
             await _unitOfWork.CompleteAsync();
             await _userManager.UpdateAsync(user);
 
-            return ApiResponseFactory.Success("User photo uploaded successfully.");
+            return ApiResponseFactory.Success(_localizer["UserPhotoUploadedSuccessfully"].Value);
         }
 
 
@@ -761,10 +764,10 @@ namespace EStoreX.Core.Services.Account
                 .FirstOrDefaultAsync(u => u.Id == userId);
 
             if (user == null)
-                return ApiResponseFactory.NotFound("User not found.");
+                return ApiResponseFactory.NotFound(_localizer["UserNotFound"].Value);
 
             if (user.Photo == null)
-                return ApiResponseFactory.BadRequest("User has no photo to delete.");
+                return ApiResponseFactory.BadRequest(_localizer["UserHasNoPhotoToDelete"].Value);
 
             _imageService.DeleteImageAsync(user.Photo.ImageName);
             await _unitOfWork.PhotoRepository.DeleteAsync(user.Photo.Id);
@@ -773,7 +776,7 @@ namespace EStoreX.Core.Services.Account
             await _unitOfWork.CompleteAsync();
             await _userManager.UpdateAsync(user);
 
-            return ApiResponseFactory.Success("User photo deleted successfully.");
+            return ApiResponseFactory.Success(_localizer["UserPhotoDeletedSuccessfully"].Value);
         }
 
 

@@ -110,10 +110,23 @@ namespace EStoreX.Core.Services.Account
             if (!string.IsNullOrWhiteSpace(request.ClientName))
                 client.ClientName = request.ClientName;
 
+            if(!string.IsNullOrWhiteSpace(request.OAuthCallbackUrl))
+                client.OAuthCallbackUrl = request.OAuthCallbackUrl;
+
+            if (!string.IsNullOrWhiteSpace(request.AccountActivationCallbackUrl))
+                client.AccountActivationCallbackUrl = request.AccountActivationCallbackUrl;
+
+            if (!string.IsNullOrWhiteSpace(request.PasswordResetCallbackUrl))
+                client.PasswordResetCallbackUrl = request.PasswordResetCallbackUrl;
+
+            if (!string.IsNullOrWhiteSpace(request.Email))
+                client.Email = request.Email;
+
             client.UpdatedAt = DateTime.UtcNow;
 
             await _clientRepository.UpdateAsync(client);
-            await _unitOfWork.CompleteAsync();
+
+            var res = await _unitOfWork.CompleteAsync();
 
             return true;
         }
