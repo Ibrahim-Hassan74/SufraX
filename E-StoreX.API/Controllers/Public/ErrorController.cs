@@ -1,7 +1,7 @@
 ﻿using E_StoreX.API.Helper;
 using Microsoft.AspNetCore.Mvc;
 
-namespace E_StoreX.API.Controllers.Public
+namespace EStoreX.API.Controllers.Public
 {
     /// <summary>
     /// Controller responsible for handling error responses.  

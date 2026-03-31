@@ -1,14 +1,21 @@
-﻿using EStoreX.Core.DTO.Common;
+using EStoreX.Core.DTO.Common;
 using Microsoft.AspNetCore.Mvc;
 using EStoreX.Core.Helper;
+using Microsoft.Extensions.Localization;
+using EStoreX.API.Filters;
 
-namespace E_StoreX.API.Controllers.Public
+namespace EStoreX.API.Controllers.Public
 {
     /// <summary>
     /// Controller for handling bug-related operations.
     /// </summary>
     public class BugController : CustomControllerBase
     {
+        private readonly IStringLocalizer<SharedResource> _localizer;
+        public BugController(IStringLocalizer<SharedResource> localizer)
+        {
+            _localizer = localizer;
+        }
         /// <summary>
         /// Returns a 500 Internal Server Error response.
         /// </summary>
@@ -16,7 +23,7 @@ namespace E_StoreX.API.Controllers.Public
         [HttpGet("error")]
         public ActionResult<ApiResponse> GetError()
         {
-            return ApiResponseFactory.InternalServerError("Internal Server Error");
+            return ApiResponseFactory.InternalServerError(_localizer["InternalServerError"].Value);
         }
 
         /// <summary>
@@ -26,7 +33,7 @@ namespace E_StoreX.API.Controllers.Public
         [HttpGet("not-found")]
         public ActionResult<ApiResponse> GetNotFound()
         {
-            return ApiResponseFactory.BadRequest("Resource not found");
+            return ApiResponseFactory.BadRequest(_localizer["ResourceNotFound"].Value);
         }
         ///  <summary>
         ///  Returns a 400 Bad Request response.
@@ -35,7 +42,7 @@ namespace E_StoreX.API.Controllers.Public
         [HttpGet("bad-request/{Id:guid}")]
         public ActionResult<ApiResponse> GetBadRequest(Guid Id)
         {
-            return ApiResponseFactory.BadRequest($"Bad Request for Id: {Id}");
+            return ApiResponseFactory.BadRequest(_localizer["BadRequestWithId", Id].Value);
         }
         ///  <summary>
         ///  Returns a 400 Bad Request response.

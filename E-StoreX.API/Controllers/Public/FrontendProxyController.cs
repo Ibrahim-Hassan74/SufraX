@@ -1,10 +1,12 @@
-﻿using Asp.Versioning;
+using Asp.Versioning;
 using EStoreX.Core.DTO.Account.Requests;
 using EStoreX.Core.DTO.Common;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
+using EStoreX.API.Filters;
 using System.Text.Json;
 
-namespace E_StoreX.API.Controllers.Public
+namespace EStoreX.API.Controllers.Public
 {
     /// <summary>
     /// Controller that acts as a proxy between the frontend and backend for password reset functionality.
@@ -21,6 +23,7 @@ namespace E_StoreX.API.Controllers.Public
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IConfiguration _configuration;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IStringLocalizer<SharedResource> _localizer;
         /// <summary>
         /// Initializes a new instance of the <see cref="FrontendProxyController"/> class.
         /// </summary>
@@ -34,11 +37,13 @@ namespace E_StoreX.API.Controllers.Public
         public FrontendProxyController(
             IHttpClientFactory httpClientFactory,
             IConfiguration configuration,
-            IHttpContextAccessor httpContextAccessor)
+            IHttpContextAccessor httpContextAccessor,
+            IStringLocalizer<SharedResource> localizer)
         {
             _httpClientFactory = httpClientFactory;
             _configuration = configuration;
             _httpContextAccessor = httpContextAccessor;
+            _localizer = localizer;
         }
         /// <summary>
         /// Acts as a proxy endpoint that forwards a password reset request from the frontend to the backend API.
@@ -64,7 +69,7 @@ namespace E_StoreX.API.Controllers.Public
 
             var httpContext = _httpContextAccessor.HttpContext;
             if (httpContext == null)
-                return StatusCode(StatusCodes.Status500InternalServerError, "Unable to determine host information.");
+                return StatusCode(StatusCodes.Status500InternalServerError, _localizer["HostInfoUnavailable"].Value);
 
             var requestUrl = httpContext.Request;
             var baseUrl = $"{requestUrl.Scheme}://{requestUrl.Host.Value}";
@@ -110,7 +115,7 @@ namespace E_StoreX.API.Controllers.Public
 
             var httpContext = _httpContextAccessor.HttpContext;
             if (httpContext == null)
-                return StatusCode(StatusCodes.Status500InternalServerError, "Unable to determine host information.");
+                return StatusCode(StatusCodes.Status500InternalServerError, _localizer["HostInfoUnavailable"].Value);
 
             var baseUrl = $"{httpContext.Request.Scheme}://{httpContext.Request.Host.Value}";
             var fullBaseUrl = $"{baseUrl}/{apiPath}".TrimEnd('/');
@@ -203,7 +208,7 @@ namespace E_StoreX.API.Controllers.Public
 
             var httpContext = _httpContextAccessor.HttpContext;
             if (httpContext == null)
-                return StatusCode(StatusCodes.Status500InternalServerError, "No HttpContext");
+                return StatusCode(StatusCodes.Status500InternalServerError, _localizer["NoHttpContext"].Value);
 
             var baseUrl = $"{httpContext.Request.Scheme}://{httpContext.Request.Host.Value}";
             var fullApiUrl = $"{baseUrl.TrimEnd('/')}/{loginPath.TrimStart('/')}";
@@ -237,7 +242,7 @@ namespace E_StoreX.API.Controllers.Public
                 Expires = loginResponse.Expiration
             });
 
-            return Ok(new { message = "Login successful", user = loginResponse.UserName, success = loginResponse.Success });
+            return Ok(new { message = _localizer["LoginSuccess"].Value, user = loginResponse.UserName, success = loginResponse.Success });
         }
 
 
