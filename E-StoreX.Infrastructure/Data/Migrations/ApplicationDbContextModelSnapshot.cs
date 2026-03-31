@@ -79,6 +79,9 @@ namespace EStoreX.Infrastructure.Migrations
                     b.Property<string>("ClientName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
@@ -115,14 +118,19 @@ namespace EStoreX.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("NameAr")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("NameEn")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name")
+                    b.HasIndex("NameEn")
                         .IsUnique();
 
                     b.ToTable("Brands");
@@ -134,11 +142,20 @@ namespace EStoreX.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Description")
+                    b.Property<string>("DescriptionAr")
                         .HasMaxLength(300)
                         .HasColumnType("nvarchar(300)");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("DescriptionEn")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<string>("NameAr")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("NameEn")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
@@ -264,7 +281,12 @@ namespace EStoreX.Infrastructure.Migrations
                     b.Property<Guid>("CategoryId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Description")
+                    b.Property<string>("DescriptionAr")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("DescriptionEn")
                         .IsRequired()
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
@@ -274,7 +296,12 @@ namespace EStoreX.Infrastructure.Migrations
                         .HasColumnType("bit")
                         .HasDefaultValue(false);
 
-                    b.Property<string>("Name")
+                    b.Property<string>("NameAr")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("NameEn")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
@@ -330,11 +357,19 @@ namespace EStoreX.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Description")
+                    b.Property<string>("DescriptionAr")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("DescriptionEn")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NameAr")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NameEn")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -344,32 +379,6 @@ namespace EStoreX.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("DeliveryMethods");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("f5c2a7b1-4e0e-4a66-8c7a-7c9d50f9e111"),
-                            DeliveryTime = "1-2 Days",
-                            Description = "Fast delivery within 1-2 days",
-                            Name = "Fast",
-                            Price = 50m
-                        },
-                        new
-                        {
-                            Id = new Guid("d9372a1e-e6cb-4d1a-9476-1f52f9c8c222"),
-                            DeliveryTime = "3-5 Days",
-                            Description = "Standard delivery within 3-5 days",
-                            Name = "Standard",
-                            Price = 20m
-                        },
-                        new
-                        {
-                            Id = new Guid("6f2d385c-9b0b-4f93-aaf6-3c62d6c1d333"),
-                            DeliveryTime = "6-8 Days",
-                            Description = "Economy delivery within 6-8 days",
-                            Name = "Economy",
-                            Price = 10m
-                        });
                 });
 
             modelBuilder.Entity("EStoreX.Core.Domain.Entities.Orders.Order", b =>
@@ -436,7 +445,11 @@ namespace EStoreX.Infrastructure.Migrations
                     b.Property<Guid>("ProductItemId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("ProductName")
+                    b.Property<string>("ProductNameAr")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ProductNameEn")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
