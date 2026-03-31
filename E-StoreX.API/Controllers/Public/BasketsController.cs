@@ -1,14 +1,17 @@
 ﻿using Asp.Versioning;
 using Domain.Entities.Baskets;
+using EStoreX.API.Filters;
 using EStoreX.Core.DTO.Basket;
 using EStoreX.Core.DTO.Common;
 using EStoreX.Core.Helper;
 using EStoreX.Core.ServiceContracts.Basket;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
+using System.Globalization;
 using System.Security.Claims;
 
-namespace E_StoreX.API.Controllers.Public
+namespace EStoreX.API.Controllers.Public
 {
     /// <summary>
     /// API controller for managing customer baskets.
@@ -17,13 +20,16 @@ namespace E_StoreX.API.Controllers.Public
     public class BasketsController : CustomControllerBase
     {
         private readonly IBasketService _basketService;
+        private readonly IStringLocalizer<SharedResource> _localizer;
         /// <summary>
         /// Initializes a new instance of the <see cref="BasketsController"/> class.
         /// </summary>
         /// <param name="basketService">basket service</param>
-        public BasketsController(IBasketService basketService)
+        /// <param name="localizer">localizer</param>
+        public BasketsController(IBasketService basketService, IStringLocalizer<SharedResource> localizer)
         {
             _basketService = basketService;
+            _localizer = localizer;
         }
 
         /// <summary>
@@ -51,7 +57,8 @@ namespace E_StoreX.API.Controllers.Public
         public async Task<IActionResult> GetBasket(string id)
         {
             if (!Guid.TryParse(id, out _))
-                return BadRequest(ApiResponseFactory.BadRequest("Invalid Id format"));
+                return BadRequest(ApiResponseFactory.BadRequest(_localizer["InvalidIdFormat"].Value));
+
             var basket = await _basketService.GetBasketAsync(id);
             return Ok(basket);
         }
@@ -79,11 +86,13 @@ namespace E_StoreX.API.Controllers.Public
         public async Task<IActionResult> AddOrUpdateBasket([FromBody] BasketAddRequest basket)
         {
             if (!Guid.TryParse(basket.BasketId, out _))
-                return BadRequest(ApiResponseFactory.BadRequest("Invalid Id format"));
+                return BadRequest(ApiResponseFactory.BadRequest(_localizer["InvalidIdFormat"]));
 
             var updatedBasket = await _basketService.AddItemToBasketAsync(basket);
+
             if (updatedBasket == null)
-                return BadRequest(ApiResponseFactory.BadRequest("No valid items to update the basket"));
+                return BadRequest(ApiResponseFactory.BadRequest(_localizer["NoValidItems"]));
+
             return Ok(updatedBasket);
         }
 
@@ -114,12 +123,13 @@ namespace E_StoreX.API.Controllers.Public
         public async Task<IActionResult> DeleteBasket(string id)
         {
             if (!Guid.TryParse(id, out _))
-                return BadRequest(ApiResponseFactory.BadRequest("Invalid Id format"));
+                return BadRequest(ApiResponseFactory.BadRequest(_localizer["InvalidIdFormat"]));
 
             var result = await _basketService.DeleteBasketAsync(id);
+
             return result
-                ? Ok(ApiResponseFactory.Success("Item Deleted"))
-                : NotFound(ApiResponseFactory.NotFound("Basket not found or already deleted"));
+                ? Ok(ApiResponseFactory.Success(_localizer["ItemDeleted"]))
+                : NotFound(ApiResponseFactory.NotFound(_localizer["BasketNotFoundOrDeleted"]));
         }
         /// <summary>
         /// Merges the guest basket (created before login) with the authenticated user's basket.
@@ -148,11 +158,12 @@ namespace E_StoreX.API.Controllers.Public
         public async Task<IActionResult> MergeBasket(string guestId)
         {
             if (!Guid.TryParse(guestId, out _))
-                return BadRequest(ApiResponseFactory.BadRequest("Invalid Id format"));
+                return BadRequest(ApiResponseFactory.BadRequest(_localizer["InvalidIdFormat"]));
 
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
             if (string.IsNullOrEmpty(userId))
-                return Unauthorized(ApiResponseFactory.Unauthorized("User not logged in"));
+                return Unauthorized(ApiResponseFactory.Unauthorized(_localizer["UserNotLoggedIn"]));
 
             var mergedBasket = await _basketService.MergeBasketsAsync(guestId, userId);
 
@@ -188,11 +199,12 @@ namespace E_StoreX.API.Controllers.Public
         public async Task<IActionResult> DecreaseItemQuantity(string basketId, Guid productId)
         {
             if (!Guid.TryParse(basketId, out _))
-                return BadRequest(ApiResponseFactory.BadRequest("Invalid Basket Id format"));
+                return BadRequest(ApiResponseFactory.BadRequest(_localizer["InvalidBasketIdFormat"]));
 
             var updatedBasket = await _basketService.DecreaseItemQuantityAsync(basketId, productId);
+
             if (updatedBasket == null)
-                return NotFound(ApiResponseFactory.NotFound("Basket or item not found"));
+                return NotFound(ApiResponseFactory.NotFound(_localizer["BasketOrItemNotFound"]));
 
             return Ok(updatedBasket);
         }
@@ -225,11 +237,12 @@ namespace E_StoreX.API.Controllers.Public
         public async Task<IActionResult> RemoveItemFromBasket(string basketId, Guid productId)
         {
             if (!Guid.TryParse(basketId, out _))
-                return BadRequest(ApiResponseFactory.BadRequest("Invalid Basket Id format"));
+                return BadRequest(ApiResponseFactory.BadRequest(_localizer["InvalidBasketIdFormat"]));
 
             var updatedBasket = await _basketService.RemoveItemAsync(basketId, productId);
+
             if (updatedBasket == null)
-                return NotFound(ApiResponseFactory.NotFound("Basket or item not found"));
+                return NotFound(ApiResponseFactory.NotFound(_localizer["BasketOrItemNotFound"]));
 
             return Ok(updatedBasket);
         }
@@ -249,11 +262,12 @@ namespace E_StoreX.API.Controllers.Public
         public async Task<IActionResult> IncreaseItemQuantity(string basketId, Guid productId)
         {
             if (!Guid.TryParse(basketId, out _))
-                return BadRequest(ApiResponseFactory.BadRequest("Invalid Basket Id format"));
+                return BadRequest(ApiResponseFactory.BadRequest(_localizer["InvalidBasketIdFormat"]));
 
             var updatedBasket = await _basketService.IncreaseItemQuantityAsync(basketId, productId);
+
             if (updatedBasket == null)
-                return NotFound(ApiResponseFactory.NotFound("Basket or item not found"));
+                return NotFound(ApiResponseFactory.NotFound(_localizer["BasketOrItemNotFound"]));
 
             return Ok(updatedBasket);
         }
@@ -281,8 +295,9 @@ namespace E_StoreX.API.Controllers.Public
         public async Task<IActionResult> ApplyDiscount(string basketId, string code)
         {
             var basket = await _basketService.ApplyDiscountAsync(basketId, code);
+
             if (basket == null)
-                return NotFound(ApiResponseFactory.NotFound("Basket or Discount not found"));
+                return NotFound(ApiResponseFactory.NotFound(_localizer["BasketOrDiscountNotFound"]));
 
             return Ok(basket);
         }

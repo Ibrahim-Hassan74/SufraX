@@ -1,13 +1,15 @@
-﻿using Asp.Versioning;
+using Asp.Versioning;
 using EStoreX.Core.DTO.Common;
 using EStoreX.Core.DTO.Products.Responses;
 using EStoreX.Core.Helper;
 using EStoreX.Core.ServiceContracts.Favourites;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
+using EStoreX.API.Filters;
 using System.Security.Claims;
 
-namespace E_StoreX.API.Controllers.Public
+namespace EStoreX.API.Controllers.Public
 {
     /// <summary>
     /// Controller responsible for managing user's favourite products.
@@ -18,14 +20,17 @@ namespace E_StoreX.API.Controllers.Public
     public class FavouritesController : CustomControllerBase
     {
         private readonly IFavouriteService _favouriteService;
+        private readonly IStringLocalizer<SharedResource> _localizer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FavouritesController"/> class.
         /// </summary>
         /// <param name="favouriteService">The service that handles favourite-related operations.</param>
-        public FavouritesController(IFavouriteService favouriteService)
+        /// <param name="localizer">localizer for shared resources.</param>
+        public FavouritesController(IFavouriteService favouriteService, IStringLocalizer<SharedResource> localizer)
         {
             _favouriteService = favouriteService;
+            _localizer = localizer;
         }
 
         /// <summary>
@@ -49,9 +54,9 @@ namespace E_StoreX.API.Controllers.Public
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (string.IsNullOrEmpty(userId))
-                return Unauthorized(ApiResponseFactory.Unauthorized("User not found"));
-            if(!Guid.TryParse(userId, out _))
-                return Unauthorized(ApiResponseFactory.Unauthorized("Invalid user identifier"));
+                return Unauthorized(ApiResponseFactory.Unauthorized(_localizer["UserNotFound"].Value));
+            if (!Guid.TryParse(userId, out _))
+                return Unauthorized(ApiResponseFactory.Unauthorized(_localizer["InvalidUserIdentifier"].Value));
             var userIdGuid = Guid.Parse(userId);
             var response = await _favouriteService.AddToFavouriteAsync(userIdGuid, productId);
             return StatusCode(response.StatusCode, response);

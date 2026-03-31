@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Domain.Entities.Baskets;
 using Domain.Entities.Product;
 using EStoreX.Core.DTO.Basket;
@@ -6,6 +6,7 @@ using EStoreX.Core.Enums;
 using EStoreX.Core.RepositoryContracts.Common;
 using EStoreX.Core.ServiceContracts.Basket;
 using EStoreX.Core.Services.Common;
+using Microsoft.Extensions.Localization;
 using Org.BouncyCastle.Bcpg;
 
 namespace EStoreX.Core.Services.Basket
@@ -16,8 +17,10 @@ namespace EStoreX.Core.Services.Basket
     public class BasketService : BaseService, IBasketService
     {
 
-        public BasketService(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
+        private readonly IStringLocalizer<BasketService> _localizer;
+        public BasketService(IUnitOfWork unitOfWork, IMapper mapper, IStringLocalizer<BasketService> localizer) : base(unitOfWork, mapper)
         {
+            _localizer = localizer;
         }
 
         /// <inheritdoc/>
@@ -43,9 +46,9 @@ namespace EStoreX.Core.Services.Basket
         //        basketItems.Add(new BasketItem()
         //        {
         //            Id = item.Id,
-        //            Name = product.Name,
+        //            NameEn = product.NameEn,
         //            Price = product.NewPrice,
-        //            Description = product.Description,
+        //            DescriptionEn = product.DescriptionEn,
         //            Qunatity = item.Qunatity,
         //            Category = item.Category,
         //            Image = item.Image,
@@ -226,9 +229,9 @@ namespace EStoreX.Core.Services.Basket
             var newItem = new BasketItem
             {
                 Id = request.BasketItem.Id,
-                Name = product.Name,
+                Name = product.NameEn,
                 Price = product.NewPrice,
-                Description = product.Description,
+                Description = product.DescriptionEn,
                 Qunatity = request.BasketItem.Qunatity,
                 Category = request.BasketItem.Category,
                 Image = request.BasketItem.Image,

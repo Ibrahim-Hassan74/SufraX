@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Domain.Entities.Product;
 using EStoreX.Core.Domain.Entities.Favourites;
 using EStoreX.Core.DTO.Common;
@@ -8,16 +8,19 @@ using EStoreX.Core.RepositoryContracts.Common;
 using EStoreX.Core.RepositoryContracts.Favourites;
 using EStoreX.Core.ServiceContracts.Favourites;
 using EStoreX.Core.Services.Common;
+using Microsoft.Extensions.Localization;
 
 namespace EStoreX.Core.Services.Favourites
 {
     public class FavouriteService : BaseService, IFavouriteService
     {
         private readonly IFavouriteRepository _favouriteRepository;
+        private readonly IStringLocalizer<FavouriteService> _localizer;
 
-        public FavouriteService(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
+        public FavouriteService(IUnitOfWork unitOfWork, IMapper mapper, IStringLocalizer<FavouriteService> localizer) : base(unitOfWork, mapper)
         {
             _favouriteRepository = _unitOfWork.FavouriteRepository;
+            _localizer = localizer;
         }
         /// <inheritdoc/>
         public async Task<ApiResponse> AddToFavouriteAsync(Guid userId, Guid productId)
@@ -29,10 +32,10 @@ namespace EStoreX.Core.Services.Favourites
             };
 
             if (await _favouriteRepository.IsFavouriteAsync(favourite))
-                return ApiResponseFactory.Conflict("Product already in favourites");
+                return ApiResponseFactory.Conflict(_localizer["ProductAlreadyInFavourites"].Value);
 
             await _favouriteRepository.AddToFavouriteAsync(favourite);
-            return ApiResponseFactory.Success("Product added to favourites successfully");
+            return ApiResponseFactory.Success(_localizer["ProductAddedToFavourites"].Value);
         }
 
         /// <inheritdoc/>
@@ -45,14 +48,14 @@ namespace EStoreX.Core.Services.Favourites
             };
 
             if (!await _favouriteRepository.IsFavouriteAsync(favourite))
-                return ApiResponseFactory.NotFound("Product not found in favourites");
+                return ApiResponseFactory.NotFound(_localizer["ProductNotFoundInFavourites"].Value);
 
             var removed = await _favouriteRepository.RemoveFromFavouriteAsync(favourite);
 
             if (!removed)
-                return ApiResponseFactory.InternalServerError("Failed to remove product from favourites");
+                return ApiResponseFactory.InternalServerError(_localizer["FailedToRemoveFromFavourites"].Value);
 
-            return ApiResponseFactory.Success("Product removed from favourites successfully");
+            return ApiResponseFactory.Success(_localizer["ProductRemovedFromFavourites"].Value);
         }
 
         /// <inheritdoc/>
