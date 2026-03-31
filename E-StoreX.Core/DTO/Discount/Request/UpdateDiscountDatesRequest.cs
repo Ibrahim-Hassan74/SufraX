@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace EStoreX.Core.DTO.Discount.Request
 {
@@ -7,7 +7,7 @@ namespace EStoreX.Core.DTO.Discount.Request
         /// <summary>
         /// The new start date of the discount.
         /// </summary>
-        [Required]
+        [Required(ErrorMessageResourceName = "RequiredStartDate", ErrorMessageResourceType = typeof(EStoreX.Core.Resources.DTO.Discount.DiscountValidationMessages))]
         public DateTime StartDate { get; set; }
 
         /// <summary>

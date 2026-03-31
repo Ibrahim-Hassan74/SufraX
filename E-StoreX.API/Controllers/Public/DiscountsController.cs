@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace E_StoreX.API.Controllers.Public
+namespace EStoreX.API.Controllers.Public
 {
     /// <summary>
     /// Provides endpoints for clients to apply and validate discount codes.

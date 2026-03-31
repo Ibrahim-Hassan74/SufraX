@@ -1,4 +1,4 @@
-﻿using Asp.Versioning;
+using Asp.Versioning;
 using EStoreX.Core.DTO.Common;
 using EStoreX.Core.DTO.Discount.Request;
 using EStoreX.Core.DTO.Discounts.Responses;
@@ -7,8 +7,10 @@ using EStoreX.Core.Helper;
 using EStoreX.Core.ServiceContracts.Common;
 using EStoreX.Core.ServiceContracts.Discount;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
+using EStoreX.API.Filters;
 
-namespace E_StoreX.API.Controllers.Admin
+namespace EStoreX.API.Controllers.Admin
 {
     /// <summary>
     /// Provides endpoints for managing discounts in the system.
@@ -19,16 +21,20 @@ namespace E_StoreX.API.Controllers.Admin
     {
         private readonly IDiscountService _discountService;
         private readonly IExportService _exportService;
+        private readonly IStringLocalizer<SharedResource> _localizer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DiscountsController"/> class.
         /// </summary>
         /// <param name="discountService">Service responsible for managing discount operations, including creation, update, deletion, and validation.</param>
         /// <param name="exportService">Service responsible for exporting discount data in various formats (CSV, Excel, PDF).</param>
-        public DiscountsController(IDiscountService discountService, IExportService exportService)
+        /// <param name="exportService">Service responsible for exporting discount data in various formats (CSV, Excel, PDF).</param>
+        /// <param name="localizer">localizer for shared resources.</param>
+        public DiscountsController(IDiscountService discountService, IExportService exportService, IStringLocalizer<SharedResource> localizer)
         {
             _discountService = discountService;
             _exportService = exportService;
+            _localizer = localizer;
         }
 
         /// <summary>
@@ -354,7 +360,7 @@ namespace E_StoreX.API.Controllers.Admin
         {
             var discounts = await _discountService.GetActiveDiscountsAsync() as ApiResponseWithData<List<DiscountResponse>>;
             if (discounts is null) 
-                return NotFound(ApiResponseFactory.NotFound());
+                return NotFound(ApiResponseFactory.NotFound(_localizer["DiscountNotFound"].Value));
             return ExportDiscountsFile(discounts.Data, type, "active");
         }
 
@@ -416,7 +422,7 @@ namespace E_StoreX.API.Controllers.Admin
                 ExportType.Csv => File(_exportService.ExportToCsv(discounts), "text/csv", $"discounts_{suffix}.csv"),
                 ExportType.Excel => File(_exportService.ExportToExcel(discounts), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"discounts_{suffix}.xlsx"),
                 ExportType.Pdf => File(_exportService.ExportToPdf(discounts), "application/pdf", $"discounts_{suffix}.pdf"),
-                _ => BadRequest(ApiResponseFactory.BadRequest("Unsupported export type"))
+                _ => BadRequest(ApiResponseFactory.BadRequest(_localizer["UnsupportedExportType"].Value))
             };
         }
     }
