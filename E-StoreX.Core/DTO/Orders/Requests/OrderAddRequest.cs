@@ -1,16 +1,16 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 namespace EStoreX.Core.DTO.Orders.Requests
 {
     public class OrderAddRequest
     {
-        [Required(ErrorMessage = "Delivery method ID is required.")]
+        [Required(ErrorMessageResourceName = "RequiredDeliveryMethodId", ErrorMessageResourceType = typeof(EStoreX.Core.Resources.DTO.Orders.OrderValidationMessages))]
         public Guid DeliveryMethodId { get; set; }
 
-        [Required(ErrorMessage = "Basket ID is required.")]
-        [StringLength(100, ErrorMessage = "Basket ID cannot exceed 100 characters.")]
+        [Required(ErrorMessageResourceName = "RequiredBasketId", ErrorMessageResourceType = typeof(EStoreX.Core.Resources.DTO.Orders.OrderValidationMessages))]
+        [StringLength(100, ErrorMessageResourceName = "MaxLengthBasketId", ErrorMessageResourceType = typeof(EStoreX.Core.Resources.DTO.Orders.OrderValidationMessages))]
         public string BasketId { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "Shipping address is required.")]
+        [Required(ErrorMessageResourceName = "RequiredShippingAddress", ErrorMessageResourceType = typeof(EStoreX.Core.Resources.DTO.Orders.OrderValidationMessages))]
         public ShippingAddressDTO ShippingAddress { get; set; }
     }
 }

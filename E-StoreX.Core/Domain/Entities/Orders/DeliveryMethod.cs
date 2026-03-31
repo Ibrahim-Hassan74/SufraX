@@ -4,18 +4,22 @@ namespace EStoreX.Core.Domain.Entities.Orders
 {
     public class DeliveryMethod : BaseEntity<Guid>
     {
-        public DeliveryMethod(string name, string description, decimal price, string deliveryTime)
+        public DeliveryMethod(string nameEn, string descriptionEn, string nameAr, string descriptionAr, decimal price, string deliveryTime)
         {
-            Name = name;
-            Description = description;
+            NameEn = nameEn;
+            DescriptionEn = descriptionEn;
+            NameAr = nameAr;
+            DescriptionAr = descriptionAr;
             Price = price;
             DeliveryTime = deliveryTime;
         }
 
         public DeliveryMethod() { }
 
-        public string Name { get; set; }
-        public string Description { get; set; }
+        public string NameEn { get; set; }
+        public string DescriptionEn { get; set; }
+        public string NameAr { get; set; }
+        public string DescriptionAr { get; set; }
         public decimal Price { get; set; }
         public string DeliveryTime { get; set; }
     }
