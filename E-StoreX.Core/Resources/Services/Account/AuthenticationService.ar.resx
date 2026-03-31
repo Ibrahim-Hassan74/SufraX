@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="InvalidRegistrationData" xml:space="preserve">
+    <value>بيانات التسجيل غير صالحة.</value>
+  </data>
+  <data name="RegistrationDataRequired" xml:space="preserve">
+    <value>لا يمكن أن تكون بيانات التسجيل فارغة.</value>
+  </data>
+  <data name="EmailAlreadyRegistered" xml:space="preserve">
+    <value>البريد الإلكتروني مسجل بالفعل.</value>
+  </data>
+  <data name="EmailAlreadyInUse" xml:space="preserve">
+    <value>هذا البريد الإلكتروني قيد الاستخدام بالفعل.</value>
+  </data>
+  <data name="RegistrationFailed" xml:space="preserve">
+    <value>فشل التسجيل.</value>
+  </data>
+  <data name="RegistrationSuccessfulConfirmEmail" xml:space="preserve">
+    <value>تم التسجيل بنجاح. يرجى مراجعة بريدك الإلكتروني لتأكيد حسابك.</value>
+  </data>
+  <data name="InvalidLoginData" xml:space="preserve">
+    <value>بيانات تسجيل الدخول غير صالحة.</value>
+  </data>
+  <data name="LoginDataRequired" xml:space="preserve">
+    <value>لا يمكن أن تكون بيانات تسجيل الدخول فارغة.</value>
+  </data>
+  <data name="UserNotFound" xml:space="preserve">
+    <value>المستخدم غير موجود.</value>
+  </data>
+  <data name="EmailNotFound" xml:space="preserve">
+    <value>لا يوجد حساب مرتبط بهذا البريد الإلكتروني.</value>
+  </data>
+  <data name="EmailNotConfirmed" xml:space="preserve">
+    <value>البريد الإلكتروني غير مؤكد.</value>
+  </data>
+  <data name="ConfirmEmailBeforeLogin" xml:space="preserve">
+    <value>يجب عليك تأكيد بريدك الإلكتروني قبل تسجيل الدخول.</value>
+  </data>
+  <data name="AccountLockedOut" xml:space="preserve">
+    <value>حسابك مغلق مؤقتًا بسبب محاولات تسجيل دخول فاشلة متعددة. يرجى المحاولة مرة أخرى لاحقًا.</value>
+  </data>
+  <data name="LoginNotAllowed" xml:space="preserve">
+    <value>المستخدم غير مسموح له بتسجيل الدخول.</value>
+  </data>
+  <data name="InvalidLoginAttempt" xml:space="preserve">
+    <value>محاولة تسجيل دخول غير صالحة.</value>
+  </data>
+  <data name="IncorrectEmailOrPassword" xml:space="preserve">
+    <value>البريد الإلكتروني أو كلمة المرور غير صحيحة.</value>
+  </data>
+  <data name="UserIdNotFound" xml:space="preserve">
+    <value>المستخدم صاحب المعرف المقدم غير موجود.</value>
+  </data>
+  <data name="EmailAlreadyConfirmed" xml:space="preserve">
+    <value>تم تأكيد البريد الإلكتروني بالفعل.</value>
+  </data>
+  <data name="InvalidConfirmationToken" xml:space="preserve">
+    <value>رمز التأكيد غير صالح أو منتهي الصلاحية.</value>
+  </data>
+  <data name="TokenMismatch" xml:space="preserve">
+    <value>عدم تطابق في الرمز أو أنه تم استخدامه بالفعل.</value>
+  </data>
+  <data name="FailedToUpdateUserAfterConfirmation" xml:space="preserve">
+    <value>فشل تحديث المستخدم بعد التأكيد.</value>
+  </data>
+  <data name="EmailConfirmedSuccessfully" xml:space="preserve">
+    <value>تم تأكيد البريد الإلكتروني بنجاح.</value>
+  </data>
+  <data name="FailedToConfirmEmail" xml:space="preserve">
+    <value>فشل تأكيد البريد الإلكتروني.</value>
+  </data>
+  <data name="IncorrectEmail" xml:space="preserve">
+    <value>بريد إلكتروني غير صحيح.</value>
+  </data>
+  <data name="ConfirmEmailBeforeReset" xml:space="preserve">
+    <value>يرجى تأكيد بريدك الإلكتروني قبل إعادة تعيين كلمة المرور.</value>
+  </data>
+  <data name="PasswordResetSentRecently" xml:space="preserve">
+    <value>تم إرسال بريد إلكتروني لإعادة تعيين كلمة المرور مؤخرًا. يرجى الانتظار قبل المحاولة مرة أخرى.</value>
+  </data>
+  <data name="ResetAlreadyRequested" xml:space="preserve">
+    <value>تم طلب إعادة التعيين بالفعل.</value>
+  </data>
+  <data name="PasswordResetLinkSent" xml:space="preserve">
+    <value>تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك الإلكتروني.</value>
+  </data>
+  <data name="InvalidVerificationRequest" xml:space="preserve">
+    <value>طلب تحقق غير صالح.</value>
+  </data>
+  <data name="UserIdAndTokenRequired" xml:space="preserve">
+    <value>معرف المستخدم والرمز مطلوبان.</value>
+  </data>
+  <data name="NoAccountForUserId" xml:space="preserve">
+    <value>لا يوجد حساب مرتبط بمعرف المستخدم المقدم.</value>
+  </data>
+  <data name="InvalidTokenFormat" xml:space="preserve">
+    <value>تنسيق الرمز غير صالح.</value>
+  </data>
+  <data name="TokenFormatInvalid" xml:space="preserve">
+    <value>تنسيق الرمز غير صالح أو تالف.</value>
+  </data>
+  <data name="InvalidOrExpiredToken" xml:space="preserve">
+    <value>الرمز غير صالح أو منتهي الصلاحية.</value>
+  </data>
+  <data name="TokenInvalidOrUsed" xml:space="preserve">
+    <value>الرمز غير صالح أو تم استخدامه بالفعل.</value>
+  </data>
+  <data name="TokenValidationFailed" xml:space="preserve">
+    <value>فشل التحقق من صحة الرمز.</value>
+  </data>
+  <data name="TokenTimestampInvalid" xml:space="preserve">
+    <value>الطابع الزمني للرمز غير صالح.</value>
+  </data>
+  <data name="ResetPasswordLinkExpired" xml:space="preserve">
+    <value>انتهت صلاحية رابط إعادة تعيين كلمة المرور.</value>
+  </data>
+  <data name="ResetPasswordTokenValid" xml:space="preserve">
+    <value>رمز إعادة تعيين كلمة المرور صالح.</value>
+  </data>
+  <data name="InvalidResetPasswordData" xml:space="preserve">
+    <value>بيانات إعادة تعيين كلمة المرور غير صالحة.</value>
+  </data>
+  <data name="RequestBodyRequired" xml:space="preserve">
+    <value>لا يمكن أن يكون جسم الطلب فارغًا.</value>
+  </data>
+  <data name="FailedToResetPassword" xml:space="preserve">
+    <value>فشل إعادة تعيين كلمة المرور.</value>
+  </data>
+  <data name="PasswordResetSuccessful" xml:space="preserve">
+    <value>تم إعادة تعيين كلمة المرور بنجاح.</value>
+  </data>
+  <data name="InvalidTokenModel" xml:space="preserve">
+    <value>نموذج الرمز غير صالح.</value>
+  </data>
+  <data name="TokenAndRefreshRequired" xml:space="preserve">
+    <value>الرمز ورمز التحديث مطلوبان.</value>
+  </data>
+  <data name="InvalidToken" xml:space="preserve">
+    <value>رمز غير صالح.</value>
+  </data>
+  <data name="AccessTokenInvalid" xml:space="preserve">
+    <value>رمز الوصول غير صالح.</value>
+  </data>
+  <data name="EmailClaimMissing" xml:space="preserve">
+    <value>مطالبة البريد الإلكتروني مفقودة في الرمز.</value>
+  </data>
+  <data name="InvalidRefreshToken" xml:space="preserve">
+    <value>رمز تحديث غير صالح.</value>
+  </data>
+  <data name="RefreshTokenInvalidOrExpired" xml:space="preserve">
+    <value>رمز التحديث غير صالح أو منتهي الصلاحية.</value>
+  </data>
+  <data name="TokenRefreshedSuccessfully" xml:space="preserve">
+    <value>تم تحديث الرمز بنجاح.</value>
+  </data>
+  <data name="LoggedOutSuccessfully" xml:space="preserve">
+    <value>تم تسجيل الخروج بنجاح.</value>
+  </data>
+  <data name="InvalidUpdateData" xml:space="preserve">
+    <value>بيانات التحديث غير صالحة.</value>
+  </data>
+  <data name="UpdateDataRequired" xml:space="preserve">
+    <value>لا يمكن أن تكون بيانات التحديث فارغة.</value>
+  </data>
+  <data name="FailedToUpdateProfile" xml:space="preserve">
+    <value>فشل تحديث الملف الشخصي.</value>
+  </data>
+  <data name="FailedToChangePassword" xml:space="preserve">
+    <value>فشل تغيير كلمة المرور.</value>
+  </data>
+  <data name="ProfileUpdatedSuccessfully" xml:space="preserve">
+    <value>تم تحديث الملف الشخصي بنجاح.</value>
+  </data>
+  <data name="ExternalProviderError" xml:space="preserve">
+    <value>خطأ في المزود الخارجي: {0}</value>
+  </data>
+  <data name="FailedToLoadExternalLoginInfo" xml:space="preserve">
+    <value>فشل تحميل معلومات تسجيل الدخول الخارجية.</value>
+  </data>
+  <data name="ExternalProviderMissingIdentityData" xml:space="preserve">
+    <value>لم يقم المزود الخارجي بتوفير البريد الإلكتروني أو اسم المستخدم.</value>
+  </data>
+  <data name="ConfirmEmailBeforeLinking" xml:space="preserve">
+    <value>يرجى تأكيد بريدك الإلكتروني قبل ربط تسجيل دخول خارجي.</value>
+  </data>
+  <data name="FailedToLinkExternalProvider" xml:space="preserve">
+    <value>فشل ربط المزود الخارجي بالحساب الحالي.</value>
+  </data>
+  <data name="FailedToCreateAccountFromExternal" xml:space="preserve">
+    <value>فشل إنشاء حساب من تسجيل دخول خارجي.</value>
+  </data>
+  <data name="FailedToLinkExternalLogin" xml:space="preserve">
+    <value>فشل ربط تسجيل الدخول الخارجي.</value>
+  </data>
+  <data name="AccountDeletedSuccessfully" xml:space="preserve">
+    <value>تم حذف الحساب بنجاح.</value>
+  </data>
+  <data name="FailedToDeleteAccount" xml:space="preserve">
+    <value>فشل حذف الحساب.</value>
+  </data>
+  <data name="EmailIsRequired" xml:space="preserve">
+    <value>البريد الإلكتروني مطلوب.</value>
+  </data>
+  <data name="AccountAlreadyConfirmed" xml:space="preserve">
+    <value>الحساب مؤكد بالفعل.</value>
+  </data>
+  <data name="ConfirmationEmailSentRecently" xml:space="preserve">
+    <value>تم إرسال بريد التأكيد مؤخرًا. يرجى الانتظار قبل الطلب مرة أخرى.</value>
+  </data>
+  <data name="ConfirmationEmailResentSuccessfully" xml:space="preserve">
+    <value>تم إعادة إرسال بريد التأكيد بنجاح.</value>
+  </data>
+  <data name="NoFileProvided" xml:space="preserve">
+    <value>لم يتم توفير ملف.</value>
+  </data>
+  <data name="InvalidImageType" xml:space="preserve">
+    <value>نوع الصورة غير صالح.</value>
+  </data>
+  <data name="ImageSizeExceedsLimit" xml:space="preserve">
+    <value>حجم الصورة يتجاوز الحد المسموح به.</value>
+  </data>
+  <data name="UserPhotoUploadedSuccessfully" xml:space="preserve">
+    <value>تم تحميل صورة المستخدم بنجاح.</value>
+  </data>
+  <data name="UserHasNoPhotoToDelete" xml:space="preserve">
+    <value>المستخدم ليس لديه صورة لحذفها.</value>
+  </data>
+  <data name="UserPhotoDeletedSuccessfully" xml:space="preserve">
+    <value>تم حذف صورة المستخدم بنجاح.</value>
+  </data>
+  <data name="LoginSuccessful" xml:space="preserve">
+    <value>تم تسجيل الدخول بنجاح.</value>
+  </data>
+</root>

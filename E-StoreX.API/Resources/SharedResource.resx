@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="InvalidIdFormat" xml:space="preserve">
+    <value>Invalid Id format</value>
+  </data>
+  <data name="InvalidBasketIdFormat" xml:space="preserve">
+    <value>Invalid Basket Id format</value>
+  </data>
+  <data name="NoValidItems" xml:space="preserve">
+    <value>No valid items to update the basket</value>
+  </data>
+  <data name="ItemDeleted" xml:space="preserve">
+    <value>Item Deleted</value>
+  </data>
+  <data name="BasketNotFoundOrDeleted" xml:space="preserve">
+    <value>Basket not found or already deleted</value>
+  </data>
+  <data name="UserNotLoggedIn" xml:space="preserve">
+    <value>User not logged in</value>
+  </data>
+  <data name="BasketOrItemNotFound" xml:space="preserve">
+    <value>Basket or item not found</value>
+  </data>
+  <data name="BasketOrDiscountNotFound" xml:space="preserve">
+    <value>Basket or Discount not found</value>
+  </data>
+  <data name="InvalidConfirmationData" xml:space="preserve">
+    <value>Invalid confirmation data.</value>
+  </data>
+  <data name="AddressUpdated" xml:space="preserve">
+    <value>Address updated successfully.</value>
+  </data>
+  <data name="AddressUpdateFailed" xml:space="preserve">
+    <value>Failed to update address.</value>
+  </data>
+  <data name="AddressFetchFailed" xml:space="preserve">
+    <value>Failed to get address.</value>
+  </data>
+  <data name="UserIdNotFound" xml:space="preserve">
+    <value>User ID not found in claims.</value>
+  </data>
+  <data name="UserNotFound" xml:space="preserve">
+    <value>User not found.</value>
+  </data>
+  <data name="ProviderRequired" xml:space="preserve">
+    <value>Provider is required.</value>
+  </data>
+  <data name="InvalidUser" xml:space="preserve">
+    <value>Invalid user.</value>
+  </data>
+  <data name="EmailRequired" xml:space="preserve">
+    <value>Email is required.</value>
+  </data>
+  <data name="IdMismatch" xml:space="preserve">
+    <value>Id must be equals</value>
+  </data>
+  <data name="InvalidProductId" xml:space="preserve">
+    <value>Invalid Product ID</value>
+  </data>
+  <data name="ProductNotFound" xml:space="preserve">
+    <value>Can't find any product with this ID</value>
+  </data>
+  <data name="DeletedSuccessfully" xml:space="preserve">
+    <value>Deleted Successfully</value>
+  </data>
+  <data name="UnsupportedExportType" xml:space="preserve">
+    <value>Unsupported export type</value>
+  </data>
+  <data name="NoFeaturedProducts" xml:space="preserve">
+    <value>No featured products found.</value>
+  </data>
+  <data name="ProductMarkedAsFeatured" xml:space="preserve">
+    <value>Product marked as featured successfully.</value>
+  </data>
+  <data name="ProductRemovedFromFeatured" xml:space="preserve">
+    <value>Product removed from featured successfully.</value>
+  </data>
+  <data name="ProductNotFoundOrInvalidId" xml:space="preserve">
+    <value>Product not found or invalid product Id</value>
+  </data>
+  <data name="RatingNotFoundOrNotOwned" xml:space="preserve">
+    <value>Rating not found or not owned by user.</value>
+  </data>
+  <data name="BasketIdRequired" xml:space="preserve">
+    <value>Basket ID cannot be null or empty.</value>
+  </data>
+  <data name="InvalidDeliveryMethodId" xml:space="preserve">
+    <value>Invalid delivery method ID.</value>
+  </data>
+  <data name="BasketNotFound" xml:space="preserve">
+    <value>Basket not found.</value>
+  </data>
+  <data name="UserEmailNotFoundInToken" xml:space="preserve">
+    <value>User email not found in token.</value>
+  </data>
+  <data name="InvalidUserCredentials" xml:space="preserve">
+    <value>Invalid user credentials.</value>
+  </data>
+  <data name="InvalidUserIdentifier" xml:space="preserve">
+    <value>Invalid user identifier</value>
+  </data>
+  <data name="MessageSent" xml:space="preserve">
+    <value>Message sent successfully.</value>
+  </data>
+  <data name="InvalidCategoryIdFormat" xml:space="preserve">
+    <value>Invalid Category Id format</value>
+  </data>
+  <data name="CategoryNotFound" xml:space="preserve">
+    <value>Category not found</value>
+  </data>
+  <data name="NoCategoriesWithBrands" xml:space="preserve">
+    <value>No categories with brands found.</value>
+  </data>
+  <data name="ResourceNotFound" xml:space="preserve">
+    <value>Resource not found</value>
+  </data>
+  <data name="BrandNotFound" xml:space="preserve">
+    <value>Brand not found.</value>
+  </data>
+  <data name="StartDateAfterEndDate" xml:space="preserve">
+    <value>Start date cannot be after end date.</value>
+  </data>
+  <data name="NoSalesData" xml:space="preserve">
+    <value>No sales data available for this period.</value>
+  </data>
+  <data name="FailedToDeleteCategory" xml:space="preserve">
+    <value>Failed to delete category</value>
+  </data>
+  <data name="CheckBrandAndCategoryIds" xml:space="preserve">
+    <value>check you brand and category Ids.</value>
+  </data>
+  <data name="FailedToUnassignBrand" xml:space="preserve">
+    <value>Failed to unassign brand from category.</value>
+  </data>
+  <data name="BrandNameRequired" xml:space="preserve">
+    <value>Brand name cannot be empty.</value>
+  </data>
+  <data name="NewBrandNameRequired" xml:space="preserve">
+    <value>New name cannot be empty.</value>
+  </data>
+  <data name="ClientNameRequired" xml:space="preserve">
+    <value>Client name is required.</value>
+  </data>
+  <data name="ClientNotFound" xml:space="preserve">
+    <value>Client not found.</value>
+  </data>
+  <data name="ClientActivated" xml:space="preserve">
+    <value>Client activated successfully.</value>
+  </data>
+  <data name="ClientDeactivated" xml:space="preserve">
+    <value>Client deactivated successfully.</value>
+  </data>
+  <data name="ClientRemoved" xml:space="preserve">
+    <value>Client removed successfully.</value>
+  </data>
+  <data name="InternalServerError" xml:space="preserve">
+    <value>Internal Server Error</value>
+  </data>
+  <data name="BrandNotFoundWithName" xml:space="preserve">
+    <value>Brand Not found: {0}</value>
+  </data>
+  <data name="BadRequestWithId" xml:space="preserve">
+    <value>Bad Request for Id: {0}</value>
+  </data>
+  <data name="RatingNotFound" xml:space="preserve">
+    <value>Rating not found.</value>
+  </data>
+  <data name="InvalidDateRange" xml:space="preserve">
+    <value>Start date cannot be after end date.</value>
+  </data>
+  <data name="NoSalesData" xml:space="preserve">
+    <value>No sales data available for this period.</value>
+  </data>
+  <data name="DiscountNotFound" xml:space="preserve">
+    <value>Discount not found.</value>
+  </data>
+  <data name="DeliveryMethodNotFound" xml:space="preserve">
+    <value>Delivery method not found.</value>
+  </data>
+  <data name="IdMismatch" xml:space="preserve">
+    <value>Id mismatch</value>
+  </data>
+  <data name="CategoryDeletionFailed" xml:space="preserve">
+    <value>Failed to delete category</value>
+  </data>
+  <data name="InvalidBrandOrCategoryIds" xml:space="preserve">
+    <value>Check your brand and category IDs.</value>
+  </data>
+  <data name="BrandUnassignmentFailed" xml:space="preserve">
+    <value>Failed to unassign brand from category.</value>
+  </data>
+  <data name="ClientNameRequired" xml:space="preserve">
+    <value>Client name is required.</value>
+  </data>
+  <data name="ClientActivated" xml:space="preserve">
+    <value>Client activated successfully.</value>
+  </data>
+  <data name="ClientDeactivated" xml:space="preserve">
+    <value>Client deactivated successfully.</value>
+  </data>
+  <data name="ClientUpdated" xml:space="preserve">
+    <value>Client updated successfully.</value>
+  </data>
+  <data name="ApiKeyRotated" xml:space="preserve">
+    <value>API Key rotated successfully.</value>
+  </data>
+  <data name="BrandNameRequired" xml:space="preserve">
+    <value>Brand name is required.</value>
+  </data>
+  <data name="HostInfoUnavailable" xml:space="preserve">
+    <value>Unable to determine host information.</value>
+  </data>
+  <data name="NoHttpContext" xml:space="preserve">
+    <value>No HttpContext available.</value>
+  </data>
+  <data name="ValidationFailed" xml:space="preserve">
+    <value>Validation failed.</value>
+  </data>
+  <data name="ApiKeyMissing" xml:space="preserve">
+    <value>API Key is missing.</value>
+  </data>
+  <data name="ApiKeyRequiredDescription" xml:space="preserve">
+    <value>API Key is required for authentication. Please provide a valid API Key in the request headers.</value>
+  </data>
+  <data name="ApiKeyEmpty" xml:space="preserve">
+    <value>API Key cannot be empty.</value>
+  </data>
+  <data name="ApiKeyEmptyDescription" xml:space="preserve">
+    <value>API Key cannot be empty. Please provide a valid API Key in the request headers.</value>
+  </data>
+  <data name="InvalidApiKey" xml:space="preserve">
+    <value>Invalid API Key.</value>
+  </data>
+  <data name="ApiKeyDeactivated" xml:space="preserve">
+    <value>API Key is deactivated. Please contact support to reactivate it.</value>
+  </data>
+  <data name="InternalServerError" xml:space="preserve">
+    <value>An unexpected error occurred.</value>
+  </data>
+  <data name="TooManyRequests" xml:space="preserve">
+    <value>Too Many Requests. Please try again later.</value>
+  </data>
+</root>

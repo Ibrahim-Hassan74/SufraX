@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="RequiredName" xml:space="preserve">
+    <value>Name is required.</value>
+  </data>
+  <data name="MaxLengthName" xml:space="preserve">
+    <value>{0} can't be longer than {1} characters.</value>
+  </data>
+  <data name="MaxLengthDescription" xml:space="preserve">
+    <value>{0} can't be longer than {1} characters.</value>
+  </data>
+  <data name="InvalidPriceRange" xml:space="preserve">
+    <value>Price must be between {1} and {2}.</value>
+  </data>
+  <data name="RequiredDeliveryTime" xml:space="preserve">
+    <value>Delivery time is required.</value>
+  </data>
+  <data name="MaxLengthDeliveryTime" xml:space="preserve">
+    <value>{0} can't be longer than {1} characters.</value>
+  </data>
+  <data name="RequiredDeliveryMethodId" xml:space="preserve">
+    <value>Delivery method ID is required.</value>
+  </data>
+  <data name="RequiredBasketId" xml:space="preserve">
+    <value>Basket ID is required.</value>
+  </data>
+  <data name="MaxLengthBasketId" xml:space="preserve">
+    <value>{0} cannot exceed {1} characters.</value>
+  </data>
+  <data name="RequiredShippingAddress" xml:space="preserve">
+    <value>Shipping address is required.</value>
+  </data>
+  <data name="RequiredFirstName" xml:space="preserve">
+    <value>First name is required.</value>
+  </data>
+  <data name="MaxLengthFirstName" xml:space="preserve">
+    <value>{0} cannot exceed {1} characters.</value>
+  </data>
+  <data name="RequiredLastName" xml:space="preserve">
+    <value>Last name is required.</value>
+  </data>
+  <data name="MaxLengthLastName" xml:space="preserve">
+    <value>{0} cannot exceed {1} characters.</value>
+  </data>
+  <data name="RequiredCity" xml:space="preserve">
+    <value>City is required.</value>
+  </data>
+  <data name="MaxLengthCity" xml:space="preserve">
+    <value>{0} cannot exceed {1} characters.</value>
+  </data>
+  <data name="RequiredZipCode" xml:space="preserve">
+    <value>Zip code is required.</value>
+  </data>
+  <data name="InvalidZipCode" xml:space="preserve">
+    <value>Invalid zip code format.</value>
+  </data>
+  <data name="RequiredStreet" xml:space="preserve">
+    <value>Street is required.</value>
+  </data>
+  <data name="MaxLengthStreet" xml:space="preserve">
+    <value>{0} cannot exceed {1} characters.</value>
+  </data>
+  <data name="RequiredState" xml:space="preserve">
+    <value>State is required.</value>
+  </data>
+  <data name="MaxLengthState" xml:space="preserve">
+    <value>{0} cannot exceed {1} characters.</value>
+  </data>
+</root>

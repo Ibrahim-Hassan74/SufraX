@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="FailedToCreateAdmin" xml:space="preserve">
+    <value>فشل في إنشاء المسؤول.</value>
+  </data>
+  <data name="AdminCreatedSuccessfully" xml:space="preserve">
+    <value>تم إنشاء المسؤول بنجاح.</value>
+  </data>
+  <data name="UserNotFound" xml:space="preserve">
+    <value>المستخدم غير موجود.</value>
+  </data>
+  <data name="RoleAssignedSuccessfully" xml:space="preserve">
+    <value>تم تعيين الدور بنجاح.</value>
+  </data>
+  <data name="FailedToAssignRole" xml:space="preserve">
+    <value>فشل في تعيين الدور.</value>
+  </data>
+  <data name="RoleRemovedSuccessfully" xml:space="preserve">
+    <value>تمت إزالة الدور بنجاح.</value>
+  </data>
+  <data name="FailedToRemoveRole" xml:space="preserve">
+    <value>فشل في إزالة الدور.</value>
+  </data>
+  <data name="AdminsCannotActivateAdmin" xml:space="preserve">
+    <value>لا يمكن للمسؤولين تنشيط المسؤولين الآخرين أو المسؤولين الممتازين.</value>
+  </data>
+  <data name="SuperAdminsCannotActivateSuperAdmin" xml:space="preserve">
+    <value>لا يمكن للمسؤولين الممتازين تنشيط مسؤولين ممتازين آخرين.</value>
+  </data>
+  <data name="UserActivatedSuccessfully" xml:space="preserve">
+    <value>تم تنشيط المستخدم بنجاح.</value>
+  </data>
+  <data name="FailedToActivateUser" xml:space="preserve">
+    <value>فشل في تنشيط المستخدم.</value>
+  </data>
+  <data name="AdminsCannotDeactivateAdmin" xml:space="preserve">
+    <value>لا يمكن للمسؤولين إلغاء تنشيط المسؤولين الآخرين أو المسؤولين الممتازين.</value>
+  </data>
+  <data name="SuperAdminsCannotDeactivateSuperAdmin" xml:space="preserve">
+    <value>لا يمكن للمسؤولين الممتازين إلغاء تنشيط مسؤولين ممتازين آخرين.</value>
+  </data>
+  <data name="UserDeactivatedSuccessfully" xml:space="preserve">
+    <value>تم إلغاء تنشيط المستخدم بنجاح.</value>
+  </data>
+  <data name="FailedToDeactivateUser" xml:space="preserve">
+    <value>فشل في إلغاء تنشيط المستخدم.</value>
+  </data>
+  <data name="Unauthorized" xml:space="preserve">
+    <value>غير مصرح به.</value>
+  </data>
+  <data name="OnlySuperAdminCanDeleteSuperAdmin" xml:space="preserve">
+    <value>فقط المسؤول الممتاز يمكنه حذف مسؤول ممتاز آخر.</value>
+  </data>
+  <data name="OnlySuperAdminCanDeleteAdmin" xml:space="preserve">
+    <value>فقط المسؤول الممتاز يمكنه حذف مسؤول.</value>
+  </data>
+  <data name="OnlyAdminCanDeleteUser" xml:space="preserve">
+    <value>فقط المسؤول أو المسؤول الممتاز يمكنه حذف مستخدم.</value>
+  </data>
+  <data name="UserDeletedSuccessfully" xml:space="preserve">
+    <value>تم حذف المستخدم بنجاح.</value>
+  </data>
+  <data name="FailedToDeleteUser" xml:space="preserve">
+    <value>فشل في حذف المستخدم.</value>
+  </data>
+  <data name="AdminsCannotDeleteAdmin" xml:space="preserve">
+    <value>لا يمكن للمسؤولين حذف المسؤولين الآخرين أو المسؤولين الممتازين.</value>
+  </data>
+  <data name="SuperAdminsCannotDeleteSuperAdmin" xml:space="preserve">
+    <value>لا يمكن للمسؤولين الممتازين حذف مسؤولين ممتازين آخرين.</value>
+  </data>
+  <data name="AdminDeletedSuccessfully" xml:space="preserve">
+    <value>تم حذف المسؤول بنجاح.</value>
+  </data>
+  <data name="FailedToDeleteAdmin" xml:space="preserve">
+    <value>فشل في حذف المسؤول.</value>
+  </data>
+</root>

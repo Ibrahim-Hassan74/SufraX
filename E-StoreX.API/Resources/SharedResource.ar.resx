@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<!-- 
+		Microsoft ResX Schema
+
+		Version 1.3
+
+		The primary goals of this format is to allow a simple XML format 
+		that is mostly human readable. The generation and parsing of the 
+		various data types are done through the TypeConverter classes 
+		associated with the data types.
+
+		Example:
+
+		... ado.net/XML headers & schema ...
+		<resheader name="resmimetype">text/microsoft-resx</resheader>
+		<resheader name="version">1.3</resheader>
+		<resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+		<resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+		<data name="Name1">this is my long string</data>
+		<data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+		<data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+			[base64 mime encoded serialized .NET Framework object]
+		</data>
+		<data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+			[base64 mime encoded string representing a byte array form of the .NET Framework object]
+		</data>
+
+		There are any number of "resheader" rows that contain simple 
+		name/value pairs.
+
+		Each data row contains a name, and value. The row also contains a 
+		type or mimetype. Type corresponds to a .NET class that support 
+		text/value conversion through the TypeConverter architecture. 
+		Classes that don't support this are serialized and stored with the 
+		mimetype set.
+
+		The mimetype is used for serialized objects, and tells the 
+		ResXResourceReader how to depersist the object. This is currently not 
+		extensible. For a given mimetype the value must be set accordingly:
+
+		Note - application/x-microsoft.net.object.binary.base64 is the format 
+		that the ResXResourceWriter will generate, however the reader can 
+		read any of the formats listed below.
+
+		mimetype: application/x-microsoft.net.object.binary.base64
+		value   : The object must be serialized with 
+			: System.Serialization.Formatters.Binary.BinaryFormatter
+			: and then encoded with base64 encoding.
+
+		mimetype: application/x-microsoft.net.object.soap.base64
+		value   : The object must be serialized with 
+			: System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+			: and then encoded with base64 encoding.
+
+		mimetype: application/x-microsoft.net.object.bytearray.base64
+		value   : The object must be serialized into a byte array 
+			: using a System.ComponentModel.TypeConverter
+			: and then encoded with base64 encoding.
+	-->
+	
+	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+		<xsd:element name="root" msdata:IsDataSet="true">
+			<xsd:complexType>
+				<xsd:choice maxOccurs="unbounded">
+					<xsd:element name="data">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+								<xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+							<xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+							<xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="resheader">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" />
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:choice>
+			</xsd:complexType>
+		</xsd:element>
+	</xsd:schema>
+	<resheader name="resmimetype">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="version">
+		<value>1.3</value>
+	</resheader>
+	<resheader name="reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<resheader name="writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+  <data name="InvalidIdFormat" xml:space="preserve">
+    <value>صيغة المعرف غير صحيحة</value>
+  </data>
+
+  <data name="InvalidBasketIdFormat" xml:space="preserve">
+    <value>صيغة معرف السلة غير صحيحة</value>
+  </data>
+
+  <data name="NoValidItems" xml:space="preserve">
+    <value>لا توجد عناصر صالحة لتحديث السلة</value>
+  </data>
+
+  <data name="ItemDeleted" xml:space="preserve">
+    <value>تم حذف العنصر بنجاح</value>
+  </data>
+
+  <data name="BasketNotFoundOrDeleted" xml:space="preserve">
+    <value>السلة غير موجودة أو تم حذفها مسبقًا</value>
+  </data>
+
+  <data name="UserNotLoggedIn" xml:space="preserve">
+    <value>المستخدم غير مسجل الدخول</value>
+  </data>
+
+  <data name="BasketOrItemNotFound" xml:space="preserve">
+    <value>السلة أو العنصر غير موجود</value>
+  </data>
+
+  <data name="BasketOrDiscountNotFound" xml:space="preserve">
+    <value>السلة أو كود الخصم غير موجود</value>
+  </data>
+  <data name="InvalidConfirmationData" xml:space="preserve">
+    <value>بيانات التأكيد غير صالحة.</value>
+  </data>
+  <data name="AddressUpdated" xml:space="preserve">
+    <value>تم تحديث العنوان بنجاح.</value>
+  </data>
+  <data name="AddressUpdateFailed" xml:space="preserve">
+    <value>فشل تحديث العنوان.</value>
+  </data>
+  <data name="AddressFetchFailed" xml:space="preserve">
+    <value>فشل الحصول على العنوان.</value>
+  </data>
+  <data name="UserIdNotFound" xml:space="preserve">
+    <value>معرف المستخدم غير موجود في المطالبات.</value>
+  </data>
+  <data name="UserNotFound" xml:space="preserve">
+    <value>المستخدم غير موجود.</value>
+  </data>
+  <data name="ProviderRequired" xml:space="preserve">
+    <value>المزود مطلوب.</value>
+  </data>
+  <data name="InvalidUser" xml:space="preserve">
+    <value>مستخدم غير صالح.</value>
+  </data>
+  <data name="EmailRequired" xml:space="preserve">
+    <value>البريد الإلكتروني مطلوب.</value>
+  </data>
+  <data name="IdMismatch" xml:space="preserve">
+    <value>يجب أن تكون المعرفات متطابقة</value>
+  </data>
+  <data name="InvalidProductId" xml:space="preserve">
+    <value>معرف المنتج غير صالح</value>
+  </data>
+  <data name="ProductNotFound" xml:space="preserve">
+    <value>لا يمكن العثور على أي منتج بهذا المعرف</value>
+  </data>
+  <data name="DeletedSuccessfully" xml:space="preserve">
+    <value>تم الحذف بنجاح</value>
+  </data>
+  <data name="UnsupportedExportType" xml:space="preserve">
+    <value>نوع التصدير غير مدعوم</value>
+  </data>
+  <data name="NoFeaturedProducts" xml:space="preserve">
+    <value>لم يتم العثور على منتجات مميزة.</value>
+  </data>
+  <data name="ProductMarkedAsFeatured" xml:space="preserve">
+    <value>تم تحديد المنتج كمميز بنجاح.</value>
+  </data>
+  <data name="ProductRemovedFromFeatured" xml:space="preserve">
+    <value>تم إزالة المنتج من المميز بنجاح.</value>
+  </data>
+  <data name="ProductNotFoundOrInvalidId" xml:space="preserve">
+    <value>المنتج غير موجود أو معرف المنتج غير صالح</value>
+  </data>
+  <data name="RatingNotFoundOrNotOwned" xml:space="preserve">
+    <value>التقييم غير موجود أو لا يملك المستخدم هذا التقييم.</value>
+  </data>
+  <data name="BasketIdRequired" xml:space="preserve">
+    <value>معرف السلة مطلوب ولا يمكن أن يكون فارغًا.</value>
+  </data>
+  <data name="InvalidDeliveryMethodId" xml:space="preserve">
+    <value>معرف طريقة التوصيل غير صالح.</value>
+  </data>
+  <data name="BasketNotFound" xml:space="preserve">
+    <value>السلة غير موجودة.</value>
+  </data>
+  <data name="UserEmailNotFoundInToken" xml:space="preserve">
+    <value>البريد الإلكتروني للمستخدم غير موجود في الرمز.</value>
+  </data>
+  <data name="InvalidUserCredentials" xml:space="preserve">
+    <value>بيانات اعتماد المستخدم غير صالحة.</value>
+  </data>
+  <data name="InvalidUserIdentifier" xml:space="preserve">
+    <value>معرف مستخدم غير صالح</value>
+  </data>
+  <data name="MessageSent" xml:space="preserve">
+    <value>تم إرسال الرسالة بنجاح.</value>
+  </data>
+  <data name="InvalidCategoryIdFormat" xml:space="preserve">
+    <value>تنسيق معرف الفئة غير صالح</value>
+  </data>
+  <data name="CategoryNotFound" xml:space="preserve">
+    <value>الفئة غير موجودة</value>
+  </data>
+  <data name="NoCategoriesWithBrands" xml:space="preserve">
+    <value>لم يتم العثور على فئات مرتبطة بعلامات تجارية.</value>
+  </data>
+  <data name="ResourceNotFound" xml:space="preserve">
+    <value>المورد غير موجود</value>
+  </data>
+  <data name="BrandNotFound" xml:space="preserve">
+    <value>العلامة التجارية غير موجودة.</value>
+  </data>
+  <data name="StartDateAfterEndDate" xml:space="preserve">
+    <value>تاريخ البدء لا يمكن أن يكون بعد تاريخ الانتهاء.</value>
+  </data>
+  <data name="NoSalesData" xml:space="preserve">
+    <value>لا توجد بيانات مبيعات متاحة لهذه الفترة.</value>
+  </data>
+  <data name="FailedToDeleteCategory" xml:space="preserve">
+    <value>فشل حذف الفئة</value>
+  </data>
+  <data name="CheckBrandAndCategoryIds" xml:space="preserve">
+    <value>يرجى التحقق من معرفات العلامة التجارية والفئة.</value>
+  </data>
+  <data name="FailedToUnassignBrand" xml:space="preserve">
+    <value>فشل إلغاء تعيين العلامة التجارية من الفئة.</value>
+  </data>
+  <data name="BrandNameRequired" xml:space="preserve">
+    <value>اسم العلامة التجارية مطلوب.</value>
+  </data>
+  <data name="NewBrandNameRequired" xml:space="preserve">
+    <value>الاسم الجديد مطلوب.</value>
+  </data>
+  <data name="ClientNameRequired" xml:space="preserve">
+    <value>اسم العميل مطلوب.</value>
+  </data>
+  <data name="ClientNotFound" xml:space="preserve">
+    <value>العميل غير موجود.</value>
+  </data>
+  <data name="ClientActivated" xml:space="preserve">
+    <value>تم تفعيل العميل بنجاح.</value>
+  </data>
+  <data name="ClientDeactivated" xml:space="preserve">
+    <value>تم إلغاء تفعيل العميل بنجاح.</value>
+  </data>
+  <data name="ClientRemoved" xml:space="preserve">
+    <value>تم إزالة العميل بنجاح.</value>
+  </data>
+  <data name="InternalServerError" xml:space="preserve">
+    <value>خطأ داخلي في الخادم</value>
+  </data>
+  <data name="BrandNotFoundWithName" xml:space="preserve">
+    <value>العلامة التجارية غير موجودة: {0}</value>
+  </data>
+  <data name="BadRequestWithId" xml:space="preserve">
+    <value>طلب غير صالح للمعرف: {0}</value>
+  </data>
+  <data name="RatingNotFound" xml:space="preserve">
+    <value>التقييم غير موجود.</value>
+  </data>
+  <data name="InvalidDateRange" xml:space="preserve">
+    <value>تاريخ البدء لا يمكن أن يكون بعد تاريخ الانتهاء.</value>
+  </data>
+  <data name="NoSalesData" xml:space="preserve">
+    <value>لا توجد بيانات مبيعات متاحة لهذه الفترة.</value>
+  </data>
+  <data name="DiscountNotFound" xml:space="preserve">
+    <value>الخصم غير موجود.</value>
+  </data>
+  <data name="DeliveryMethodNotFound" xml:space="preserve">
+    <value>طريقة التوصيل غير موجودة.</value>
+  </data>
+  <data name="IdMismatch" xml:space="preserve">
+    <value>عدم تطابق المعرف</value>
+  </data>
+  <data name="CategoryDeletionFailed" xml:space="preserve">
+    <value>فشل في حذف الفئة</value>
+  </data>
+  <data name="InvalidBrandOrCategoryIds" xml:space="preserve">
+    <value>تحقق من معرفات العلامة التجارية والفئة.</value>
+  </data>
+  <data name="BrandUnassignmentFailed" xml:space="preserve">
+    <value>فشل في إلغاء تعيين العلامة التجارية من الفئة.</value>
+  </data>
+  <data name="ClientNameRequired" xml:space="preserve">
+    <value>اسم العميل مطلوب.</value>
+  </data>
+  <data name="ClientActivated" xml:space="preserve">
+    <value>تم تفعيل العميل بنجاح.</value>
+  </data>
+  <data name="ClientDeactivated" xml:space="preserve">
+    <value>تم إلغاء تفعيل العميل بنجاح.</value>
+  </data>
+  <data name="ClientUpdated" xml:space="preserve">
+    <value>تم تحديث العميل بنجاح.</value>
+  </data>
+  <data name="ApiKeyRotated" xml:space="preserve">
+    <value>تم تدوير مفتاح API بنجاح.</value>
+  </data>
+  <data name="BrandNameRequired" xml:space="preserve">
+    <value>اسم العلامة التجارية مطلوب.</value>
+  </data>
+  <data name="HostInfoUnavailable" xml:space="preserve">
+    <value>غير قادر على تحديد معلومات المضيف.</value>
+  </data>
+  <data name="NoHttpContext" xml:space="preserve">
+    <value>سياق HTTP غير متاح.</value>
+  </data>
+  <data name="ValidationFailed" xml:space="preserve">
+    <value>فشل التحقق من الصحة.</value>
+  </data>
+  <data name="ApiKeyMissing" xml:space="preserve">
+    <value>مفتاح API مفقود.</value>
+  </data>
+  <data name="ApiKeyRequiredDescription" xml:space="preserve">
+    <value>مفتاح API مطلوب للمصادقة. يرجى تقديم مفتاح API صالح في ترويسات الطلب.</value>
+  </data>
+  <data name="ApiKeyEmpty" xml:space="preserve">
+    <value>لا يمكن أن يكون مفتاح API فارغًا.</value>
+  </data>
+  <data name="ApiKeyEmptyDescription" xml:space="preserve">
+    <value>لا يمكن أن يكون مفتاح API فارغًا. يرجى تقديم مفتاح API صالح في ترويسات الطلب.</value>
+  </data>
+  <data name="InvalidApiKey" xml:space="preserve">
+    <value>مفتاح API غير صالح.</value>
+  </data>
+  <data name="ApiKeyDeactivated" xml:space="preserve">
+    <value>تم إلغاء تفعيل مفتاح API. يرجى الاتصال بالدعم لإعادة تفعيله.</value>
+  </data>
+  <data name="InternalServerError" xml:space="preserve">
+    <value>حدث خطأ غير متوقع.</value>
+  </data>
+  <data name="TooManyRequests" xml:space="preserve">
+    <value>طلبات كثيرة جداً. يرجى المحاولة مرة أخرى لاحقاً.</value>
+  </data>
+</root>

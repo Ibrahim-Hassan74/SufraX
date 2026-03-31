@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Confirmation_Title"> <value>تأكيد بريدك الإلكتروني</value> </data>
+  <data name="Confirmation_Hi"> <value>مرحباً بكم،</value> </data>
+  <data name="Confirmation_Body"> <value>شكراً لتسجيلكم في &lt;strong&gt;E-StoreX&lt;/strong&gt;. يرجى النقر على الزر أدناه لتأكيد بريدكم الإلكتروني والبدء:</value> </data>
+  <data name="Confirmation_Button"> <value>تأكيد البريد الإلكتروني</value> </data>
+  <data name="Confirmation_Ignore"> <value>إذا لم تقم بإنشاء هذا الحساب، يمكنك تجاهل هذا البريد الإلكتروني بأمان.</value> </data>
+  <data name="PasswordReset_Title"> <value>إعادة تعيين كلمة المرور</value> </data>
+  <data name="PasswordReset_Body"> <value>لقد تلقينا طلباً لإعادة تعيين كلمة المرور لحساب E-StoreX الخاص بك. انقر فوق الزر أدناه للمتابعة:</value> </data>
+  <data name="PasswordReset_Button"> <value>إعادة تعيين كلمة المرور</value> </data>
+  <data name="PasswordReset_Ignore"> <value>إذا لم تطلب إعادة تعيين كلمة المرور، يمكنك تجاهل هذا البريد الإلكتروني بأمان. هذا الرابط صالح لمدة 10 دقائق.</value> </data>
+  <data name="Footer_Copyright"> <value>حقوق الطبع والنشر &amp;copy; {0} E-StoreX. تطوير إبراهيم حسن.</value> </data>
+  <data name="Newsletter_Title"> <value>نشرة E-StoreX الأسبوعية</value> </data>
+  <data name="Newsletter_Greeting"> <value>مرحباً {0}، 👋</value> </data>
+  <data name="Newsletter_Body"> <value>يسعدنا مشاركة أحدث التحديثات والمميزات من &lt;strong&gt;E-StoreX&lt;/strong&gt; هذا الأسبوع.</value> </data>
+  <data name="Newsletter_Highlight_Features"> <value>🌟 ميزات جديدة مثيرة قادمة قريباً لتحسين تجربتكم.</value> </data>
+  <data name="Newsletter_Highlight_Performance"> <value>⚡ أداء أسرع وتنقل أكثر سلاسة عبر المنصة.</value> </data>
+  <data name="Newsletter_Highlight_Community"> <value>🤝 شكراً لكونكم جزءاً من مجتمعنا المتنامي!</value> </data>
+  <data name="Newsletter_StayTuned"> <value>ابقوا على اتصال - المزيد من التحديثات والنصائح والرؤى الحصرية في الطريق 🚀</value> </data>
+  <data name="Newsletter_OpenDashboard"> <value>افتح لوحة التحكم</value> </data>
+  <data name="OrderConfirmation_Title"> <value>شكراً لطلبكم!</value> </data>
+  <data name="OrderConfirmation_Hi"> <value>مرحباً {0}،</value> </data>
+  <data name="OrderConfirmation_PlacedOn"> <value>تم تقديم طلبكم بنجاح في &lt;strong&gt;{0}&lt;/strong&gt;.</value> </data>
+  <data name="OrderConfirmation_OrderID"> <value>رقم الطلب:</value> </data>
+  <data name="OrderConfirmation_ShippingAddress"> <value>عنوان الشحن:</value> </data>
+  <data name="OrderConfirmation_DeliveryMethod"> <value>طريقة التوصيل:</value> </data>
+  <data name="OrderConfirmation_Table_Product"> <value>المنتج</value> </data>
+  <data name="OrderConfirmation_Table_Image"> <value>الصورة</value> </data>
+  <data name="OrderConfirmation_Table_Qty"> <value>الكمية</value> </data>
+  <data name="OrderConfirmation_Table_Price"> <value>السعر</value> </data>
+  <data name="OrderConfirmation_Discount"> <value>الخصم:</value> </data>
+  <data name="OrderConfirmation_Total"> <value>الإجمالي:</value> </data>
+  <data name="OrderConfirmation_Questions"> <value>إذا كان لديكم أي أسئلة، ما عليكم سوى الرد على هذا البريد الإلكتروني - يسعدنا تقديم المساعدة!</value> </data>
+  <data name="PaymentFailed_Title"> <value>فشل عملية الدفع ❌</value> </data>
+  <data name="PaymentFailed_Hi"> <value>نعتذر منك، {0}.</value> </data>
+  <data name="PaymentFailed_Body"> <value>عملية الدفع لطلبكم رقم &lt;strong&gt;#{0}&lt;/strong&gt; بتاريخ &lt;strong&gt;{1}&lt;/strong&gt; لم تكتمل.</value> </data>
+  <data name="PaymentFailed_Retry"> <value>يرجى التحقق من تفاصيل الدفع الخاصة بك والمحاولة مرة أخرى، أو استخدام طريقة دفع مختلفة.</value> </data>
+  <data name="PaymentFailed_Summary"> <value>ملخص الطلب</value> </data>
+  <data name="PaymentFailed_ContactSupport"> <value>إذا استمرت المشكلة، يرجى الاتصال بفريق الدعم الخاص بنا وسنكون سعداء بمساعدتك.</value> </data>
+  <data name="Discount_Title"> <value>خصم حصري لك 🎉</value> </data>
+  <data name="Discount_Hi"> <value>مرحباً {0}،</value> </data>
+  <data name="Discount_Intro"> <value>بصفتك عضواً قيماً في &lt;strong&gt;E-StoreX&lt;/strong&gt;، يسعدنا أن نقدم لك خصماً خاصاً!</value> </data>
+  <data name="Discount_ValidUntil"> <value>صالح حتى: {0}</value> </data>
+  <data name="Discount_Body"> <value>لا تفوت هذا العرض لفترة محدودة. استخدم الرمز عند الدفع واستمتع بمدخراتك 🚀</value> </data>
+  <data name="Discount_ShopNow"> <value>تسوق الآن</value> </data>
+  <data name="SalesReport_Title"> <value>📊 تقرير المبيعات اليومي</value> </data>
+  <data name="SalesReport_Greeting"> <value>مرحباً أيها المدير،</value> </data>
+  <data name="SalesReport_Body"> <value>يرجى العثور على تقرير المبيعات المرفق للفترة:</value> </data>
+  <data name="SalesReport_From"> <value>من:</value> </data>
+  <data name="SalesReport_To"> <value>إلى:</value> </data>
+  <data name="SalesReport_Download"> <value>يمكنك تحميل ومراجعة ملف Excel المرفق أدناه.</value> </data>
+  <data name="Teaser_Headline"> <value>صه... إنه سر. 😉</value> </data>
+  <data name="Teaser_Hi"> <value>مرحباً {0}،</value> </data>
+  <data name="Teaser_Body"> <value>هناك شيء ما يحدث خلف الأبواب المغلقة في &lt;strong&gt;E-StoreX&lt;/strong&gt;. لسنا مستعدين لإظهاره للعالم بعد، لكننا أردنا أن تكون &lt;strong&gt;أنت&lt;/strong&gt; أول من يعرف أنه قادم.</value> </data>
+  <data name="Teaser_ComingSoon"> <value>قريباً</value> </data>
+  <data name="Teaser_MysteryText"> <value>لا تسريبات.. لا حرق أحداث..&lt;br&gt;فقط العظمة.</value> </data>
+  <data name="Teaser_SafeEmail"> <value>احتفظ بهذا البريد الإلكتروني آمناً. ستحتاج إليه عندما تصل الساعة إلى الصفر.</value> </data>
+  <data name="Teaser_ReadyBtn"> <value>أنا مستعد</value> </data>
+  <data name="Teaser_FooterBrand"> <value>إطلاق E-StoreX الغامض</value> </data>
+  <data name="Teaser_FooterCuratedBy"> <value>تنسيق إبراهيم حسن</value> </data>
+  <data name="ContactMessage_Title"> <value>رسالة اتصال جديدة</value> </data>
+  <data name="ContactMessage_Table_Name"> <value>الاسم:</value> </data>
+  <data name="ContactMessage_Table_Email"> <value>البريد الإلكتروني:</value> </data>
+  <data name="ContactMessage_Table_Subject"> <value>الموضوع:</value> </data>
+  <data name="ContactMessage_Footer"> <value>تم إرسال هذه الرسالة من نموذج الاتصال في E-StoreX.</value> </data>
+  <data name="Confirmation_Subject"> <value>تأكيد بريدك الإلكتروني</value> </data>
+  <data name="PasswordReset_Subject"> <value>إعادة تعيين كلمة المرور</value> </data>
+  <data name="Newsletter_Subject"> <value>✨ أهم ميزات E-StoreX لهذا الأسبوع!</value> </data>
+  <data name="Teaser_Subject"> <value>صه... إنه سر 😉</value> </data>
+  <data name="OrderConfirmation_Subject"> <value>🛒 تأكيد الطلب - E-StoreX</value> </data>
+  <data name="PaymentFailed_Subject"> <value>⚠️ فشل عملية الدفع - E-StoreX</value> </data>
+  <data name="Discount_Subject"> <value>🔥 خصم حصري لك فقط!</value> </data>
+  <data name="SalesReport_Subject"> <value>📈 تقرير المبيعات اليومي ({0})</value> </data>
+</root>

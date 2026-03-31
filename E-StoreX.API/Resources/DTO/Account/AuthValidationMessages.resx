@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="RequiredEmail" xml:space="preserve">
+    <value>Email is required.</value>
+  </data>
+  <data name="InvalidEmail" xml:space="preserve">
+    <value>Invalid email format.</value>
+  </data>
+  <data name="RequiredPassword" xml:space="preserve">
+    <value>Password is required.</value>
+  </data>
+  <data name="MinLengthPassword" xml:space="preserve">
+    <value>Password must be at least {1} characters.</value>
+  </data>
+  <data name="PasswordsDoNotMatch" xml:space="preserve">
+    <value>Passwords do not match.</value>
+  </data>
+  <data name="RequiredUserName" xml:space="preserve">
+    <value>Username is required.</value>
+  </data>
+  <data name="RequiredPhone" xml:space="preserve">
+    <value>Phone number is required.</value>
+  </data>
+  <data name="InvalidPhoneNumbersOnly" xml:space="preserve">
+    <value>Phone should contain numbers only.</value>
+  </data>
+  <data name="RequiredUserId" xml:space="preserve">
+    <value>User ID is required.</value>
+  </data>
+  <data name="RequiredToken" xml:space="preserve">
+    <value>Token is required.</value>
+  </data>
+  <data name="MinLengthToken" xml:space="preserve">
+    <value>Token must be at least {1} characters.</value>
+  </data>
+  <data name="InvalidUrl" xml:space="preserve">
+    <value>{0} must be a valid URL.</value>
+  </data>
+  <data name="RequiredDisplayName" xml:space="preserve">
+    <value>Display Name is required.</value>
+  </data>
+  <data name="MinLengthDisplayName" xml:space="preserve">
+    <value>Display Name must be at least {1} characters.</value>
+  </data>
+  <data name="MaxLengthDisplayName" xml:space="preserve">
+    <value>Display Name cannot exceed {1} characters.</value>
+  </data>
+  <data name="InvalidPhoneNumber" xml:space="preserve">
+    <value>Invalid phone number format.</value>
+  </data>
+  <data name="RequiredClientName" xml:space="preserve">
+    <value>Client Name is required.</value>
+  </data>
+  <data name="RequiredCurrentPassword" xml:space="preserve">
+    <value>Current password is required to set a new password.</value>
+  </data>
+  <data name="RequiredConfirmNewPassword" xml:space="preserve">
+    <value>Please confirm the new password.</value>
+  </data>
+  <data name="RequiredRole" xml:space="preserve">
+    <value>Role is required.</value>
+  </data>
+  <data name="RequiredFile" xml:space="preserve">
+    <value>File is required.</value>
+  </data>
+</root>

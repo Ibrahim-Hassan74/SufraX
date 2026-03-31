@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="InvalidRegistrationData" xml:space="preserve">
+    <value>Invalid registration data.</value>
+  </data>
+  <data name="RegistrationDataRequired" xml:space="preserve">
+    <value>Registration data cannot be null.</value>
+  </data>
+  <data name="EmailAlreadyRegistered" xml:space="preserve">
+    <value>Email is already registered.</value>
+  </data>
+  <data name="EmailAlreadyInUse" xml:space="preserve">
+    <value>This email is already in use.</value>
+  </data>
+  <data name="RegistrationFailed" xml:space="preserve">
+    <value>Registration failed.</value>
+  </data>
+  <data name="RegistrationSuccessfulConfirmEmail" xml:space="preserve">
+    <value>Registration successful. Please check your email to confirm your account.</value>
+  </data>
+  <data name="InvalidLoginData" xml:space="preserve">
+    <value>Invalid login data.</value>
+  </data>
+  <data name="LoginDataRequired" xml:space="preserve">
+    <value>Login data cannot be null.</value>
+  </data>
+  <data name="UserNotFound" xml:space="preserve">
+    <value>User not found.</value>
+  </data>
+  <data name="EmailNotFound" xml:space="preserve">
+    <value>No account found with this email.</value>
+  </data>
+  <data name="EmailNotConfirmed" xml:space="preserve">
+    <value>Email not confirmed.</value>
+  </data>
+  <data name="ConfirmEmailBeforeLogin" xml:space="preserve">
+    <value>You must confirm your email before logging in.</value>
+  </data>
+  <data name="AccountLockedOut" xml:space="preserve">
+    <value>Your account is temporarily locked due to multiple failed login attempts. Please try again later.</value>
+  </data>
+  <data name="LoginNotAllowed" xml:space="preserve">
+    <value>User is not allowed to login.</value>
+  </data>
+  <data name="InvalidLoginAttempt" xml:space="preserve">
+    <value>Invalid login attempt.</value>
+  </data>
+  <data name="IncorrectEmailOrPassword" xml:space="preserve">
+    <value>Incorrect email or password.</value>
+  </data>
+  <data name="UserIdNotFound" xml:space="preserve">
+    <value>User with the provided ID does not exist.</value>
+  </data>
+  <data name="EmailAlreadyConfirmed" xml:space="preserve">
+    <value>Email is already confirmed.</value>
+  </data>
+  <data name="InvalidConfirmationToken" xml:space="preserve">
+    <value>Invalid or expired confirmation token.</value>
+  </data>
+  <data name="TokenMismatch" xml:space="preserve">
+    <value>Token mismatch or already used.</value>
+  </data>
+  <data name="FailedToUpdateUserAfterConfirmation" xml:space="preserve">
+    <value>Failed to update user after confirmation.</value>
+  </data>
+  <data name="EmailConfirmedSuccessfully" xml:space="preserve">
+    <value>Email confirmed successfully.</value>
+  </data>
+  <data name="FailedToConfirmEmail" xml:space="preserve">
+    <value>Failed to confirm email.</value>
+  </data>
+  <data name="IncorrectEmail" xml:space="preserve">
+    <value>Incorrect email.</value>
+  </data>
+  <data name="ConfirmEmailBeforeReset" xml:space="preserve">
+    <value>Please confirm your email before resetting password.</value>
+  </data>
+  <data name="PasswordResetSentRecently" xml:space="preserve">
+    <value>A password reset email was already sent recently. Please wait before trying again.</value>
+  </data>
+  <data name="ResetAlreadyRequested" xml:space="preserve">
+    <value>Reset already requested.</value>
+  </data>
+  <data name="PasswordResetLinkSent" xml:space="preserve">
+    <value>A password reset link has been sent to your email.</value>
+  </data>
+  <data name="InvalidVerificationRequest" xml:space="preserve">
+    <value>Invalid verification request.</value>
+  </data>
+  <data name="UserIdAndTokenRequired" xml:space="preserve">
+    <value>UserId and token are required.</value>
+  </data>
+  <data name="NoAccountForUserId" xml:space="preserve">
+    <value>No account found for the provided user ID.</value>
+  </data>
+  <data name="InvalidTokenFormat" xml:space="preserve">
+    <value>Invalid token format.</value>
+  </data>
+  <data name="TokenFormatInvalid" xml:space="preserve">
+    <value>The token format is invalid or corrupted.</value>
+  </data>
+  <data name="InvalidOrExpiredToken" xml:space="preserve">
+    <value>Invalid or expired token.</value>
+  </data>
+  <data name="TokenInvalidOrUsed" xml:space="preserve">
+    <value>The token is invalid or has already been used.</value>
+  </data>
+  <data name="TokenValidationFailed" xml:space="preserve">
+    <value>Token validation failed.</value>
+  </data>
+  <data name="TokenTimestampInvalid" xml:space="preserve">
+    <value>The token timestamp is invalid.</value>
+  </data>
+  <data name="ResetPasswordLinkExpired" xml:space="preserve">
+    <value>Reset password link has expired.</value>
+  </data>
+  <data name="ResetPasswordTokenValid" xml:space="preserve">
+    <value>The reset password token is valid.</value>
+  </data>
+  <data name="InvalidResetPasswordData" xml:space="preserve">
+    <value>Invalid reset password data.</value>
+  </data>
+  <data name="RequestBodyRequired" xml:space="preserve">
+    <value>Request body cannot be null.</value>
+  </data>
+  <data name="FailedToResetPassword" xml:space="preserve">
+    <value>Failed to reset password.</value>
+  </data>
+  <data name="PasswordResetSuccessful" xml:space="preserve">
+    <value>Password has been reset successfully.</value>
+  </data>
+  <data name="InvalidTokenModel" xml:space="preserve">
+    <value>Invalid token model.</value>
+  </data>
+  <data name="TokenAndRefreshRequired" xml:space="preserve">
+    <value>Token and refresh token are required.</value>
+  </data>
+  <data name="InvalidToken" xml:space="preserve">
+    <value>Invalid token.</value>
+  </data>
+  <data name="AccessTokenInvalid" xml:space="preserve">
+    <value>Access token is invalid.</value>
+  </data>
+  <data name="EmailClaimMissing" xml:space="preserve">
+    <value>Email claim is missing in token.</value>
+  </data>
+  <data name="InvalidRefreshToken" xml:space="preserve">
+    <value>Invalid refresh token.</value>
+  </data>
+  <data name="RefreshTokenInvalidOrExpired" xml:space="preserve">
+    <value>Refresh token is invalid or expired.</value>
+  </data>
+  <data name="TokenRefreshedSuccessfully" xml:space="preserve">
+    <value>Token refreshed successfully.</value>
+  </data>
+  <data name="LoggedOutSuccessfully" xml:space="preserve">
+    <value>Logged out successfully.</value>
+  </data>
+  <data name="InvalidUpdateData" xml:space="preserve">
+    <value>Invalid update data.</value>
+  </data>
+  <data name="UpdateDataRequired" xml:space="preserve">
+    <value>Update data cannot be null.</value>
+  </data>
+  <data name="FailedToUpdateProfile" xml:space="preserve">
+    <value>Failed to update profile.</value>
+  </data>
+  <data name="FailedToChangePassword" xml:space="preserve">
+    <value>Failed to change password.</value>
+  </data>
+  <data name="ProfileUpdatedSuccessfully" xml:space="preserve">
+    <value>Profile updated successfully.</value>
+  </data>
+  <data name="ExternalProviderError" xml:space="preserve">
+    <value>External provider error: {0}</value>
+  </data>
+  <data name="FailedToLoadExternalLoginInfo" xml:space="preserve">
+    <value>Failed to load external login info.</value>
+  </data>
+  <data name="ExternalProviderMissingIdentityData" xml:space="preserve">
+    <value>External provider did not supply email or username.</value>
+  </data>
+  <data name="ConfirmEmailBeforeLinking" xml:space="preserve">
+    <value>Please confirm your email before linking an external login.</value>
+  </data>
+  <data name="FailedToLinkExternalProvider" xml:space="preserve">
+    <value>Failed to link external provider to existing account.</value>
+  </data>
+  <data name="FailedToCreateAccountFromExternal" xml:space="preserve">
+    <value>Failed to create account from external login.</value>
+  </data>
+  <data name="FailedToLinkExternalLogin" xml:space="preserve">
+    <value>Failed to link external login.</value>
+  </data>
+  <data name="AccountDeletedSuccessfully" xml:space="preserve">
+    <value>Account deleted successfully.</value>
+  </data>
+  <data name="FailedToDeleteAccount" xml:space="preserve">
+    <value>Failed to delete account.</value>
+  </data>
+  <data name="EmailIsRequired" xml:space="preserve">
+    <value>Email is required.</value>
+  </data>
+  <data name="AccountAlreadyConfirmed" xml:space="preserve">
+    <value>Account already confirmed.</value>
+  </data>
+  <data name="ConfirmationEmailSentRecently" xml:space="preserve">
+    <value>Confirmation email already sent recently. Please wait before requesting again.</value>
+  </data>
+  <data name="ConfirmationEmailResentSuccessfully" xml:space="preserve">
+    <value>Confirmation email resent successfully.</value>
+  </data>
+  <data name="NoFileProvided" xml:space="preserve">
+    <value>No file provided.</value>
+  </data>
+  <data name="InvalidImageType" xml:space="preserve">
+    <value>Invalid image type.</value>
+  </data>
+  <data name="ImageSizeExceedsLimit" xml:space="preserve">
+    <value>Image size exceeds limit.</value>
+  </data>
+  <data name="UserPhotoUploadedSuccessfully" xml:space="preserve">
+    <value>User photo uploaded successfully.</value>
+  </data>
+  <data name="UserHasNoPhotoToDelete" xml:space="preserve">
+    <value>User has no photo to delete.</value>
+  </data>
+  <data name="UserPhotoDeletedSuccessfully" xml:space="preserve">
+    <value>User photo deleted successfully.</value>
+  </data>
+  <data name="LoginSuccessful" xml:space="preserve">
+    <value>Login successful.</value>
+  </data>
+</root>

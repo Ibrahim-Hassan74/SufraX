@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Confirmation_Title" xml:space="preserve">
+    <value>Confirm Your Email</value>
+  </data>
+  <data name="Confirmation_Hi" xml:space="preserve">
+    <value>Hi there,</value>
+  </data>
+  <data name="Confirmation_Body" xml:space="preserve">
+    <value>Thanks for signing up with &lt;strong&gt;E-StoreX&lt;/strong&gt;. Click the button below to confirm your email address and get started:</value>
+  </data>
+  <data name="Confirmation_Button" xml:space="preserve">
+    <value>Confirm Email</value>
+  </data>
+  <data name="Confirmation_Ignore" xml:space="preserve">
+    <value>If you didn’t create this account, you can safely ignore this email.</value>
+  </data>
+  <data name="PasswordReset_Title" xml:space="preserve">
+    <value>Reset Your Password</value>
+  </data>
+  <data name="PasswordReset_Body" xml:space="preserve">
+    <value>We received a request to reset the password for your E-StoreX account. Click the button below to continue:</value>
+  </data>
+  <data name="PasswordReset_Button" xml:space="preserve">
+    <value>Reset Password</value>
+  </data>
+  <data name="PasswordReset_Ignore" xml:space="preserve">
+    <value>If you didn’t request a password reset, you can safely ignore this email. This link is valid for 10 minutes.</value>
+  </data>
+  <data name="Footer_Copyright" xml:space="preserve">
+    <value>Copyright © {0} E-StoreX. Developed by Ibrahim Hassan.</value>
+  </data>
+  <data name="Newsletter_Title" xml:space="preserve">
+    <value>E-StoreX Weekly Newsletter</value>
+  </data>
+  <data name="Newsletter_Greeting" xml:space="preserve">
+    <value>Hi {0}, 👋</value>
+  </data>
+  <data name="Newsletter_Body" xml:space="preserve">
+    <value>We’re thrilled to share the latest updates and highlights from &lt;strong&gt;E-StoreX&lt;/strong&gt; this week.</value>
+  </data>
+  <data name="Newsletter_Highlight_Features" xml:space="preserve">
+    <value>🌟 Exciting new features are coming soon to improve your experience.</value>
+  </data>
+  <data name="Newsletter_Highlight_Performance" xml:space="preserve">
+    <value>⚡ Faster performance &amp; smoother navigation across the platform.</value>
+  </data>
+  <data name="Newsletter_Highlight_Community" xml:space="preserve">
+    <value>🤝 Thanks for being part of our growing community!</value>
+  </data>
+  <data name="Newsletter_StayTuned" xml:space="preserve">
+    <value>Stay tuned — more updates, tips, and exclusive insights are on the way 🚀</value>
+  </data>
+  <data name="Newsletter_OpenDashboard" xml:space="preserve">
+    <value>Open Dashboard</value>
+  </data>
+  <data name="OrderConfirmation_Title" xml:space="preserve">
+    <value>Thank you for your order!</value>
+  </data>
+  <data name="OrderConfirmation_Hi" xml:space="preserve">
+    <value>Hi {0},</value>
+  </data>
+  <data name="OrderConfirmation_PlacedOn" xml:space="preserve">
+    <value>Your order has been successfully placed on &lt;strong&gt;{0}&lt;/strong&gt;.</value>
+  </data>
+  <data name="OrderConfirmation_OrderID" xml:space="preserve">
+    <value>Order ID:</value>
+  </data>
+  <data name="OrderConfirmation_ShippingAddress" xml:space="preserve">
+    <value>Shipping Address:</value>
+  </data>
+  <data name="OrderConfirmation_DeliveryMethod" xml:space="preserve">
+    <value>Delivery Method:</value>
+  </data>
+  <data name="OrderConfirmation_Table_Product" xml:space="preserve">
+    <value>Product</value>
+  </data>
+  <data name="OrderConfirmation_Table_Image" xml:space="preserve">
+    <value>Image</value>
+  </data>
+  <data name="OrderConfirmation_Table_Qty" xml:space="preserve">
+    <value>Qty</value>
+  </data>
+  <data name="OrderConfirmation_Table_Price" xml:space="preserve">
+    <value>Price</value>
+  </data>
+  <data name="OrderConfirmation_Discount" xml:space="preserve">
+    <value>Discount:</value>
+  </data>
+  <data name="OrderConfirmation_Total" xml:space="preserve">
+    <value>Total:</value>
+  </data>
+  <data name="OrderConfirmation_Questions" xml:space="preserve">
+    <value>If you have any questions, just reply to this email — we’re happy to help!</value>
+  </data>
+  <data name="PaymentFailed_Title" xml:space="preserve">
+    <value>Payment Failed ❌</value>
+  </data>
+  <data name="PaymentFailed_Hi" xml:space="preserve">
+    <value>We're sorry, {0}.</value>
+  </data>
+  <data name="PaymentFailed_Body" xml:space="preserve">
+    <value>Your payment for order &lt;strong&gt;#{0}&lt;/strong&gt; on &lt;strong&gt;{1}&lt;/strong&gt; did not go through.</value>
+  </data>
+  <data name="PaymentFailed_Retry" xml:space="preserve">
+    <value>Please check your payment details and try again, or use a different payment method.</value>
+  </data>
+  <data name="PaymentFailed_Summary" xml:space="preserve">
+    <value>Order Summary</value>
+  </data>
+  <data name="PaymentFailed_ContactSupport" xml:space="preserve">
+    <value>If the issue persists, please contact our support team and we’ll be happy to help you.</value>
+  </data>
+  <data name="Discount_Title" xml:space="preserve">
+    <value>Exclusive Discount for You 🎉</value>
+  </data>
+  <data name="Discount_Hi" xml:space="preserve">
+    <value>Hi {0},</value>
+  </data>
+  <data name="Discount_Intro" xml:space="preserve">
+    <value>As a valued member of &lt;strong&gt;E-StoreX&lt;/strong&gt;, we’re excited to offer you a special discount!</value>
+  </data>
+  <data name="Discount_ValidUntil" xml:space="preserve">
+    <value>Valid until: {0}</value>
+  </data>
+  <data name="Discount_Body" xml:space="preserve">
+    <value>Don’t miss this limited-time offer. Use the code at checkout and enjoy your savings 🚀</value>
+  </data>
+  <data name="Discount_ShopNow" xml:space="preserve">
+    <value>Shop Now</value>
+  </data>
+  <data name="SalesReport_Title" xml:space="preserve">
+    <value>📊 Daily Sales Report</value>
+  </data>
+  <data name="SalesReport_Greeting" xml:space="preserve">
+    <value>Hello Admin,</value>
+  </data>
+  <data name="SalesReport_Body" xml:space="preserve">
+    <value>Please find attached the sales report for the period:</value>
+  </data>
+  <data name="SalesReport_From" xml:space="preserve">
+    <value>From:</value>
+  </data>
+  <data name="SalesReport_To" xml:space="preserve">
+    <value>To:</value>
+  </data>
+  <data name="SalesReport_Download" xml:space="preserve">
+    <value>You can download and review the Excel file attached below.</value>
+  </data>
+  <data name="Teaser_Headline" xml:space="preserve">
+    <value>Shhh... It's a Secret. 😉</value>
+  </data>
+  <data name="Teaser_Hi" xml:space="preserve">
+    <value>Hi {0},</value>
+  </data>
+  <data name="Teaser_Body" xml:space="preserve">
+    <value>Something is happening behind closed doors at &lt;strong&gt;E-StoreX&lt;/strong&gt;. We aren't ready to show the world yet, but we wanted &lt;strong&gt;you&lt;/strong&gt; to be the first to know that it's coming.</value>
+  </data>
+  <data name="Teaser_ComingSoon" xml:space="preserve">
+    <value>Coming Soon</value>
+  </data>
+  <data name="Teaser_MysteryText" xml:space="preserve">
+    <value>No spoilers. No leaks.&lt;br&gt;Just greatness.</value>
+  </data>
+  <data name="Teaser_SafeEmail" xml:space="preserve">
+    <value>Keep this email safe. You’ll need it when the clock hits zero.</value>
+  </data>
+  <data name="Teaser_ReadyBtn" xml:space="preserve">
+    <value>I'm Ready</value>
+  </data>
+  <data name="Teaser_FooterBrand" xml:space="preserve">
+    <value>E-StoreX Mystery Launch</value>
+  </data>
+  <data name="Teaser_FooterCuratedBy" xml:space="preserve">
+    <value>Curated by Ibrahim Hassan</value>
+  </data>
+  <data name="ContactMessage_Title" xml:space="preserve">
+    <value>New Contact Message</value>
+  </data>
+  <data name="ContactMessage_Table_Name" xml:space="preserve">
+    <value>Name:</value>
+  </data>
+  <data name="ContactMessage_Table_Email" xml:space="preserve">
+    <value>Email:</value>
+  </data>
+  <data name="ContactMessage_Table_Subject" xml:space="preserve">
+    <value>Subject:</value>
+  </data>
+  <data name="ContactMessage_Footer" xml:space="preserve">
+    <value>This message was sent from the E-StoreX contact form.</value>
+  </data>
+  <data name="Confirmation_Subject" xml:space="preserve">
+    <value>Confirm Your Email</value>
+  </data>
+  <data name="PasswordReset_Subject" xml:space="preserve">
+    <value>Reset Your Password</value>
+  </data>
+  <data name="Newsletter_Subject" xml:space="preserve">
+    <value>✨ Your Weekly E-StoreX Highlights Are Here!</value>
+  </data>
+  <data name="Teaser_Subject" xml:space="preserve">
+    <value>Shhh... It's a Secret 😉</value>
+  </data>
+  <data name="OrderConfirmation_Subject" xml:space="preserve">
+    <value>🛒 Order Confirmation - E-StoreX</value>
+  </data>
+  <data name="PaymentFailed_Subject" xml:space="preserve">
+    <value>⚠️ Payment Failed - E-StoreX</value>
+  </data>
+  <data name="Discount_Subject" xml:space="preserve">
+    <value>🔥 Exclusive Discount Just for You!</value>
+  </data>
+  <data name="SalesReport_Subject" xml:space="preserve">
+    <value>📈 Daily Sales Report ({0})</value>
+  </data>
+</root>
