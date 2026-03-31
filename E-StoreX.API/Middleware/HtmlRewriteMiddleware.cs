@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using System.Threading.Tasks;
 
-namespace E_StoreX.API.Middleware
+namespace EStoreX.API.Middleware
 {
     // You may need to install the Microsoft.AspNetCore.Http.Abstractions package into your project
     /// <summary>

@@ -1,12 +1,14 @@
-﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using EStoreX.Core.ServiceContracts.Account;
 using System.Threading.Tasks;
 using EStoreX.Core.Helper;
 using EStoreX.Core.Domain.Options;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Localization;
+using EStoreX.API.Filters;
 
-namespace E_StoreX.API.Middleware
+namespace EStoreX.API.Middleware
 {
     /// <summary>
     /// Middleware to validate API key from incoming HTTP requests.
@@ -37,8 +39,10 @@ namespace E_StoreX.API.Middleware
         /// </summary>
         /// <param name="context">The current HTTP context.</param>
         /// <param name="apiClientService">api client</param>
-        public async Task InvokeAsync(HttpContext context, IApiClientService apiClientService)
+        /// <param name="localizer">localizer for shared resources.</param>
+        public async Task InvokeAsync(HttpContext context, IApiClientService apiClientService, IStringLocalizer<SharedResource> _localizer)
         {
+
 
             var path = context.Request.Path.Value?.ToLower();
 
@@ -65,9 +69,9 @@ namespace E_StoreX.API.Middleware
             if (!context.Request.Headers.TryGetValue(API_KEY_HEADER_NAME, out var extractedApiKey))
             {
                 context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                await context.Response.WriteAsJsonAsync(ApiResponseFactory.Unauthorized("API Key is missing.", new List<string>
+                await context.Response.WriteAsJsonAsync(ApiResponseFactory.Unauthorized(_localizer["ApiKeyMissing"].Value, new List<string>
                 {
-                    "API Key is required for authentication. Please provide a valid API Key in the request headers."
+                    _localizer["ApiKeyRequiredDescription"].Value
                 }));
                 return;
             }
@@ -75,9 +79,9 @@ namespace E_StoreX.API.Middleware
             if (string.IsNullOrWhiteSpace(extractedApiKey))
             {
                 context.Response.StatusCode = StatusCodes.Status400BadRequest;
-                await context.Response.WriteAsJsonAsync(ApiResponseFactory.BadRequest("API Key cannot be empty.", new List<string>
+                await context.Response.WriteAsJsonAsync(ApiResponseFactory.BadRequest(_localizer["ApiKeyEmpty"].Value, new List<string>
                 {
-                    "API Key cannot be empty. Please provide a valid API Key in the request headers."
+                    _localizer["ApiKeyEmptyDescription"].Value
                 }));
                 return;
             }
@@ -87,9 +91,9 @@ namespace E_StoreX.API.Middleware
             if (client == null)
             {
                 context.Response.StatusCode = StatusCodes.Status403Forbidden;
-                await context.Response.WriteAsJsonAsync(ApiResponseFactory.Forbidden("Invalid API Key.", new List<string>
+                await context.Response.WriteAsJsonAsync(ApiResponseFactory.Forbidden(_localizer["InvalidApiKey"].Value, new List<string>
                 {
-                    "Invalid API Key."
+                    _localizer["InvalidApiKey"].Value
                 }));
                 return;
             }
@@ -97,10 +101,10 @@ namespace E_StoreX.API.Middleware
             if (!client.IsActive)
             {
                 context.Response.StatusCode = StatusCodes.Status403Forbidden;
-                await context.Response.WriteAsJsonAsync(ApiResponseFactory.Forbidden( "API Key is deactivated. Please contact support to reactivate it.", 
+                await context.Response.WriteAsJsonAsync(ApiResponseFactory.Forbidden( _localizer["ApiKeyDeactivated"].Value, 
                 new List<string>
                 {
-                    "API Key is deactivated. Please contact support to reactivate it."
+                    _localizer["ApiKeyDeactivated"].Value
                 }));
                 return;
             }

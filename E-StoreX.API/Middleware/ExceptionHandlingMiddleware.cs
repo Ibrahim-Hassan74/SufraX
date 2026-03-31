@@ -1,9 +1,11 @@
-﻿using EStoreX.Core.Helper;
+using EStoreX.Core.Helper;
 using Microsoft.Extensions.Caching.Memory;
+using EStoreX.API.Filters;
+using Microsoft.Extensions.Localization;
 using System.Net;
 using System.Text.Json;
 
-namespace E_StoreX.API.Middleware
+namespace EStoreX.API.Middleware
 {
     // You may need to install the Microsoft.AspNetCore.Http.Abstractions package into your project
     public class ExceptionHandlingMiddleware
@@ -20,7 +22,7 @@ namespace E_StoreX.API.Middleware
             _cache = cache;
         }
 
-        public async Task Invoke(HttpContext httpContext)
+        public async Task Invoke(HttpContext httpContext, IStringLocalizer<SharedResource> localizer)
         {
             try
             {
@@ -45,7 +47,7 @@ namespace E_StoreX.API.Middleware
                 httpContext.Response.ContentType = "application/json";
                 var response = _host.IsDevelopment() ?
                     ApiResponseFactory.InternalServerError(ex.Message, new List<string> { ex.StackTrace }) :
-                    ApiResponseFactory.InternalServerError(ex.Message);
+                    ApiResponseFactory.InternalServerError(localizer["InternalServerError"].Value);
                     //new ApiExceptions((int)HttpStatusCode.InternalServerError, ex.Message, ex.StackTrace) :
                     //new ApiExceptions((int)HttpStatusCode.InternalServerError, ex.Message);
 

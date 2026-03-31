@@ -1,5 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Extensions.Localization;
 using EStoreX.Core.DTO.Common;
 
 namespace EStoreX.API.Filters
@@ -10,6 +11,12 @@ namespace EStoreX.API.Filters
     /// </summary>
     public class AccountValidationFilter : IAsyncActionFilter
     {
+        private readonly IStringLocalizer<SharedResource> _localizer;
+
+        public AccountValidationFilter(IStringLocalizer<SharedResource> localizer)
+        {
+            _localizer = localizer;
+        }
         /// <summary>
         /// Executes the action filter asynchronously.
         /// If the model state is invalid, it short-circuits the pipeline and returns a standardized error response.
@@ -32,7 +39,7 @@ namespace EStoreX.API.Filters
                 {
                     Success = false,
                     StatusCode = 400,
-                    Message = "Validation failed.",
+                    Message = _localizer["ValidationFailed"].Value,
                     Errors = errors
                 };
 

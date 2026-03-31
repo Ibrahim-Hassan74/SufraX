@@ -4,7 +4,7 @@ using Hangfire.Annotations;
 using Hangfire.Dashboard;
 using System.Security.Claims;
 
-namespace E_StoreX.API.Filters
+namespace EStoreX.API.Filters
 {
     public class HangfireAuthorizationFilter : IDashboardAuthorizationFilter
     {

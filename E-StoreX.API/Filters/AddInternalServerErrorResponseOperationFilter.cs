@@ -2,7 +2,8 @@
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace E_StoreX.API.Filters
+
+namespace EStoreX.API.Filters
 {
     public class AddInternalServerErrorResponseOperationFilter : IOperationFilter
     {
