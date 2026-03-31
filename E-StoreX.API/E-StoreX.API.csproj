@@ -4,7 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <RootNamespace>E_StoreX.API</RootNamespace>
+    <RootNamespace>EStoreX.API</RootNamespace>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <DocumentationFile>E-StoreX.API.xml</DocumentationFile>
   </PropertyGroup>
@@ -32,6 +32,13 @@
   <ItemGroup>
     <ProjectReference Include="..\E-StoreX.Core\E-StoreX.Core.csproj" />
     <ProjectReference Include="..\E-StoreX.Infrastructure\E-StoreX.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\SharedResource.resx">
+      <Generator></Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\SharedResource.ar.resx" />
   </ItemGroup>
 
 </Project>

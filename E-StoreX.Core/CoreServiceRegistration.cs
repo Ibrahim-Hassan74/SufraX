@@ -1,4 +1,4 @@
-﻿using EStoreX.Core.BackgroundJobs.Interfaces;
+using EStoreX.Core.BackgroundJobs.Interfaces;
 using EStoreX.Core.BackgroundJobs.Jobs;
 using EStoreX.Core.BackgroundJobs.Wrapper;
 using EStoreX.Core.Domain.Options;
@@ -32,6 +32,8 @@ using System.Text;
 using System.Text.Json;
 using MyDiscountService = EStoreX.Core.Services.Discounts.DiscountService;
 //using EStoreX.Core.Services.Common;
+
+[assembly: Microsoft.Extensions.Localization.RootNamespace("EStoreX.Core")]
 
 namespace EStoreX.Core
 {

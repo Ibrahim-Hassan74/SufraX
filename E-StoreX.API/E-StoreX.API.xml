@@ -4,12 +4,12 @@
         <name>E-StoreX.API</name>
     </assembly>
     <members>
-        <member name="T:E_StoreX.API.Controllers.Admin.AdminControllerBase">
+        <member name="T:EStoreX.API.Controllers.Admin.AdminControllerBase">
             <summary>
             Abstract base controller for admin-related operations.
             </summary>
         </member>
-        <member name="T:E_StoreX.API.Controllers.Admin.ApiClientsController">
+        <member name="T:EStoreX.API.Controllers.Admin.ApiClientsController">
             <summary>
             Provides administrative operations for managing API clients in the E-StoreX platform.
             </summary>
@@ -17,21 +17,22 @@
             This controller is restricted to <b>Admin users</b> only and supports API version 2.0.  
             It is responsible for managing API client configurations, authentication keys, and permissions.  
             <para>
-            Inherits from <see cref="T:E_StoreX.API.Controllers.Admin.AdminControllerBase"/>.  
+            Inherits from <see cref="T:EStoreX.API.Controllers.Admin.AdminControllerBase"/>.  
             </para>
             </remarks>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.ApiClientsController.#ctor(EStoreX.Core.ServiceContracts.Account.IApiClientService,EStoreX.Core.ServiceContracts.Common.IExportService)">
+        <member name="M:EStoreX.API.Controllers.Admin.ApiClientsController.#ctor(EStoreX.Core.ServiceContracts.Account.IApiClientService,EStoreX.Core.ServiceContracts.Common.IExportService,Microsoft.Extensions.Localization.IStringLocalizer{EStoreX.API.SharedResource})">
             <summary>
-            Initializes a new instance of the <see cref="T:E_StoreX.API.Controllers.Admin.ApiClientsController"/> class with the specified API client
+            Initializes a new instance of the <see cref="T:EStoreX.API.Controllers.Admin.ApiClientsController"/> class with the specified API client
             service.
             </summary>
             <remarks>— This constructor is typically used by dependency injection to provide the required
             service for API client management.</remarks>
             <param name="clientService">The service used to manage API client data and operations. Cannot be <c>null</c>.</param>
             <param name="exportService">Service to manage files.</param>
+            <param name="localizer">localizer for shared resources.</param>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.ApiClientsController.RegisterClient(EStoreX.Core.DTO.Account.Requests.RegisterApiClientRequest)">
+        <member name="M:EStoreX.API.Controllers.Admin.ApiClientsController.RegisterClient(EStoreX.Core.DTO.Account.Requests.RegisterApiClientRequest)">
             <summary>
             Registers a new API client and returns its API key.
             </summary>
@@ -43,7 +44,7 @@
             <response code="200">Client registered successfully.</response>
             <response code="400">Invalid client data provided.</response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.ApiClientsController.GetClientByKey(System.String)">
+        <member name="M:EStoreX.API.Controllers.Admin.ApiClientsController.GetClientByKey(System.String)">
             <summary>
             Retrieves client details by its API key.
             </summary>
@@ -55,14 +56,14 @@
             <response code="200">Client found successfully.</response>
             <response code="404">Client not found.</response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.ApiClientsController.GetAllClients">
+        <member name="M:EStoreX.API.Controllers.Admin.ApiClientsController.GetAllClients">
             <summary>
             Retrieves all registered API clients.
             </summary>
             <returns>Returns a list of <see cref="T:Domain.Entities.Common.ApiClient"/> entities.</returns>
             <response code="200">Clients retrieved successfully.</response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.ApiClientsController.ActiveClient(System.Guid)">
+        <member name="M:EStoreX.API.Controllers.Admin.ApiClientsController.ActiveClient(System.Guid)">
             <summary>
             Activates an API client by its unique identifier.
             </summary>
@@ -74,7 +75,7 @@
             <response code="200">Client activated successfully.</response>
             <response code="404">Client not found.</response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.ApiClientsController.DeActivateClient(System.Guid)">
+        <member name="M:EStoreX.API.Controllers.Admin.ApiClientsController.DeActivateClient(System.Guid)">
             <summary>
             Deactivates an API client by its unique identifier.
             </summary>
@@ -83,7 +84,7 @@
             <response code="200">Client deactivated successfully.</response>
             <response code="404">Client not found.</response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.ApiClientsController.GetClient(System.Guid)">
+        <member name="M:EStoreX.API.Controllers.Admin.ApiClientsController.GetClient(System.Guid)">
             <summary>
             Retrieves a specific API client by its unique identifier.
             </summary>
@@ -92,7 +93,7 @@
             <response code="200">Client retrieved successfully.</response>
             <response code="404">Client not found.</response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.ApiClientsController.RemoveClient(System.Guid)">
+        <member name="M:EStoreX.API.Controllers.Admin.ApiClientsController.RemoveClient(System.Guid)">
             <summary>
             Removes an API client by its unique identifier.
             </summary>
@@ -101,7 +102,7 @@
             <response code="200">Client removed successfully.</response>
             <response code="404">Client not found.</response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.ApiClientsController.UpdateClient(System.Guid,EStoreX.Core.DTO.Common.UpdateClientRequest)">
+        <member name="M:EStoreX.API.Controllers.Admin.ApiClientsController.UpdateClient(System.Guid,EStoreX.Core.DTO.Common.UpdateClientRequest)">
             <summary>
             Updates an API client by its unique identifier.
             </summary>
@@ -111,7 +112,7 @@
             <response code="200">Client updated successfully.</response>
             <response code="404">Client not found.</response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.ApiClientsController.RotateApiKey(System.Guid)">
+        <member name="M:EStoreX.API.Controllers.Admin.ApiClientsController.RotateApiKey(System.Guid)">
             <summary>
             Rotates the API key of a specific client.
             </summary>
@@ -120,7 +121,7 @@
             <response code="200">API key rotated successfully.</response>
             <response code="404">Client not found.</response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.ApiClientsController.Export(EStoreX.Core.Enums.ExportType)">
+        <member name="M:EStoreX.API.Controllers.Admin.ApiClientsController.Export(EStoreX.Core.Enums.ExportType)">
             <summary>
             Exports all clients into the specified file format.
             </summary>
@@ -141,7 +142,7 @@
             <response code="400">Unsupported export type requested.</response>
             <response code="401">If the user is not authenticated.</response>
         </member>
-        <member name="T:E_StoreX.API.Controllers.Admin.BrandsController">
+        <member name="T:EStoreX.API.Controllers.Admin.BrandsController">
             <summary>
             Provides administrative operations for managing product brands in the E-StoreX platform.
             </summary>
@@ -149,18 +150,19 @@
             This controller is restricted to <b>Admin users</b> only and supports API version 2.0.  
             It allows creating, updating, deleting, and retrieving brands, as well as assigning them to categories.  
             <para>
-            Inherits from <see cref="T:E_StoreX.API.Controllers.Admin.AdminControllerBase"/>.  
+            Inherits from <see cref="T:EStoreX.API.Controllers.Admin.AdminControllerBase"/>.  
             </para>
             </remarks>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.BrandsController.#ctor(EStoreX.Core.ServiceContracts.Products.IBrandService,EStoreX.Core.ServiceContracts.Common.IExportService)">
+        <member name="M:EStoreX.API.Controllers.Admin.BrandsController.#ctor(EStoreX.Core.ServiceContracts.Products.IBrandService,EStoreX.Core.ServiceContracts.Common.IExportService,Microsoft.Extensions.Localization.IStringLocalizer{EStoreX.API.SharedResource})">
             <summary>
-            Initializes a new instance of <see cref="T:E_StoreX.API.Controllers.Admin.BrandsController"/>.
+            Initializes a new instance of <see cref="T:EStoreX.API.Controllers.Admin.BrandsController"/>.
             </summary>
             <param name="brandsService">Service to manage brand operations.</param>
             <param name="exportService">Service to manage files.</param>
+            <param name="localizer">localizer for shared resources.</param>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.BrandsController.Create(System.String)">
+        <member name="M:EStoreX.API.Controllers.Admin.BrandsController.Create(System.String)">
             <summary>
             Creates a new brand.
             </summary>
@@ -170,7 +172,7 @@
             <response code="400">Brand name is empty or invalid.</response>
             <response code="401">If the user is not authenticated.</response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.BrandsController.Update(System.Guid,System.String)">
+        <member name="M:EStoreX.API.Controllers.Admin.BrandsController.Update(System.Guid,System.String)">
             <summary>
             Updates an existing brand.
             </summary>
@@ -182,7 +184,7 @@
             <response code="404">Brand not found.</response>
             <response code="401">If the user is not authenticated.</response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.BrandsController.Delete(System.Guid)">
+        <member name="M:EStoreX.API.Controllers.Admin.BrandsController.Delete(System.Guid)">
             <summary>
             Deletes a brand by ID.
             </summary>
@@ -191,7 +193,7 @@
             <response code="404">Brand not found.</response>
             <response code="401">If the user is not authenticated.</response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.BrandsController.Export(EStoreX.Core.Enums.ExportType)">
+        <member name="M:EStoreX.API.Controllers.Admin.BrandsController.Export(EStoreX.Core.Enums.ExportType)">
             <summary>
             Exports all brands into the specified file format.
             </summary>
@@ -212,7 +214,7 @@
             <response code="400">Unsupported export type requested.</response>
             <response code="401">If the user is not authenticated.</response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.BrandsController.DeleteBrandImage(System.Guid,System.Guid)">
+        <member name="M:EStoreX.API.Controllers.Admin.BrandsController.DeleteBrandImage(System.Guid,System.Guid)">
             <summary>
             Deletes a specific brand image by its ID.
             </summary>
@@ -227,7 +229,7 @@
             <response code="404">Brand or image not found.</response>
             <response code="500">Unexpected server error.</response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.BrandsController.AddBrandImages(System.Guid,System.Collections.Generic.List{Microsoft.AspNetCore.Http.IFormFile})">
+        <member name="M:EStoreX.API.Controllers.Admin.BrandsController.AddBrandImages(System.Guid,System.Collections.Generic.List{Microsoft.AspNetCore.Http.IFormFile})">
             <summary>
             Adds images to the specified brand.
             </summary>
@@ -242,7 +244,7 @@
             <response code="400">No files were provided.</response>
             <response code="404">Brand not found.</response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.BrandsController.UpdateBrandImages(System.Guid,System.Collections.Generic.List{Microsoft.AspNetCore.Http.IFormFile})">
+        <member name="M:EStoreX.API.Controllers.Admin.BrandsController.UpdateBrandImages(System.Guid,System.Collections.Generic.List{Microsoft.AspNetCore.Http.IFormFile})">
             <summary>
             Updates all images of the specified brand.
             </summary>
@@ -260,7 +262,7 @@
             <response code="400">No files were provided.</response>
             <response code="404">Brand not found.</response>
         </member>
-        <member name="T:E_StoreX.API.Controllers.Admin.CategoriesController">
+        <member name="T:EStoreX.API.Controllers.Admin.CategoriesController">
             <summary>
             Provides administrative operations for managing product categories in the E-StoreX platform.
             </summary>
@@ -269,18 +271,18 @@
             for creating, updating, deleting, assigning brands, and exporting categories.
             <para>
             Version: 2.0  
-            Inherits from <see cref="T:E_StoreX.API.Controllers.Admin.AdminControllerBase"/>.
+            Inherits from <see cref="T:EStoreX.API.Controllers.Admin.AdminControllerBase"/>.
             </para>
             </remarks>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.CategoriesController.#ctor(EStoreX.Core.ServiceContracts.Categories.ICategoriesService,EStoreX.Core.ServiceContracts.Common.IExportService)">
+        <member name="M:EStoreX.API.Controllers.Admin.CategoriesController.#ctor(EStoreX.Core.ServiceContracts.Categories.ICategoriesService,EStoreX.Core.ServiceContracts.Common.IExportService,Microsoft.Extensions.Localization.IStringLocalizer{EStoreX.API.SharedResource})">
             <summary>
-            Initializes a new instance of the <see cref="T:E_StoreX.API.Controllers.Admin.CategoriesController"/> class.
+            Initializes a new instance of the <see cref="T:EStoreX.API.Controllers.Admin.CategoriesController"/> class.
             </summary>
-            <param name="categoriesService">Service for managing categories.</param>
             <param name="exportService">Service for exporting categories to files.</param>
+            <param name="localizer">localizer for shared resources.</param>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.CategoriesController.CreateCategory(EStoreX.Core.DTO.Categories.Requests.CategoryRequest)">
+        <member name="M:EStoreX.API.Controllers.Admin.CategoriesController.CreateCategory(EStoreX.Core.DTO.Categories.Requests.CategoryRequest)">
             <summary>
             Creates a new category in the database.
             </summary>
@@ -293,7 +295,7 @@
             <response code="200">Category created successfully.</response>
             <response code="400">Invalid category data supplied.</response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.CategoriesController.UpdateCategory(System.Guid,EStoreX.Core.DTO.Categories.Requests.UpdateCategoryDTO)">
+        <member name="M:EStoreX.API.Controllers.Admin.CategoriesController.UpdateCategory(System.Guid,EStoreX.Core.DTO.Categories.Requests.UpdateCategoryDTO)">
             <summary>
             Updates an existing category in the database.
             </summary>
@@ -308,7 +310,7 @@
             <response code="204">Category updated successfully.</response>
             <response code="400">Invalid request or ID mismatch.</response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.CategoriesController.DeleteCategory(System.Guid)">
+        <member name="M:EStoreX.API.Controllers.Admin.CategoriesController.DeleteCategory(System.Guid)">
             <summary>
             Deletes a category with the specified Id from the database.
             </summary>
@@ -322,7 +324,7 @@
             <response code="204">Category deleted successfully.</response>
             <response code="400">Invalid category ID or failed to delete.</response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.CategoriesController.AssignBrandToCategory(System.Guid,System.Guid)">
+        <member name="M:EStoreX.API.Controllers.Admin.CategoriesController.AssignBrandToCategory(System.Guid,System.Guid)">
             <summary>
             Assign a brand to a category.
             </summary>
@@ -330,7 +332,7 @@
             <param name="brandId">The unique identifier of the brand.</param>
             <returns>NoContent if successful, BadRequest otherwise.</returns>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.CategoriesController.UnassignBrandFromCategory(System.Guid,System.Guid)">
+        <member name="M:EStoreX.API.Controllers.Admin.CategoriesController.UnassignBrandFromCategory(System.Guid,System.Guid)">
             <summary>
             Unassign a brand from a category.
             </summary>
@@ -338,7 +340,7 @@
             <param name="brandId">The unique identifier of the brand.</param>
             <returns>NoContent if successful, BadRequest otherwise.</returns>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.CategoriesController.Export(EStoreX.Core.Enums.ExportType)">
+        <member name="M:EStoreX.API.Controllers.Admin.CategoriesController.Export(EStoreX.Core.Enums.ExportType)">
             <summary>
             Exports all categories into the specified file format.
             </summary>
@@ -359,7 +361,7 @@
             <response code="400">Unsupported export type requested.</response>
             <response code="401">If the user is not authenticated.</response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.CategoriesController.DeleteCategoryImage(System.Guid,System.Guid)">
+        <member name="M:EStoreX.API.Controllers.Admin.CategoriesController.DeleteCategoryImage(System.Guid,System.Guid)">
             <summary>
             Deletes a specific category image by its ID.
             </summary>
@@ -374,7 +376,7 @@
             <response code="404">Category or image not found.</response>
             <response code="500">Unexpected server error.</response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.CategoriesController.AddCategoryImages(System.Guid,System.Collections.Generic.List{Microsoft.AspNetCore.Http.IFormFile})">
+        <member name="M:EStoreX.API.Controllers.Admin.CategoriesController.AddCategoryImages(System.Guid,System.Collections.Generic.List{Microsoft.AspNetCore.Http.IFormFile})">
             <summary>
             Adds images to the specified category.
             </summary>
@@ -389,7 +391,7 @@
             <response code="400">No files were provided.</response>
             <response code="404">Category not found.</response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.CategoriesController.UpdateCategoryImages(System.Guid,System.Collections.Generic.List{Microsoft.AspNetCore.Http.IFormFile})">
+        <member name="M:EStoreX.API.Controllers.Admin.CategoriesController.UpdateCategoryImages(System.Guid,System.Collections.Generic.List{Microsoft.AspNetCore.Http.IFormFile})">
             <summary>
             Updates all images of the specified category.
             </summary>
@@ -407,17 +409,18 @@
             <response code="400">No files were provided.</response>
             <response code="404">Category not found.</response>
         </member>
-        <member name="T:E_StoreX.API.Controllers.Admin.DeliveryMethodController">
+        <member name="T:EStoreX.API.Controllers.Admin.DeliveryMethodController">
             <summary>
             DeliveryMethodController handles admin operations related to delivery methods.
             </summary>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.DeliveryMethodController.#ctor(EStoreX.Core.ServiceContracts.Orders.IDeliveryMethodService,EStoreX.Core.ServiceContracts.Common.IExportService)">
+        <member name="M:EStoreX.API.Controllers.Admin.DeliveryMethodController.#ctor(EStoreX.Core.ServiceContracts.Orders.IDeliveryMethodService,EStoreX.Core.ServiceContracts.Common.IExportService,Microsoft.Extensions.Localization.IStringLocalizer{EStoreX.API.SharedResource})">
             <summary>
-            Initializes a new instance of the <see cref="T:E_StoreX.API.Controllers.Admin.DeliveryMethodController"/> class.
+            Initializes a new instance of the <see cref="T:EStoreX.API.Controllers.Admin.DeliveryMethodController"/> class.
             </summary>
+            <param name="localizer">localizer for shared resources.</param>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.DeliveryMethodController.Create(EStoreX.Core.DTO.Orders.Requests.DeliveryMethodRequest)">
+        <member name="M:EStoreX.API.Controllers.Admin.DeliveryMethodController.Create(EStoreX.Core.DTO.Orders.Requests.DeliveryMethodRequest)">
             <summary>
             Creates a new delivery method.
             </summary>
@@ -427,7 +430,7 @@
             <response code="400">Invalid request data.</response>
             <response code="401">Unauthorized user.</response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.DeliveryMethodController.Update(System.Guid,EStoreX.Core.DTO.Orders.Requests.DeliveryMethodRequest)">
+        <member name="M:EStoreX.API.Controllers.Admin.DeliveryMethodController.Update(System.Guid,EStoreX.Core.DTO.Orders.Requests.DeliveryMethodRequest)">
             <summary>
             Updates an existing delivery method.
             </summary>
@@ -438,7 +441,7 @@
             <response code="404">Delivery method not found.</response>
             <response code="401">Unauthorized user.</response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.DeliveryMethodController.Delete(System.Guid)">
+        <member name="M:EStoreX.API.Controllers.Admin.DeliveryMethodController.Delete(System.Guid)">
             <summary>
             Deletes a delivery method by its unique identifier.
             </summary>
@@ -448,7 +451,7 @@
             <response code="404">Delivery method not found.</response>
             <response code="401">Unauthorized user.</response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.DeliveryMethodController.Export(EStoreX.Core.Enums.ExportType)">
+        <member name="M:EStoreX.API.Controllers.Admin.DeliveryMethodController.Export(EStoreX.Core.Enums.ExportType)">
             <summary>
             Exports all deliveryMethods into the specified file format.
             </summary>
@@ -469,20 +472,22 @@
             <response code="400">Unsupported export type requested.</response>
             <response code="401">If the user is not authenticated.</response>
         </member>
-        <member name="T:E_StoreX.API.Controllers.Admin.DiscountsController">
+        <member name="T:EStoreX.API.Controllers.Admin.DiscountsController">
             <summary>
             Provides endpoints for managing discounts in the system.
             This controller is intended for administrators only.
             </summary>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.DiscountsController.#ctor(EStoreX.Core.ServiceContracts.Discount.IDiscountService,EStoreX.Core.ServiceContracts.Common.IExportService)">
+        <member name="M:EStoreX.API.Controllers.Admin.DiscountsController.#ctor(EStoreX.Core.ServiceContracts.Discount.IDiscountService,EStoreX.Core.ServiceContracts.Common.IExportService,Microsoft.Extensions.Localization.IStringLocalizer{EStoreX.API.SharedResource})">
             <summary>
-            Initializes a new instance of the <see cref="T:E_StoreX.API.Controllers.Admin.DiscountsController"/> class.
+            Initializes a new instance of the <see cref="T:EStoreX.API.Controllers.Admin.DiscountsController"/> class.
             </summary>
             <param name="discountService">Service responsible for managing discount operations, including creation, update, deletion, and validation.</param>
             <param name="exportService">Service responsible for exporting discount data in various formats (CSV, Excel, PDF).</param>
+            <param name="exportService">Service responsible for exporting discount data in various formats (CSV, Excel, PDF).</param>
+            <param name="localizer">localizer for shared resources.</param>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.DiscountsController.Create(DiscountRequest)">
+        <member name="M:EStoreX.API.Controllers.Admin.DiscountsController.Create(EStoreX.Core.DTO.Discount.Request.DiscountRequest)">
             <summary>
             Creates a new discount entry in the system, allowing administrators to define promotional offers 
             such as percentage-based or fixed-amount discounts.  
@@ -508,7 +513,7 @@
             }
             </remarks>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.DiscountsController.Update(System.Guid,DiscountRequest)">
+        <member name="M:EStoreX.API.Controllers.Admin.DiscountsController.Update(System.Guid,EStoreX.Core.DTO.Discount.Request.DiscountRequest)">
             <summary>
             Updates the details of an existing discount in the system.  
             This allows administrators to modify attributes such as the discount code, value, validity period,
@@ -536,7 +541,7 @@
             }
             </remarks>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.DiscountsController.Delete(System.Guid)">
+        <member name="M:EStoreX.API.Controllers.Admin.DiscountsController.Delete(System.Guid)">
             <summary>
             Permanently removes an existing discount from the system.  
             This action is typically used by administrators when a discount code is no longer valid 
@@ -553,7 +558,7 @@
             DELETE /api/discount/{id}  
             </remarks>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.DiscountsController.Activate(System.Guid)">
+        <member name="M:EStoreX.API.Controllers.Admin.DiscountsController.Activate(System.Guid)">
             <summary>
             Activates an existing discount immediately, making it available for use by customers.  
             This action is typically performed by administrators to enable a discount code without waiting
@@ -570,7 +575,7 @@
             POST /api/discount/{id}/activate  
             </remarks>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.DiscountsController.Expire(System.Guid)">
+        <member name="M:EStoreX.API.Controllers.Admin.DiscountsController.Expire(System.Guid)">
             <summary>
             Expires an existing discount immediately, preventing it from being used in any future orders.  
             This action is typically performed by administrators to disable a discount code before its scheduled end date.
@@ -586,7 +591,7 @@
             POST /api/discount/{id}/expire  
             </remarks>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.DiscountsController.UpdateDates(System.Guid,EStoreX.Core.DTO.Discount.Request.UpdateDiscountDatesRequest)">
+        <member name="M:EStoreX.API.Controllers.Admin.DiscountsController.UpdateDates(System.Guid,EStoreX.Core.DTO.Discount.Request.UpdateDiscountDatesRequest)">
             <summary>
             Updates the validity period of an existing discount by modifying its start and end dates.  
             This action is typically used by administrators to extend, shorten, or reschedule a discount campaign.
@@ -609,7 +614,7 @@
             }
             </remarks>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.DiscountsController.GetById(System.Guid)">
+        <member name="M:EStoreX.API.Controllers.Admin.DiscountsController.GetById(System.Guid)">
             <summary>
             Retrieves the details of a specific discount by its unique identifier.  
             This allows administrators or authorized users to view information such as the discount code, value, 
@@ -627,7 +632,7 @@
             GET /api/discount/{id}  
             </remarks>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.DiscountsController.GetByCode(System.String)">
+        <member name="M:EStoreX.API.Controllers.Admin.DiscountsController.GetByCode(System.String)">
             <summary>
             Retrieves the details of a discount using its unique code.  
             This allows customers or administrators to check whether a discount code is valid 
@@ -645,7 +650,7 @@
             GET /api/discount/by-code/SUMMER25  
             </remarks>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.DiscountsController.GetAll">
+        <member name="M:EStoreX.API.Controllers.Admin.DiscountsController.GetAll">
             <summary>
             Retrieves a list of all discounts available in the system.  
             This includes active, expired, and scheduled discounts, allowing administrators 
@@ -661,7 +666,7 @@
             GET /api/discount  
             </remarks>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.DiscountsController.GetActive">
+        <member name="M:EStoreX.API.Controllers.Admin.DiscountsController.GetActive">
             <summary>
             Retrieves a list of all discounts that are currently active and available for use.  
             Active discounts are those within their validity period and not expired or deactivated.
@@ -676,7 +681,7 @@
             GET /api/discount/active  
             </remarks>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.DiscountsController.GetExpired">
+        <member name="M:EStoreX.API.Controllers.Admin.DiscountsController.GetExpired">
             <summary>
             Retrieves a list of all discounts that have expired.  
             Expired discounts are those whose end date has passed or that were manually expired 
@@ -692,7 +697,7 @@
             GET /api/discount/expired  
             </remarks>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.DiscountsController.GetNotStarted">
+        <member name="M:EStoreX.API.Controllers.Admin.DiscountsController.GetNotStarted">
             <summary>
             Retrieves a list of all discounts that are scheduled but have not yet started.  
             Upcoming discounts are those whose start date is in the future, making them unavailable 
@@ -708,50 +713,52 @@
             GET /api/discount/upcoming  
             </remarks>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.DiscountsController.ExportActiveDiscounts(EStoreX.Core.Enums.ExportType)">
+        <member name="M:EStoreX.API.Controllers.Admin.DiscountsController.ExportActiveDiscounts(EStoreX.Core.Enums.ExportType)">
             <summary>
             Exports all currently active discounts in the specified format (CSV, Excel, or PDF).  
             Use this endpoint to download active discounts for reporting or analysis purposes.  
             </summary>
             <param name="type">The type of export format (Csv, Excel, Pdf).</param>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.DiscountsController.ExportUpcomingDiscounts(EStoreX.Core.Enums.ExportType)">
+        <member name="M:EStoreX.API.Controllers.Admin.DiscountsController.ExportUpcomingDiscounts(EStoreX.Core.Enums.ExportType)">
             <summary>
             Exports all upcoming (not yet started) discounts in the specified format (CSV, Excel, or PDF).  
             Use this endpoint to download upcoming discounts for planning and promotional purposes.  
             </summary>
             <param name="type">The type of export format (Csv, Excel, Pdf).</param>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.DiscountsController.ExportExpiredDiscounts(EStoreX.Core.Enums.ExportType)">
+        <member name="M:EStoreX.API.Controllers.Admin.DiscountsController.ExportExpiredDiscounts(EStoreX.Core.Enums.ExportType)">
             <summary>
             Exports all expired discounts in the specified format (CSV, Excel, or PDF).  
             Use this endpoint to review past discounts for auditing or historical analysis.  
             </summary>
             <param name="type">The type of export format (Csv, Excel, Pdf).</param>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.DiscountsController.ExportAllDiscounts(EStoreX.Core.Enums.ExportType)">
+        <member name="M:EStoreX.API.Controllers.Admin.DiscountsController.ExportAllDiscounts(EStoreX.Core.Enums.ExportType)">
             <summary>
             Exports all discounts (active, upcoming, and expired) in the specified format (CSV, Excel, or PDF).  
             Restricted to <b>Admin users</b> for reporting or auditing purposes.  
             </summary>
             <param name="type">The type of export format (Csv, Excel, Pdf).</param>
         </member>
-        <member name="T:E_StoreX.API.Controllers.Admin.OrdersController">
+        <member name="T:EStoreX.API.Controllers.Admin.OrdersController">
             <summary>
             Provides functionality for managing and processing orders within the administrative context.
             </summary>
-            <remarks>This controller inherits from <see cref="T:E_StoreX.API.Controllers.Admin.AdminControllerBase"/> and is intended for use in
+            <remarks>This controller inherits from <see cref="T:EStoreX.API.Controllers.Admin.AdminControllerBase"/> and is intended for use in
             administrative scenarios where order-related operations are required. It serves as a base for implementing
             actions related to order management.</remarks>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.OrdersController.#ctor(EStoreX.Core.ServiceContracts.Orders.IOrderService,EStoreX.Core.ServiceContracts.Common.IExportService)">
+        <member name="M:EStoreX.API.Controllers.Admin.OrdersController.#ctor(EStoreX.Core.ServiceContracts.Orders.IOrderService,EStoreX.Core.ServiceContracts.Common.IExportService,Microsoft.Extensions.Localization.IStringLocalizer{EStoreX.API.SharedResource})">
             <summary>
-            Initializes a new instance of the <see cref="T:E_StoreX.API.Controllers.Admin.OrdersController"/> class with the specified order service.
+            Initializes a new instance of the <see cref="T:EStoreX.API.Controllers.Admin.OrdersController"/> class with the specified order service.
             </summary>
             <param name="orderService">The service used to manage order-related operations.</param>
             <param name="exportService">Service to manage files.</param>
+            <param name="exportService">Service to manage files.</param>
+            <param name="localizer">localizer for shared resources.</param>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.OrdersController.GetOrders">
+        <member name="M:EStoreX.API.Controllers.Admin.OrdersController.GetOrders">
             <summary>
             Retrieves all orders from the system.
             </summary>
@@ -764,7 +771,7 @@
             <response code="200">Orders retrieved successfully.</response>
             <response code="401">User is not authenticated.</response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.OrdersController.Export(EStoreX.Core.Enums.ExportType)">
+        <member name="M:EStoreX.API.Controllers.Admin.OrdersController.Export(EStoreX.Core.Enums.ExportType)">
             <summary>
             Exports all orders into the specified file format.
             </summary>
@@ -785,7 +792,7 @@
             <response code="400">Unsupported export type requested.</response>
             <response code="401">If the user is not authenticated.</response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.OrdersController.GetSalesReport(System.DateTime,System.DateTime)">
+        <member name="M:EStoreX.API.Controllers.Admin.OrdersController.GetSalesReport(System.DateTime,System.DateTime)">
             <summary>
             Retrieves a sales report for a given date range.  
             This allows administrators to analyze revenue, order volume, and top-selling products.
@@ -800,7 +807,7 @@
             <response code="400">Invalid date range provided (e.g., start date after end date).</response>
             <response code="404">No orders found for the specified date range.</response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.OrdersController.ExportSalesReport(System.DateTime,System.DateTime,EStoreX.Core.Enums.ExportType)">
+        <member name="M:EStoreX.API.Controllers.Admin.OrdersController.ExportSalesReport(System.DateTime,System.DateTime,EStoreX.Core.Enums.ExportType)">
             <summary>
             Exports the sales report for a given date range in the specified file format.
             </summary>
@@ -812,7 +819,7 @@
             <response code="400">Invalid date range or unsupported export type.</response>
             <response code="404">No sales data available for the specified period.</response>
         </member>
-        <member name="T:E_StoreX.API.Controllers.Admin.ProductsController">
+        <member name="T:EStoreX.API.Controllers.Admin.ProductsController">
             <summary>
             Provides administrative operations for managing products in the E-StoreX application.
             </summary>
@@ -821,14 +828,15 @@
             for creating, updating, and deleting products.
             </remarks>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.ProductsController.#ctor(EStoreX.Core.ServiceContracts.Products.IProductsService,EStoreX.Core.ServiceContracts.Common.IExportService)">
+        <member name="M:EStoreX.API.Controllers.Admin.ProductsController.#ctor(EStoreX.Core.ServiceContracts.Products.IProductsService,EStoreX.Core.ServiceContracts.Common.IExportService,Microsoft.Extensions.Localization.IStringLocalizer{EStoreX.API.SharedResource})">
             <summary>
-            Initializes a new instance of the <see cref="T:E_StoreX.API.Controllers.Admin.ProductsController"/> class.
+            Initializes a new instance of the <see cref="T:EStoreX.API.Controllers.Admin.ProductsController"/> class.
             </summary>
             <param name="productsService">Service for handling product operations.</param>
             <param name="exportService">Service to manage files.</param>
+            <param name="localizer">localizer for shared resources.</param>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.ProductsController.CreateProduct(EStoreX.Core.DTO.Products.Requests.ProductAddRequest)">
+        <member name="M:EStoreX.API.Controllers.Admin.ProductsController.CreateProduct(EStoreX.Core.DTO.Products.Requests.ProductAddRequest)">
             <summary>
             Creates a new product in the database.
             </summary>
@@ -840,7 +848,7 @@
             <response code="400">Invalid product data supplied.</response>
             <response code="401">If the user is not authenticated.</response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.ProductsController.UpdateProduct(System.Guid,EStoreX.Core.DTO.Products.Requests.ProductUpdateRequest)">
+        <member name="M:EStoreX.API.Controllers.Admin.ProductsController.UpdateProduct(System.Guid,EStoreX.Core.DTO.Products.Requests.ProductUpdateRequest)">
             <summary>
             Updates an existing product.
             </summary>
@@ -854,7 +862,7 @@
             <response code="400">Product ID mismatch or invalid data supplied.</response>
             <response code="401">If the user is not authenticated.</response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.ProductsController.DeleteProduct(System.Guid)">
+        <member name="M:EStoreX.API.Controllers.Admin.ProductsController.DeleteProduct(System.Guid)">
             <summary>
             Deletes a product from the database.
             </summary>
@@ -869,7 +877,7 @@
             <response code="404">Product not found.</response>
             <response code="401">If the user is not authenticated.</response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.ProductsController.Export(EStoreX.Core.Enums.ExportType)">
+        <member name="M:EStoreX.API.Controllers.Admin.ProductsController.Export(EStoreX.Core.Enums.ExportType)">
             <summary>
             Exports all products into the specified file format.
             </summary>
@@ -890,7 +898,7 @@
             <response code="400">Unsupported export type requested.</response>
             <response code="401">If the user is not authenticated.</response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.ProductsController.DeleteProductImage(System.Guid,System.Guid)">
+        <member name="M:EStoreX.API.Controllers.Admin.ProductsController.DeleteProductImage(System.Guid,System.Guid)">
             <summary>
             Deletes a specific product image by its ID.
             </summary>
@@ -905,7 +913,7 @@
             <response code="404">Product or image not found.</response>
             <response code="500">Unexpected server error.</response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.ProductsController.AddProductImages(System.Guid,System.Collections.Generic.List{Microsoft.AspNetCore.Http.IFormFile})">
+        <member name="M:EStoreX.API.Controllers.Admin.ProductsController.AddProductImages(System.Guid,System.Collections.Generic.List{Microsoft.AspNetCore.Http.IFormFile})">
             <summary>
             Adds images to the specified product.
             </summary>
@@ -920,7 +928,7 @@
             <response code="400">No files were provided.</response>
             <response code="404">Product not found.</response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.ProductsController.UpdateProductImages(System.Guid,System.Collections.Generic.List{Microsoft.AspNetCore.Http.IFormFile})">
+        <member name="M:EStoreX.API.Controllers.Admin.ProductsController.UpdateProductImages(System.Guid,System.Collections.Generic.List{Microsoft.AspNetCore.Http.IFormFile})">
             <summary>
             Updates all images of the specified product.
             </summary>
@@ -938,7 +946,7 @@
             <response code="400">No files were provided.</response>
             <response code="404">Product not found.</response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.ProductsController.SetFeaturedStatus(System.Guid,System.Boolean)">
+        <member name="M:EStoreX.API.Controllers.Admin.ProductsController.SetFeaturedStatus(System.Guid,System.Boolean)">
             <summary>
             Updates the featured status of a product.
             </summary>
@@ -951,21 +959,22 @@
             <response code="200">Product featured status updated successfully.</response>
             <response code="404">Product not found or invalid ID.</response>
         </member>
-        <member name="T:E_StoreX.API.Controllers.Admin.RatingsController">
+        <member name="T:EStoreX.API.Controllers.Admin.RatingsController">
             <summary>
             API controller for managing ratings in the admin area.  
             Provides endpoints for administrators to review, moderate, and delete ratings.  
             </summary>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.RatingsController.#ctor(EStoreX.Core.ServiceContracts.Ratings.IRatingService)">
+        <member name="M:EStoreX.API.Controllers.Admin.RatingsController.#ctor(EStoreX.Core.ServiceContracts.Ratings.IRatingService,Microsoft.Extensions.Localization.IStringLocalizer{EStoreX.API.SharedResource})">
             <summary>
-            Initializes a new instance of the <see cref="T:E_StoreX.API.Controllers.Admin.RatingsController"/> class.
+            Initializes a new instance of the <see cref="T:EStoreX.API.Controllers.Admin.RatingsController"/> class.
             </summary>
             <param name="ratingService">
             The rating service that provides operations for managing ratings.
             </param>
+            <param name="localizer">localizer for shared resources.</param>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.RatingsController.DeleteRatingAsAdmin(System.Guid)">
+        <member name="M:EStoreX.API.Controllers.Admin.RatingsController.DeleteRatingAsAdmin(System.Guid)">
             <summary>
             Deletes a rating.  
             Admins can delete any rating, while normal users can only delete their own.
@@ -977,7 +986,7 @@
             <response code="401">If the user is not authenticated.</response>
             <response code="403">If the user does not have permission to delete this rating.</response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.RatingsController.GetAllRatingsForAdmin">
+        <member name="M:EStoreX.API.Controllers.Admin.RatingsController.GetAllRatingsForAdmin">
             <summary>
             Retrieves all ratings with detailed information for admin users.  
             The response includes the rating ID, product details (name, brand, category),  
@@ -988,19 +997,20 @@
             <response code="401">If the user is not authenticated.</response>
             <response code="403">If the user does not have permission to view ratings.</response>
         </member>
-        <member name="T:E_StoreX.API.Controllers.Admin.UserManagementController">
+        <member name="T:EStoreX.API.Controllers.Admin.UserManagementController">
             <summary>
             user management controller for administrative operations
             </summary>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.UserManagementController.#ctor(EStoreX.Core.ServiceContracts.Account.IUserManagementService,EStoreX.Core.ServiceContracts.Common.IExportService)">
+        <member name="M:EStoreX.API.Controllers.Admin.UserManagementController.#ctor(EStoreX.Core.ServiceContracts.Account.IUserManagementService,EStoreX.Core.ServiceContracts.Common.IExportService,Microsoft.Extensions.Localization.IStringLocalizer{EStoreX.API.SharedResource})">
             <summary>
             User management controller constructor
             </summary>
             <param name="userManagementService">Service responsible for management</param>
             <param name="exportService">Service to manage files.</param>
+            <param name="localizer">localizer for shared resources.</param>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.UserManagementController.GetAllUsers">
+        <member name="M:EStoreX.API.Controllers.Admin.UserManagementController.GetAllUsers">
             <summary>
             Retrieves all users (Admin or SuperAdmin only).
             </summary>
@@ -1008,7 +1018,7 @@
             <response code="200">Returns the list of users.</response>
             <response code="401">If the user is not authenticated.</response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.UserManagementController.GetUserById(System.String)">
+        <member name="M:EStoreX.API.Controllers.Admin.UserManagementController.GetUserById(System.String)">
             <summary>
             Retrieves a user by their ID (Admin or SuperAdmin only).
             </summary>
@@ -1017,7 +1027,7 @@
             <response code="200">Returns the user details.</response>
             <response code="404">If the user with the given ID was not found.</response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.UserManagementController.AddAdmin(EStoreX.Core.DTO.Account.Requests.CreateAdminDTO)">
+        <member name="M:EStoreX.API.Controllers.Admin.UserManagementController.AddAdmin(EStoreX.Core.DTO.Account.Requests.CreateAdminDTO)">
             <summary>
             Creates a new Admin (SuperAdmin only).
             </summary>
@@ -1026,7 +1036,7 @@
             <response code="201">Admin created successfully.</response>
             <response code="400">If the request is invalid or creation failed.</response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.UserManagementController.DeleteAdmin(System.String)">
+        <member name="M:EStoreX.API.Controllers.Admin.UserManagementController.DeleteAdmin(System.String)">
             <summary>
             Permanently deletes an admin (SuperAdmin only).
             </summary>
@@ -1035,7 +1045,7 @@
             <response code="200">Admin deleted successfully.</response>
             <response code="404">If the admin was not found.</response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.UserManagementController.DeleteUser(System.String)">
+        <member name="M:EStoreX.API.Controllers.Admin.UserManagementController.DeleteUser(System.String)">
             <summary>
             Deletes a user (rules depend on roles: SuperAdmin/Admin).
             </summary>
@@ -1046,7 +1056,7 @@
             <response code="401">If the current user is not authenticated.</response>
             <response code="404">If the user was not found.</response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.UserManagementController.DeactivateUser(System.String)">
+        <member name="M:EStoreX.API.Controllers.Admin.UserManagementController.DeactivateUser(System.String)">
             <summary>
             Deactivates a user (Admin or SuperAdmin).
             </summary>
@@ -1055,7 +1065,7 @@
             <response code="200">User deactivated successfully.</response>
             <response code="404">If the user was not found.</response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.UserManagementController.ActivateUser(System.String)">
+        <member name="M:EStoreX.API.Controllers.Admin.UserManagementController.ActivateUser(System.String)">
             <summary>
             Activates a user (Admin or SuperAdmin).
             </summary>
@@ -1064,7 +1074,7 @@
             <response code="200">User activated successfully.</response>
             <response code="404">If the user was not found.</response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.UserManagementController.AssignRole(EStoreX.Core.DTO.Account.Requests.UpdateUserRoleDTO)">
+        <member name="M:EStoreX.API.Controllers.Admin.UserManagementController.AssignRole(EStoreX.Core.DTO.Account.Requests.UpdateUserRoleDTO)">
             <summary>
             Assigns a role to a user (SuperAdmin only).
             </summary>
@@ -1074,7 +1084,7 @@
             <response code="400">If assignment failed.</response>
             <response code="404">If the user was not found.</response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.UserManagementController.RemoveRole(EStoreX.Core.DTO.Account.Requests.UpdateUserRoleDTO)">
+        <member name="M:EStoreX.API.Controllers.Admin.UserManagementController.RemoveRole(EStoreX.Core.DTO.Account.Requests.UpdateUserRoleDTO)">
             <summary>
             Removes a role from a user (SuperAdmin only).
             </summary>
@@ -1084,7 +1094,7 @@
             <response code="400">If removal failed.</response>
             <response code="404">If the user was not found.</response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.UserManagementController.Export(EStoreX.Core.Enums.ExportType)">
+        <member name="M:EStoreX.API.Controllers.Admin.UserManagementController.Export(EStoreX.Core.Enums.ExportType)">
             <summary>
             Exports all users into the specified file format.
             </summary>
@@ -1105,7 +1115,7 @@
             <response code="400">Unsupported export type requested.</response>
             <response code="401">If the user is not authenticated.</response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Admin.UserManagementController.GetAdmins">
+        <member name="M:EStoreX.API.Controllers.Admin.UserManagementController.GetAdmins">
             <summary>
             Retrieves all users who are either Admins or SuperAdmins.
             </summary>
@@ -1113,15 +1123,15 @@
             <response code="200">Returns the list of users.</response>
             <response code="404">If no Admin or SuperAdmin users were found.</response>
         </member>
-        <member name="T:E_StoreX.API.Controllers.Public.AccountController">
+        <member name="T:EStoreX.API.Controllers.Public.AccountController">
             <summary>
             Controller responsible for handling user authentication-related actions
             such as registration, login, email confirmation, and password reset for the E-StoreX API.
             </summary>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.AccountController.#ctor(EStoreX.Core.ServiceContracts.Account.IAuthenticationService,AutoMapper.IMapper,Microsoft.AspNetCore.Identity.SignInManager{EStoreX.Core.Domain.IdentityEntities.ApplicationUser},EStoreX.Core.ServiceContracts.Account.IApiClientService)">
+        <member name="M:EStoreX.API.Controllers.Public.AccountController.#ctor(EStoreX.Core.ServiceContracts.Account.IAuthenticationService,AutoMapper.IMapper,Microsoft.AspNetCore.Identity.SignInManager{EStoreX.Core.Domain.IdentityEntities.ApplicationUser},EStoreX.Core.ServiceContracts.Account.IApiClientService,Microsoft.Extensions.Localization.IStringLocalizer{EStoreX.API.SharedResource})">
             <summary>
-            Initializes a new instance of the <see cref="T:E_StoreX.API.Controllers.Public.AccountController"/> class.
+            Initializes a new instance of the <see cref="T:EStoreX.API.Controllers.Public.AccountController"/> class.
             </summary>
             <param name="authService">
             The authentication service that handles user registration, login, 
@@ -1136,8 +1146,11 @@
             <param name="clientService">
             Service to validate client id and platform.
             </param>
+            <param name="localizer">
+            localizer for shared resources.
+            </param>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.AccountController.PostRegister(EStoreX.Core.DTO.Account.Requests.RegisterDTO)">
+        <member name="M:EStoreX.API.Controllers.Public.AccountController.PostRegister(EStoreX.Core.DTO.Account.Requests.RegisterDTO)">
             <summary>
             Registers a new user in the system.
             </summary>
@@ -1160,7 +1173,7 @@
             The system does not allow duplicate accounts with the same email.
             </response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.AccountController.PostLogin(EStoreX.Core.DTO.Account.Requests.LoginDTO)">
+        <member name="M:EStoreX.API.Controllers.Public.AccountController.PostLogin(EStoreX.Core.DTO.Account.Requests.LoginDTO)">
             <summary>
             Authenticates an existing user and generates a JWT token.
             </summary>
@@ -1199,7 +1212,7 @@
             Returns <see cref="T:EStoreX.Core.DTO.Common.ApiErrorResponse"/> explaining the lockout period.
             </response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.AccountController.ConfirmEmail(EStoreX.Core.DTO.Account.Requests.ConfirmEmailDTO)">
+        <member name="M:EStoreX.API.Controllers.Public.AccountController.ConfirmEmail(EStoreX.Core.DTO.Account.Requests.ConfirmEmailDTO)">
             <summary>
             Confirms a user's email using the provided user ID and token.
             </summary>
@@ -1224,7 +1237,7 @@
             Returns <see cref="T:EStoreX.Core.DTO.Common.ApiErrorResponse"/>.
             </response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.AccountController.ForgotPassword(EStoreX.Core.DTO.Account.Requests.ForgotPasswordDTO)">
+        <member name="M:EStoreX.API.Controllers.Public.AccountController.ForgotPassword(EStoreX.Core.DTO.Account.Requests.ForgotPasswordDTO)">
             <summary>
             Sends a password reset link to the user's email address.
             </summary>
@@ -1248,7 +1261,7 @@
             Returns <see cref="T:EStoreX.Core.DTO.Common.ApiErrorResponse"/> indicating rate limiting.
             </response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.AccountController.VerifyResetPassword(EStoreX.Core.DTO.Account.Requests.VerifyResetPasswordDTO)">
+        <member name="M:EStoreX.API.Controllers.Public.AccountController.VerifyResetPassword(EStoreX.Core.DTO.Account.Requests.VerifyResetPasswordDTO)">
             <summary>
             Verifies the validity of a reset password token for a given user.
             </summary>
@@ -1272,7 +1285,7 @@
             Returns <see cref="T:EStoreX.Core.DTO.Common.ApiErrorResponse"/> indicating the problem.
             </response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.AccountController.ResetPassword(EStoreX.Core.DTO.Account.Requests.ResetPasswordDTO)">
+        <member name="M:EStoreX.API.Controllers.Public.AccountController.ResetPassword(EStoreX.Core.DTO.Account.Requests.ResetPasswordDTO)">
             <summary>
             Resets the user's password using a valid token.
             </summary>
@@ -1296,7 +1309,7 @@
             Not Found – User not found or token invalid/expired. Returns <see cref="T:EStoreX.Core.DTO.Common.ApiErrorResponse"/>.
             </response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.AccountController.RefreshToken(EStoreX.Core.DTO.Account.Responses.TokenModel)">
+        <member name="M:EStoreX.API.Controllers.Public.AccountController.RefreshToken(EStoreX.Core.DTO.Account.Responses.TokenModel)">
             <summary>
             Generates a new access token (and refresh token) using a valid refresh token.
             </summary>
@@ -1316,7 +1329,7 @@
             Not Found – User associated with the token does not exist. Returns <see cref="T:EStoreX.Core.DTO.Common.ApiErrorResponse"/>.
             </response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.AccountController.UpdateAddress(EStoreX.Core.DTO.Orders.Requests.ShippingAddressDTO)">
+        <member name="M:EStoreX.API.Controllers.Public.AccountController.UpdateAddress(EStoreX.Core.DTO.Orders.Requests.ShippingAddressDTO)">
             <summary>
             Updates the authenticated user's shipping address.
             </summary>
@@ -1336,7 +1349,7 @@
             Unauthorized – The user is not authenticated. Returns <see cref="T:EStoreX.Core.DTO.Common.ApiResponse"/>.
             </response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.AccountController.GetAddress">
+        <member name="M:EStoreX.API.Controllers.Public.AccountController.GetAddress">
             <summary>
             Retrieves the shipping address of the currently authenticated user.
             </summary>
@@ -1357,7 +1370,7 @@
             Unauthorized – User is not authenticated. Returns <see cref="T:EStoreX.Core.DTO.Common.ApiResponse"/>.
             </response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.AccountController.PostLogout">
+        <member name="M:EStoreX.API.Controllers.Public.AccountController.PostLogout">
             <summary>
             Logs out the currently authenticated user by clearing their refresh token and signing them out.
             </summary>
@@ -1375,7 +1388,7 @@
             Unauthorized – The user is not authenticated. Returns <see cref="T:EStoreX.Core.DTO.Common.ApiResponse"/>.
             </response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.AccountController.GetCurrentUser">
+        <member name="M:EStoreX.API.Controllers.Public.AccountController.GetCurrentUser">
             <summary>
             Retrieves information about the currently authenticated user.
             </summary>
@@ -1399,7 +1412,7 @@
             Unauthorized – The user is not authenticated. Returns <see cref="T:EStoreX.Core.DTO.Common.ApiErrorResponse"/>.
             </response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.AccountController.UpdateUserProfile(EStoreX.Core.DTO.Account.Requests.UpdateUserDTO)">
+        <member name="M:EStoreX.API.Controllers.Public.AccountController.UpdateUserProfile(EStoreX.Core.DTO.Account.Requests.UpdateUserDTO)">
             <summary>
             Updates the authenticated user's profile information, including display name, 
             phone number, and optionally their password.
@@ -1427,7 +1440,7 @@
             Not Found – User does not exist. Returns <see cref="T:EStoreX.Core.DTO.Common.ApiErrorResponse"/>.
             </response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.AccountController.ExternalLogin(EStoreX.Core.Enums.ExternalLoginProvider,System.Guid)">
+        <member name="M:EStoreX.API.Controllers.Public.AccountController.ExternalLogin(EStoreX.Core.Enums.ExternalLoginProvider,System.Guid)">
             <summary>
             Initiates the external login process by redirecting the user to the chosen authentication provider (e.g., Google, GitHub).
             </summary>
@@ -1451,7 +1464,7 @@
             Bad Request – The 'provider' query parameter is missing or invalid. Returns <see cref="T:EStoreX.Core.DTO.Common.ApiResponse"/>.
             </response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.AccountController.ExternalLoginCallback(System.String)">
+        <member name="M:EStoreX.API.Controllers.Public.AccountController.ExternalLoginCallback(System.String)">
             <summary>
             Handles the callback from the external login provider after the authentication attempt.
             </summary>
@@ -1480,7 +1493,7 @@
             Internal Server Error – Failed to create user account or link external login due to server error.
             </response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.AccountController.DeleteAccount">
+        <member name="M:EStoreX.API.Controllers.Public.AccountController.DeleteAccount">
             <summary>
             Permanently deletes the currently authenticated user's account.
             </summary>
@@ -1491,7 +1504,7 @@
             <response code="404">User not found.</response>
             <response code="500">An error occurred while deleting the account.</response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.AccountController.ResendConfirmationEmail(EStoreX.Core.DTO.Account.Requests.ResendEmailRequest)">
+        <member name="M:EStoreX.API.Controllers.Public.AccountController.ResendConfirmationEmail(EStoreX.Core.DTO.Account.Requests.ResendEmailRequest)">
             <summary>
             Resends the account confirmation email to the specified user.
             </summary>
@@ -1512,7 +1525,7 @@
             <response code="404">No user found with the provided email.</response>
             <response code="500">An unexpected error occurred while sending the confirmation email.</response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.AccountController.UploadUserPhoto(EStoreX.Core.DTO.Account.Requests.UploadUserPhotoDto)">
+        <member name="M:EStoreX.API.Controllers.Public.AccountController.UploadUserPhoto(EStoreX.Core.DTO.Account.Requests.UploadUserPhotoDto)">
             <summary>
             Uploads (or replaces) the authenticated user's profile photo.
             </summary>
@@ -1535,7 +1548,7 @@
             Not Found – User does not exist. Returns <see cref="T:EStoreX.Core.DTO.Common.ApiErrorResponse"/>.
             </response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.AccountController.DeleteUserPhoto">
+        <member name="M:EStoreX.API.Controllers.Public.AccountController.DeleteUserPhoto">
             <summary>
             Deletes the authenticated user's profile photo.
             </summary>
@@ -1555,18 +1568,19 @@
             Not Found – User does not exist. Returns <see cref="T:EStoreX.Core.DTO.Common.ApiErrorResponse"/>.
             </response>
         </member>
-        <member name="T:E_StoreX.API.Controllers.Public.BasketsController">
+        <member name="T:EStoreX.API.Controllers.Public.BasketsController">
             <summary>
             API controller for managing customer baskets.
             </summary>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.BasketsController.#ctor(EStoreX.Core.ServiceContracts.Basket.IBasketService)">
+        <member name="M:EStoreX.API.Controllers.Public.BasketsController.#ctor(EStoreX.Core.ServiceContracts.Basket.IBasketService,Microsoft.Extensions.Localization.IStringLocalizer{EStoreX.API.SharedResource})">
             <summary>
-            Initializes a new instance of the <see cref="T:E_StoreX.API.Controllers.Public.BasketsController"/> class.
+            Initializes a new instance of the <see cref="T:EStoreX.API.Controllers.Public.BasketsController"/> class.
             </summary>
             <param name="basketService">basket service</param>
+            <param name="localizer">localizer</param>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.BasketsController.GetBasket(System.String)">
+        <member name="M:EStoreX.API.Controllers.Public.BasketsController.GetBasket(System.String)">
             <summary>
             Retrieves a customer basket by ID.
             </summary>
@@ -1586,7 +1600,7 @@
             Not Found – No basket exists for the given ID.
             </response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.BasketsController.AddOrUpdateBasket(EStoreX.Core.DTO.Basket.BasketAddRequest)">
+        <member name="M:EStoreX.API.Controllers.Public.BasketsController.AddOrUpdateBasket(EStoreX.Core.DTO.Basket.BasketAddRequest)">
             <summary>
             Adds or updates a customer basket.
             </summary>
@@ -1604,7 +1618,7 @@
             Bad Request – The basket ID format is invalid, or there are no valid items to update.
             </response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.BasketsController.DeleteBasket(System.String)">
+        <member name="M:EStoreX.API.Controllers.Public.BasketsController.DeleteBasket(System.String)">
             <summary>
             Deletes a customer basket by ID.
             </summary>
@@ -1625,7 +1639,7 @@
             Not Found – No basket exists with the given ID or it has already been deleted.
             </response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.BasketsController.MergeBasket(System.String)">
+        <member name="M:EStoreX.API.Controllers.Public.BasketsController.MergeBasket(System.String)">
             <summary>
             Merges the guest basket (created before login) with the authenticated user's basket.
             </summary>
@@ -1645,7 +1659,7 @@
             Unauthorized – The user is not logged in.
             </response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.BasketsController.DecreaseItemQuantity(System.String,System.Guid)">
+        <member name="M:EStoreX.API.Controllers.Public.BasketsController.DecreaseItemQuantity(System.String,System.Guid)">
             <summary>
             Decreases the quantity of a specific item in the customer's basket by 1.  
             If the quantity reaches zero, the item will be removed from the basket.
@@ -1669,7 +1683,7 @@
             Not Found – The basket or item does not exist.
             </response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.BasketsController.RemoveItemFromBasket(System.String,System.Guid)">
+        <member name="M:EStoreX.API.Controllers.Public.BasketsController.RemoveItemFromBasket(System.String,System.Guid)">
             <summary>
             Removes a specific item from the customer's basket.
             </summary>
@@ -1692,7 +1706,7 @@
             Not Found – The basket or item does not exist.
             </response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.BasketsController.IncreaseItemQuantity(System.String,System.Guid)">
+        <member name="M:EStoreX.API.Controllers.Public.BasketsController.IncreaseItemQuantity(System.String,System.Guid)">
             <summary>
             Increases the quantity of a specific item in the customer's basket.
             </summary>
@@ -1702,7 +1716,7 @@
             <response code="404">Returned if the basket or item is not found.</response>
             <response code="200">Returned with the updated basket.</response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.BasketsController.ApplyDiscount(System.String,System.String)">
+        <member name="M:EStoreX.API.Controllers.Public.BasketsController.ApplyDiscount(System.String,System.String)">
             <summary>
             Applies a discount code to a customer's basket.
             </summary>
@@ -1720,25 +1734,26 @@
             POST /api/basket/{basketId}/apply-discount/{code}
             </remarks>
         </member>
-        <member name="T:E_StoreX.API.Controllers.Public.BrandsController">
+        <member name="T:EStoreX.API.Controllers.Public.BrandsController">
             <summary>
             Public controller for retrieving brand information in API version 1.0.
             </summary>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.BrandsController.#ctor(EStoreX.Core.ServiceContracts.Products.IBrandService)">
+        <member name="M:EStoreX.API.Controllers.Public.BrandsController.#ctor(EStoreX.Core.ServiceContracts.Products.IBrandService,Microsoft.Extensions.Localization.IStringLocalizer{EStoreX.API.SharedResource})">
             <summary>
-            Initializes a new instance of <see cref="T:E_StoreX.API.Controllers.Public.BrandsController"/>.
+            Initializes a new instance of <see cref="T:EStoreX.API.Controllers.Public.BrandsController"/>.
             </summary>
             <param name="brandsService">Service to manage brand operations.</param>
+            <param name="localizer">localizer for shared resources.</param>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.BrandsController.GetAll">
+        <member name="M:EStoreX.API.Controllers.Public.BrandsController.GetAll">
             <summary>
             Retrieves all brands.
             </summary>
             <returns>List of all brands.</returns>
             <response code="200">Returns the list of brands.</response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.BrandsController.GetById(System.Guid)">
+        <member name="M:EStoreX.API.Controllers.Public.BrandsController.GetById(System.Guid)">
             <summary>
             Retrieves a brand by its unique ID.
             </summary>
@@ -1747,7 +1762,7 @@
             <response code="200">Brand found and returned successfully.</response>
             <response code="404">Brand not found.</response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.BrandsController.GetBrandByName(System.String)">
+        <member name="M:EStoreX.API.Controllers.Public.BrandsController.GetBrandByName(System.String)">
             <summary>
             Retrieves a brand by its name.
             </summary>
@@ -1759,14 +1774,14 @@
             <response code="200">Brand found and returned successfully.</response>
             <response code="404">Brand with the specified name was not found.</response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.BrandsController.GetCategoriesByBrand(System.Guid)">
+        <member name="M:EStoreX.API.Controllers.Public.BrandsController.GetCategoriesByBrand(System.Guid)">
             <summary>
             Get all categories that a brand belongs to.
             </summary>
             <param name="brandId">The unique identifier of the brand.</param>
             <returns>List of categories associated with the brand.</returns>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.BrandsController.GetBrandImages(System.Guid)">
+        <member name="M:EStoreX.API.Controllers.Public.BrandsController.GetBrandImages(System.Guid)">
             <summary>
             Retrieves all images associated with a specific brand.
             </summary>
@@ -1778,47 +1793,48 @@
             <response code="200">Brand images retrieved successfully.</response>
             <response code="404">No images found for the given brand.</response>
         </member>
-        <member name="T:E_StoreX.API.Controllers.Public.BugController">
+        <member name="T:EStoreX.API.Controllers.Public.BugController">
             <summary>
             Controller for handling bug-related operations.
             </summary>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.BugController.GetError">
+        <member name="M:EStoreX.API.Controllers.Public.BugController.GetError">
             <summary>
             Returns a 500 Internal Server Error response.
             </summary>
             <returns>A 500 status code with a message indicating an internal server error.</returns>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.BugController.GetNotFound">
+        <member name="M:EStoreX.API.Controllers.Public.BugController.GetNotFound">
             <summary>
             Returns a 404 Not Found response.
             </summary>
             <returns>A 404 status code with a message indicating the resource was not found.</returns>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.BugController.GetBadRequest(System.Guid)">
+        <member name="M:EStoreX.API.Controllers.Public.BugController.GetBadRequest(System.Guid)">
              <summary>
              Returns a 400 Bad Request response.
              </summary>
              <returns>A 400 status code with a message indicating the resource was bad-request</returns>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.BugController.GetBadRequest">
+        <member name="M:EStoreX.API.Controllers.Public.BugController.GetBadRequest">
              <summary>
              Returns a 400 Bad Request response.
              </summary>
              <returns>A 400 status code with a message indicating the resource was bad-request</returns>
         </member>
-        <member name="T:E_StoreX.API.Controllers.Public.CategoriesController">
+        <member name="T:EStoreX.API.Controllers.Public.CategoriesController">
             <summary>
             Controller for managing product categories in the E-StoreX application.
             </summary>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.CategoriesController.#ctor(EStoreX.Core.ServiceContracts.Categories.ICategoriesService)">
+        <member name="M:EStoreX.API.Controllers.Public.CategoriesController.#ctor(EStoreX.Core.ServiceContracts.Categories.ICategoriesService,Microsoft.Extensions.Localization.IStringLocalizer{EStoreX.API.SharedResource})">
             <summary>
             Constructor for CategoriesController.
             </summary>
             <param name="categoriesService"></param>
+            <param name="localizer">localizer for shared resources.</param>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.CategoriesController.GetCategories">
+        <member name="M:EStoreX.API.Controllers.Public.CategoriesController.GetCategories">
             <summary>
             Retrieves all categories from the database.
             </summary>
@@ -1829,7 +1845,7 @@
             OK – Returns the list of categories.
             </response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.CategoriesController.GetCategoryById(System.Guid)">
+        <member name="M:EStoreX.API.Controllers.Public.CategoriesController.GetCategoryById(System.Guid)">
             <summary>
             Retrieves a category by its unique ID.
             </summary>
@@ -1839,14 +1855,14 @@
             <response code="404">Category not found.</response>
             <response code="500">Unexpected error occurred.</response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.CategoriesController.GetBrandsByCategory(System.Guid)">
+        <member name="M:EStoreX.API.Controllers.Public.CategoriesController.GetBrandsByCategory(System.Guid)">
             <summary>
             Get all brands inside a category.
             </summary>
             <param name="categoryId">The unique identifier of the category.</param>
             <returns>List of brands associated with the category.</returns>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.CategoriesController.GetCategoryImages(System.Guid)">
+        <member name="M:EStoreX.API.Controllers.Public.CategoriesController.GetCategoryImages(System.Guid)">
             <summary>
             Retrieves all images associated with a specific category.
             </summary>
@@ -1858,7 +1874,7 @@
             <response code="200">Category images retrieved successfully.</response>
             <response code="404">No images found for the given category.</response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.CategoriesController.GetCategoriesWithBrands">
+        <member name="M:EStoreX.API.Controllers.Public.CategoriesController.GetCategoriesWithBrands">
             <summary>
             Retrieves all categories along with their associated brands.
             </summary>
@@ -1874,28 +1890,33 @@
             <response code="200">Categories with brands retrieved successfully.</response>
             <response code="404">No categories with brands found.</response>
         </member>
-        <member name="T:E_StoreX.API.Controllers.Public.CustomControllerBase">
+        <member name="T:EStoreX.API.Controllers.Public.ContactController">
+            <summary>
+            the ContactController handles contact-related API requests.
+            </summary>
+        </member>
+        <member name="T:EStoreX.API.Controllers.Public.CustomControllerBase">
             <summary>
             Base controller for the E-StoreX API, providing common functionality for all controllers.
             </summary>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.CustomControllerBase.#ctor">
+        <member name="M:EStoreX.API.Controllers.Public.CustomControllerBase.#ctor">
             <summary>
             Constructor for CustomControllerBase, initializing the unit of work.
             </summary>
         </member>
-        <member name="T:E_StoreX.API.Controllers.Public.DeliveryMethodController">
+        <member name="T:EStoreX.API.Controllers.Public.DeliveryMethodController">
             <summary>
             DeliveryMethodController handles operations related to delivery methods.
             </summary>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.DeliveryMethodController.#ctor(EStoreX.Core.ServiceContracts.Orders.IDeliveryMethodService)">
+        <member name="M:EStoreX.API.Controllers.Public.DeliveryMethodController.#ctor(EStoreX.Core.ServiceContracts.Orders.IDeliveryMethodService)">
             <summary>
-            Initializes a new instance of the <see cref="T:E_StoreX.API.Controllers.Public.DeliveryMethodController"/> class.
+            Initializes a new instance of the <see cref="T:EStoreX.API.Controllers.Public.DeliveryMethodController"/> class.
             </summary>
             <param name="deliveryMethod">object of <see cref="T:EStoreX.Core.ServiceContracts.Orders.IDeliveryMethodService"/></param>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.DeliveryMethodController.GetDeliveryMethods">
+        <member name="M:EStoreX.API.Controllers.Public.DeliveryMethodController.GetDeliveryMethods">
             <summary>
             Retrieves all available delivery methods.
             </summary>
@@ -1905,7 +1926,7 @@
             <response code="200">Successfully retrieved the delivery methods.</response>
             <response code="401">Unauthorized user.</response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.DeliveryMethodController.GetById(System.Guid)">
+        <member name="M:EStoreX.API.Controllers.Public.DeliveryMethodController.GetById(System.Guid)">
             <summary>
             Retrieves a delivery method by its unique identifier.
             </summary>
@@ -1915,28 +1936,28 @@
             <response code="404">Delivery method not found.</response>
             <response code="401">Unauthorized user.</response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.DeliveryMethodController.GetByName(System.String)">
+        <member name="M:EStoreX.API.Controllers.Public.DeliveryMethodController.GetByName(System.String)">
             <summary>
             Gets a delivery method by its name.
             </summary>
             <param name="name">The exact name of the delivery method to search for.</param>
-            <returns>The delivery method with the specified Name</returns>
+            <returns>The delivery method with the specified NameEn</returns>
             <response code="200">Returns the delivery method.</response>
             <response code="404">Delivery method not found.</response>
             <response code="401">Unauthorized user.</response>
         </member>
-        <member name="T:E_StoreX.API.Controllers.Public.DiscountsController">
+        <member name="T:EStoreX.API.Controllers.Public.DiscountsController">
             <summary>
             Provides endpoints for clients to apply and validate discount codes.
             </summary>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.DiscountsController.#ctor(EStoreX.Core.ServiceContracts.Discount.IDiscountService)">
+        <member name="M:EStoreX.API.Controllers.Public.DiscountsController.#ctor(EStoreX.Core.ServiceContracts.Discount.IDiscountService)">
             <summary>
-            Initializes a new instance of the <see cref="T:E_StoreX.API.Controllers.Public.DiscountsController"/> class.
+            Initializes a new instance of the <see cref="T:EStoreX.API.Controllers.Public.DiscountsController"/> class.
             </summary>
             <param name="discountService">Service for managing discounts.</param>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.DiscountsController.Validate(System.String)">
+        <member name="M:EStoreX.API.Controllers.Public.DiscountsController.Validate(System.String)">
             <summary>
             Validates a discount code to check if it is active and usable.
             </summary>
@@ -1945,14 +1966,14 @@
             <response code="200">Discount code is valid.</response>
             <response code="400">Discount code is invalid or inactive.</response>
         </member>
-        <member name="T:E_StoreX.API.Controllers.Public.ErrorController">
+        <member name="T:EStoreX.API.Controllers.Public.ErrorController">
             <summary>
             Controller responsible for handling error responses.  
             Provides a unified endpoint for returning standardized error messages 
             based on HTTP status codes.
             </summary>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.ErrorController.Error(System.Int32)">
+        <member name="M:EStoreX.API.Controllers.Public.ErrorController.Error(System.Int32)">
             <summary>
             Returns an error response with the specified HTTP status code.
             </summary>
@@ -1962,19 +1983,20 @@
             with details about the error.
             </returns>
         </member>
-        <member name="T:E_StoreX.API.Controllers.Public.FavouritesController">
+        <member name="T:EStoreX.API.Controllers.Public.FavouritesController">
             <summary>
             Controller responsible for managing user's favourite products.
             Provides endpoints to add, remove, and retrieve favourites for the authenticated user.
             </summary>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.FavouritesController.#ctor(EStoreX.Core.ServiceContracts.Favourites.IFavouriteService)">
+        <member name="M:EStoreX.API.Controllers.Public.FavouritesController.#ctor(EStoreX.Core.ServiceContracts.Favourites.IFavouriteService,Microsoft.Extensions.Localization.IStringLocalizer{EStoreX.API.SharedResource})">
             <summary>
-            Initializes a new instance of the <see cref="T:E_StoreX.API.Controllers.Public.FavouritesController"/> class.
+            Initializes a new instance of the <see cref="T:EStoreX.API.Controllers.Public.FavouritesController"/> class.
             </summary>
             <param name="favouriteService">The service that handles favourite-related operations.</param>
+            <param name="localizer">localizer for shared resources.</param>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.FavouritesController.AddToFavourite(System.Guid)">
+        <member name="M:EStoreX.API.Controllers.Public.FavouritesController.AddToFavourite(System.Guid)">
             <summary>
             Adds a product to the authenticated user's list of favourites.
             </summary>
@@ -1989,7 +2011,7 @@
             <response code="401">User is not authenticated or has an invalid identifier.</response>
             <response code="409">The product is already in the user's favourites.</response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.FavouritesController.RemoveFromFavourite(System.Guid)">
+        <member name="M:EStoreX.API.Controllers.Public.FavouritesController.RemoveFromFavourite(System.Guid)">
             <summary>
             Removes a product from the authenticated user's list of favourites.
             </summary>
@@ -2004,7 +2026,7 @@
             <response code="401">User is not authenticated or has an invalid identifier.</response>
             <response code="404">The product was not found in the user's favourites.</response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.FavouritesController.GetUserFavourites">
+        <member name="M:EStoreX.API.Controllers.Public.FavouritesController.GetUserFavourites">
             <summary>
             Retrieves all products in the authenticated user's favourites list.
             </summary>
@@ -2016,7 +2038,7 @@
             <response code="200">Successfully retrieved the list of favourite products.</response>
             <response code="401">User is not authenticated or has an invalid identifier.</response>
         </member>
-        <member name="T:E_StoreX.API.Controllers.Public.FrontendProxyController">
+        <member name="T:EStoreX.API.Controllers.Public.FrontendProxyController">
             <summary>
             Controller that acts as a proxy between the frontend and backend for password reset functionality.
             </summary>
@@ -2025,9 +2047,9 @@
             such as the need to hide the API key.
             </remarks>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.FrontendProxyController.#ctor(System.Net.Http.IHttpClientFactory,Microsoft.Extensions.Configuration.IConfiguration,Microsoft.AspNetCore.Http.IHttpContextAccessor)">
+        <member name="M:EStoreX.API.Controllers.Public.FrontendProxyController.#ctor(System.Net.Http.IHttpClientFactory,Microsoft.Extensions.Configuration.IConfiguration,Microsoft.AspNetCore.Http.IHttpContextAccessor,Microsoft.Extensions.Localization.IStringLocalizer{EStoreX.API.SharedResource})">
             <summary>
-            Initializes a new instance of the <see cref="T:E_StoreX.API.Controllers.Public.FrontendProxyController"/> class.
+            Initializes a new instance of the <see cref="T:EStoreX.API.Controllers.Public.FrontendProxyController"/> class.
             </summary>
             <param name="httpClientFactory">The factory used to create <see cref="T:System.Net.Http.HttpClient"/> instances.</param>
             <param name="configuration">The configuration provider used to access API settings.</param>
@@ -2036,7 +2058,7 @@
             such as the scheme, host, and path for constructing full URLs.
             </param>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.FrontendProxyController.ResetPasswordProxy(EStoreX.Core.DTO.Account.Requests.ResetPasswordDTO)">
+        <member name="M:EStoreX.API.Controllers.Public.FrontendProxyController.ResetPasswordProxy(EStoreX.Core.DTO.Account.Requests.ResetPasswordDTO)">
             <summary>
             Acts as a proxy endpoint that forwards a password reset request from the frontend to the backend API.
             </summary>
@@ -2053,7 +2075,7 @@
             current HTTP request context, and forwards the request to the backend with the necessary headers.
             </remarks>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.FrontendProxyController.VerifyResetPassword(EStoreX.Core.DTO.Account.Requests.VerifyResetPasswordDTO)">
+        <member name="M:EStoreX.API.Controllers.Public.FrontendProxyController.VerifyResetPassword(EStoreX.Core.DTO.Account.Requests.VerifyResetPasswordDTO)">
             <summary>
             Acts as a proxy endpoint that forwards a verify reset password request from the frontend to the backend API.
             </summary>
@@ -2073,7 +2095,7 @@
             appends the API key in the headers, and relays the GET request with query parameters.
             </remarks>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.FrontendProxyController.ConfirmEmail(EStoreX.Core.DTO.Account.Requests.ConfirmEmailDTO)">
+        <member name="M:EStoreX.API.Controllers.Public.FrontendProxyController.ConfirmEmail(EStoreX.Core.DTO.Account.Requests.ConfirmEmailDTO)">
             <summary>
             Acts as a proxy endpoint that forwards an email confirmation request 
             from the frontend to the backend API.
@@ -2092,7 +2114,7 @@
             attaches query parameters (userId + token), and sends a GET request with the API key header.
             </remarks>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.FrontendProxyController.ProxyLogin(EStoreX.Core.DTO.Account.Requests.LoginDTO)">
+        <member name="M:EStoreX.API.Controllers.Public.FrontendProxyController.ProxyLogin(EStoreX.Core.DTO.Account.Requests.LoginDTO)">
             <summary>
             Acts as a proxy endpoint that forwards a login request from the frontend to the backend API.
             </summary>
@@ -2111,19 +2133,20 @@
             Hangfire Dashboard or other backend services that rely on authentication.  
             </remarks>
         </member>
-        <member name="T:E_StoreX.API.Controllers.Public.OrdersController">
+        <member name="T:EStoreX.API.Controllers.Public.OrdersController">
             <summary>
             Controller responsible for handling order-related operations.
             Requires the user to be authenticated.
             </summary>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.OrdersController.#ctor(EStoreX.Core.ServiceContracts.Orders.IOrderService)">
+        <member name="M:EStoreX.API.Controllers.Public.OrdersController.#ctor(EStoreX.Core.ServiceContracts.Orders.IOrderService,Microsoft.Extensions.Localization.IStringLocalizer{EStoreX.API.SharedResource})">
             <summary>
-            Initializes a new instance of the <see cref="T:E_StoreX.API.Controllers.Public.OrdersController"/> class.
+            Initializes a new instance of the <see cref="T:EStoreX.API.Controllers.Public.OrdersController"/> class.
             </summary>
             <param name="orderService">The service that handles order-related operations.</param>
+            <param name="localizer">localizer for shared resources.</param>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.OrdersController.CreateOrder(EStoreX.Core.DTO.Orders.Requests.OrderAddRequest)">
+        <member name="M:EStoreX.API.Controllers.Public.OrdersController.CreateOrder(EStoreX.Core.DTO.Orders.Requests.OrderAddRequest)">
             <summary>
             Creates a new order for the authenticated user.
             </summary>
@@ -2137,7 +2160,7 @@
             <response code="400">If the user email is not present in the JWT token.</response>
             <response code="401">If the user is not authenticated.</response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.OrdersController.GetOrders">
+        <member name="M:EStoreX.API.Controllers.Public.OrdersController.GetOrders">
             <summary>
             Retrieves all orders associated with the currently authenticated user.
             </summary>
@@ -2146,7 +2169,7 @@
             <response code="400">If the user email is missing or invalid in the token.</response>
             <response code="401">If the user is not authenticated.</response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.OrdersController.GetOrdersById(System.Guid)">
+        <member name="M:EStoreX.API.Controllers.Public.OrdersController.GetOrdersById(System.Guid)">
             <summary>
             Retrieves a specific order by its ID for the currently authenticated user.
             </summary>
@@ -2159,7 +2182,7 @@
             <response code="400">If the user email is missing in the JWT token.</response>
             <response code="401">If the user is not authenticated.</response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.OrdersController.GetDeliveryMethods">
+        <member name="M:EStoreX.API.Controllers.Public.OrdersController.GetDeliveryMethods">
             <summary>
             Retrieves all available delivery methods.
             </summary>
@@ -2168,7 +2191,7 @@
             </returns>
             <response code="200">Successfully retrieved the delivery methods.</response>
         </member>
-        <member name="T:E_StoreX.API.Controllers.Public.PaymentsController">
+        <member name="T:EStoreX.API.Controllers.Public.PaymentsController">
             <summary>
             Handles payment-related operations such as creating or updating Stripe payment intents.
             </summary>
@@ -2177,17 +2200,18 @@
             Typically called before placing an order to prepare or update the payment.
             </remarks>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.PaymentsController.#ctor(EStoreX.Core.ServiceContracts.Common.IPaymentService,Microsoft.Extensions.Options.IOptions{EStoreX.Core.Domain.Options.StripeSettings},Microsoft.Extensions.Logging.ILogger{E_StoreX.API.Controllers.Public.PaymentsController})">
+        <member name="M:EStoreX.API.Controllers.Public.PaymentsController.#ctor(EStoreX.Core.ServiceContracts.Common.IPaymentService,Microsoft.Extensions.Options.IOptions{EStoreX.Core.Domain.Options.StripeSettings},Microsoft.Extensions.Logging.ILogger{EStoreX.API.Controllers.Public.PaymentsController},Microsoft.Extensions.Localization.IStringLocalizer{EStoreX.API.SharedResource})">
             <summary>
-            Initializes a new instance of the <see cref="T:E_StoreX.API.Controllers.Public.PaymentsController"/> class.
+            Initializes a new instance of the <see cref="T:EStoreX.API.Controllers.Public.PaymentsController"/> class.
             Handles payment operations including creating payment intents and processing webhooks.
             </summary>
             <param name="paymentService">Service for handling payment-related business logic.</param>
             <param name="options">Stripe configuration options (e.g., signing secret).</param>
             <param name="logger">Logger instance for logging payment events and errors.</param>
+            <param name="localizer">localizer for shared resources.</param>
             <exception cref="T:System.ArgumentNullException">Thrown if Stripe signing secret is not provided in configuration.</exception>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.PaymentsController.CreateOrUpdatePaymentIntent(System.String,System.Guid)">
+        <member name="M:EStoreX.API.Controllers.Public.PaymentsController.CreateOrUpdatePaymentIntent(System.String,System.Guid)">
             <summary>
             Creates or updates a Stripe payment intent for the specified basket and delivery method.
             </summary>
@@ -2201,7 +2225,7 @@
             <response code="404">Basket not found.</response>
             <response code="401">If the user is not authenticated.</response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.PaymentsController.UpdateStatusWithStripe">
+        <member name="M:EStoreX.API.Controllers.Public.PaymentsController.UpdateStatusWithStripe">
              <summary>
              Handles incoming Stripe webhook events to update the order status based on the payment result.
              </summary>
@@ -2228,18 +2252,19 @@
              <response code="200">Webhook processed successfully.</response>
              <response code="400">Invalid Stripe signature or processing error.</response>
         </member>
-        <member name="T:E_StoreX.API.Controllers.Public.ProductsController">
+        <member name="T:EStoreX.API.Controllers.Public.ProductsController">
             <summary>
             Handles product-related operations such as retrieving all products or fetching product details by ID.
             </summary>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.ProductsController.#ctor(EStoreX.Core.ServiceContracts.Products.IProductsService)">
+        <member name="M:EStoreX.API.Controllers.Public.ProductsController.#ctor(EStoreX.Core.ServiceContracts.Products.IProductsService,Microsoft.Extensions.Localization.IStringLocalizer{EStoreX.API.SharedResource})">
             <summary>
-            Initializes a new instance of the <see cref="T:E_StoreX.API.Controllers.Public.ProductsController"/> class.
+            Initializes a new instance of the <see cref="T:EStoreX.API.Controllers.Public.ProductsController"/> class.
             </summary>
             <param name="productsService">Service for managing product operations.</param>
+            <param name="localizer">localizer for shared resources.</param>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.ProductsController.GetAllProducts(EStoreX.Core.DTO.Products.Responses.ProductQueryDTO)">
+        <member name="M:EStoreX.API.Controllers.Public.ProductsController.GetAllProducts(EStoreX.Core.DTO.Products.Responses.ProductQueryDTO)">
             <summary>
             Retrieves all products with optional filtering and pagination.
             </summary>
@@ -2252,7 +2277,7 @@
             <response code="204">No products found for the given query.</response>
             <response code="500">Unexpected error occurred.</response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.ProductsController.GetProductById(System.Guid)">
+        <member name="M:EStoreX.API.Controllers.Public.ProductsController.GetProductById(System.Guid)">
             <summary>
             Retrieves a product by its unique identifier.
             </summary>
@@ -2265,7 +2290,7 @@
             <response code="404">Product not found or invalid ID.</response>
             <response code="500">Unexpected error occurred.</response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.ProductsController.GetProductImages(System.Guid)">
+        <member name="M:EStoreX.API.Controllers.Public.ProductsController.GetProductImages(System.Guid)">
             <summary>
             Retrieves all images associated with a specific product.
             </summary>
@@ -2277,7 +2302,7 @@
             <response code="200">Product images retrieved successfully.</response>
             <response code="404">No images found for the given product.</response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.ProductsController.GetBestSellers(System.Int32)">
+        <member name="M:EStoreX.API.Controllers.Public.ProductsController.GetBestSellers(System.Int32)">
             <summary>
             Retrieves the top N best-selling products.
             </summary>
@@ -2291,7 +2316,7 @@
             <response code="400">Invalid count provided.</response>
             <response code="404">No products found.</response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.ProductsController.GetFeaturedProducts">
+        <member name="M:EStoreX.API.Controllers.Public.ProductsController.GetFeaturedProducts">
             <summary>
             Retrieves all featured products.
             </summary>
@@ -2302,19 +2327,20 @@
             <response code="200">Featured products retrieved successfully.</response>
             <response code="404">No featured products found.</response>
         </member>
-        <member name="T:E_StoreX.API.Controllers.Public.RatingsController">
+        <member name="T:EStoreX.API.Controllers.Public.RatingsController">
             <summary>
             Handles all operations related to product ratings,
             including creating, updating, deleting, and retrieving ratings and summaries.
             </summary>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.RatingsController.#ctor(EStoreX.Core.ServiceContracts.Ratings.IRatingService)">
+        <member name="M:EStoreX.API.Controllers.Public.RatingsController.#ctor(EStoreX.Core.ServiceContracts.Ratings.IRatingService,Microsoft.Extensions.Localization.IStringLocalizer{EStoreX.API.SharedResource})">
             <summary>
-            Initializes a new instance of <see cref="T:E_StoreX.API.Controllers.Public.RatingsController"/>.
+            Initializes a new instance of <see cref="T:EStoreX.API.Controllers.Public.RatingsController"/>.
             </summary>
             <param name="ratingService">The service responsible for rating operations.</param>
+            <param name="localizer">localizer for shared resources.</param>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.RatingsController.AddRating(EStoreX.Core.DTO.Ratings.Requests.RatingAddRequest)">
+        <member name="M:EStoreX.API.Controllers.Public.RatingsController.AddRating(EStoreX.Core.DTO.Ratings.Requests.RatingAddRequest)">
             <summary>
             Adds a new rating for a given product by the logged-in user.
             </summary>
@@ -2323,7 +2349,7 @@
             <response code="200">Successfully added the rating.</response>
             <response code="401">If the user is not authenticated.</response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.RatingsController.UpdateRating(System.Guid,EStoreX.Core.DTO.Ratings.Requests.RatingUpdateRequest)">
+        <member name="M:EStoreX.API.Controllers.Public.RatingsController.UpdateRating(System.Guid,EStoreX.Core.DTO.Ratings.Requests.RatingUpdateRequest)">
             <summary>
             Updates an existing rating owned by the logged-in user.
             </summary>
@@ -2334,7 +2360,7 @@
             <response code="404">Rating not found or not owned by user.</response>
             <response code="401">If the user is not authenticated.</response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.RatingsController.DeleteRating(System.Guid)">
+        <member name="M:EStoreX.API.Controllers.Public.RatingsController.DeleteRating(System.Guid)">
             <summary>
             Deletes a rating owned by the logged-in user.
             </summary>
@@ -2344,7 +2370,7 @@
             <response code="404">Rating not found or not owned by user.</response>
             <response code="401">If the user is not authenticated.</response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.RatingsController.GetRatingsForProduct(System.Guid)">
+        <member name="M:EStoreX.API.Controllers.Public.RatingsController.GetRatingsForProduct(System.Guid)">
             <summary>
             Retrieves all ratings for a specific product.
             </summary>
@@ -2352,7 +2378,7 @@
             <returns>A list of ratings as <see cref="T:EStoreX.Core.DTO.Ratings.Response.RatingResponse"/>.</returns>
             <response code="200">Successfully retrieved product ratings.</response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.RatingsController.GetProductRatingSummary(System.Guid)">
+        <member name="M:EStoreX.API.Controllers.Public.RatingsController.GetProductRatingSummary(System.Guid)">
             <summary>
             Retrieves a summary of ratings for a specific product,
             including average score and total number of ratings.
@@ -2361,7 +2387,7 @@
             <returns>A <see cref="T:EStoreX.Core.DTO.Ratings.Response.ProductRatingResponse"/> containing rating summary.</returns>
             <response code="200">Successfully retrieved product rating summary.</response>
         </member>
-        <member name="M:E_StoreX.API.Controllers.Public.RatingsController.GetMyRatingForProduct(System.Guid)">
+        <member name="M:EStoreX.API.Controllers.Public.RatingsController.GetMyRatingForProduct(System.Guid)">
             <summary>
             Retrieves the current logged-in user's rating for a specific product.
             </summary>
@@ -2373,68 +2399,6 @@
             <response code="200">Successfully retrieved the user's rating.</response>
             <response code="404">No rating found for this product by the user.</response>
             <response code="401">If the user is not authenticated.</response>
-        </member>
-        <member name="T:E_StoreX.API.Middleware.ApiKeyMiddleware">
-            <summary>
-            Middleware to validate API key from incoming HTTP requests.
-            </summary>
-        </member>
-        <member name="M:E_StoreX.API.Middleware.ApiKeyMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate,Microsoft.Extensions.Options.IOptions{EStoreX.Core.Domain.Options.SecuritySettings})">
-            <summary>
-            Initializes a new instance of the <see cref="T:E_StoreX.API.Middleware.ApiKeyMiddleware"/> class.
-            </summary>
-            <param name="next">The next middleware in the pipeline.</param>
-            <param name="options">options setting</param>
-        </member>
-        <member name="M:E_StoreX.API.Middleware.ApiKeyMiddleware.InvokeAsync(Microsoft.AspNetCore.Http.HttpContext,EStoreX.Core.ServiceContracts.Account.IApiClientService)">
-            <summary>
-            Invokes the middleware to check for a valid API key.
-            </summary>
-            <param name="context">The current HTTP context.</param>
-            <param name="apiClientService">api client</param>
-        </member>
-        <member name="T:E_StoreX.API.Middleware.ExceptionHandlingMiddlewareExtensions">
-            <summary>
-            Exception Handling Middleware Extensions
-            </summary>
-        </member>
-        <member name="M:E_StoreX.API.Middleware.ExceptionHandlingMiddlewareExtensions.UseExceptionHandlingMiddleware(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
-            <summary>
-            
-            </summary>
-            <param name="builder"></param>
-            <returns></returns>
-        </member>
-        <member name="T:E_StoreX.API.Middleware.HtmlRewriteMiddleware">
-            <summary>
-            html rewrite middleware
-            </summary>
-        </member>
-        <member name="M:E_StoreX.API.Middleware.HtmlRewriteMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate,Microsoft.Extensions.Options.IOptions{EStoreX.Core.Domain.Options.HtmlRewriteOptions})">
-            <summary>
-            html rewrite middleware constructor
-            </summary>
-            <param name="next">call next middleware</param>
-            <param name="options">html redirect paths</param>
-        </member>
-        <member name="M:E_StoreX.API.Middleware.HtmlRewriteMiddleware.InvokeAsync(Microsoft.AspNetCore.Http.HttpContext)">
-            <summary>
-            html rewrite middleware invoke method
-            </summary>
-            <param name="context">current context</param>
-            <returns>call next</returns>
-        </member>
-        <member name="T:E_StoreX.API.Middleware.HtmlRewriteMiddlewareExtensions">
-            <summary>
-            html rewrite middleware extensions
-            </summary>
-        </member>
-        <member name="M:E_StoreX.API.Middleware.HtmlRewriteMiddlewareExtensions.UseHtmlRewriteMiddleware(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
-            <summary>
-            html rewrite middleware extension method
-            </summary>
-            <param name="builder"></param>
-            <returns></returns>
         </member>
         <member name="T:EStoreX.API.Filters.AccountValidationFilter">
             <summary>
@@ -2451,6 +2415,69 @@
             <param name="context">The context for the current action execution.</param>
             <param name="next">The delegate to execute the next action filter or action method.</param>
             <returns>A task that represents the asynchronous operation.</returns>
+        </member>
+        <member name="T:EStoreX.API.Middleware.ApiKeyMiddleware">
+            <summary>
+            Middleware to validate API key from incoming HTTP requests.
+            </summary>
+        </member>
+        <member name="M:EStoreX.API.Middleware.ApiKeyMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate,Microsoft.Extensions.Options.IOptions{EStoreX.Core.Domain.Options.SecuritySettings})">
+            <summary>
+            Initializes a new instance of the <see cref="T:EStoreX.API.Middleware.ApiKeyMiddleware"/> class.
+            </summary>
+            <param name="next">The next middleware in the pipeline.</param>
+            <param name="options">options setting</param>
+        </member>
+        <member name="M:EStoreX.API.Middleware.ApiKeyMiddleware.InvokeAsync(Microsoft.AspNetCore.Http.HttpContext,EStoreX.Core.ServiceContracts.Account.IApiClientService,Microsoft.Extensions.Localization.IStringLocalizer{EStoreX.API.SharedResource})">
+            <summary>
+            Invokes the middleware to check for a valid API key.
+            </summary>
+            <param name="context">The current HTTP context.</param>
+            <param name="apiClientService">api client</param>
+            <param name="localizer">localizer for shared resources.</param>
+        </member>
+        <member name="T:EStoreX.API.Middleware.ExceptionHandlingMiddlewareExtensions">
+            <summary>
+            Exception Handling Middleware Extensions
+            </summary>
+        </member>
+        <member name="M:EStoreX.API.Middleware.ExceptionHandlingMiddlewareExtensions.UseExceptionHandlingMiddleware(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
+            <summary>
+            
+            </summary>
+            <param name="builder"></param>
+            <returns></returns>
+        </member>
+        <member name="T:EStoreX.API.Middleware.HtmlRewriteMiddleware">
+            <summary>
+            html rewrite middleware
+            </summary>
+        </member>
+        <member name="M:EStoreX.API.Middleware.HtmlRewriteMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate,Microsoft.Extensions.Options.IOptions{EStoreX.Core.Domain.Options.HtmlRewriteOptions})">
+            <summary>
+            html rewrite middleware constructor
+            </summary>
+            <param name="next">call next middleware</param>
+            <param name="options">html redirect paths</param>
+        </member>
+        <member name="M:EStoreX.API.Middleware.HtmlRewriteMiddleware.InvokeAsync(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            html rewrite middleware invoke method
+            </summary>
+            <param name="context">current context</param>
+            <returns>call next</returns>
+        </member>
+        <member name="T:EStoreX.API.Middleware.HtmlRewriteMiddlewareExtensions">
+            <summary>
+            html rewrite middleware extensions
+            </summary>
+        </member>
+        <member name="M:EStoreX.API.Middleware.HtmlRewriteMiddlewareExtensions.UseHtmlRewriteMiddleware(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
+            <summary>
+            html rewrite middleware extension method
+            </summary>
+            <param name="builder"></param>
+            <returns></returns>
         </member>
     </members>
 </doc>
