@@ -8,9 +8,14 @@ namespace Domain.Entities.Product
     {
         [Required]
         [MaxLength(100)]
-        public string? Name { get; set; }
+        public string? NameEn { get; set; }
         [MaxLength(300)]
-        public string? Description { get; set; }
+        public string? DescriptionEn { get; set; }
+        [Required]
+        [MaxLength(100)]
+        public string? NameAr { get; set; }
+        [MaxLength(300)]
+        public string? DescriptionAr { get; set; }
         [JsonIgnore]
         public ICollection<Product> Products { get; set; } = new HashSet<Product>();
         [JsonIgnore]

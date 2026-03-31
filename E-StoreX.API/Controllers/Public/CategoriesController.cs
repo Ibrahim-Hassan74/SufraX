@@ -1,4 +1,4 @@
-﻿using Asp.Versioning;
+using Asp.Versioning;
 using Domain.Entities.Product;
 using EStoreX.Core.DTO.Categories.Responses;
 using EStoreX.Core.DTO.Common;
@@ -6,8 +6,10 @@ using EStoreX.Core.DTO.Products.Responses;
 using EStoreX.Core.Helper;
 using EStoreX.Core.ServiceContracts.Categories;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
+using EStoreX.API.Filters;
 
-namespace E_StoreX.API.Controllers.Public
+namespace EStoreX.API.Controllers.Public
 {
     /// <summary>
     /// Controller for managing product categories in the E-StoreX application.
@@ -16,13 +18,16 @@ namespace E_StoreX.API.Controllers.Public
     public class CategoriesController : CustomControllerBase
     {
         private readonly ICategoriesService _categoriesService;
+        private readonly IStringLocalizer<SharedResource> _localizer;
         /// <summary>
         /// Constructor for CategoriesController.
         /// </summary>
         /// <param name="categoriesService"></param>
-        public CategoriesController(ICategoriesService categoriesService)
+        /// <param name="localizer">localizer for shared resources.</param>
+        public CategoriesController(ICategoriesService categoriesService, IStringLocalizer<SharedResource> localizer)
         {
             _categoriesService = categoriesService;
+            _localizer = localizer;
         }
         /// <summary>
         /// Retrieves all categories from the database.
@@ -55,12 +60,12 @@ namespace E_StoreX.API.Controllers.Public
         public async Task<IActionResult> GetCategoryById(Guid Id)
         {
             if (Id == Guid.Empty)
-                return BadRequest(ApiResponseFactory.BadRequest("Invalid Category Id format"));
+                return BadRequest(ApiResponseFactory.BadRequest(_localizer["InvalidCategoryIdFormat"].Value));
 
             var category = await _categoriesService.GetCategoryByIdAsync(Id);
 
             if (category is null)
-                return NotFound(ApiResponseFactory.NotFound("Category not found"));
+                return NotFound(ApiResponseFactory.NotFound(_localizer["CategoryNotFound"].Value));
 
             return Ok(category);
         }
@@ -117,7 +122,7 @@ namespace E_StoreX.API.Controllers.Public
         {
             var result = await _categoriesService.GetCategoriesBrandsAsync();
             if (result == null || !result.Any())
-                return NotFound(ApiResponseFactory.NotFound("No categories with brands found."));
+                return NotFound(ApiResponseFactory.NotFound(_localizer["NoCategoriesWithBrands"].Value));
             return Ok(result);
         }
     }

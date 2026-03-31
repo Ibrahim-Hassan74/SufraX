@@ -10,11 +10,11 @@ namespace EStoreX.Infrastructure.Data.Configuration
         {
             builder.HasKey(c => c.Id);
 
-            builder.Property(c => c.Name)
+            builder.Property(c => c.NameEn)
                 .IsRequired()
                 .HasMaxLength(50);
 
-            //builder.Property(c => c.Description)
+            //builder.Property(c => c.DescriptionEn)
             //    .HasMaxLength(300);
 
             builder.HasMany(c => c.Products)
@@ -25,8 +25,8 @@ namespace EStoreX.Infrastructure.Data.Configuration
             //    new Category
             //    {
             //        Id = Guid.Parse("19F389FE-8472-46FC-83EA-2440790A2067"),
-            //        Name = "Electronics",
-            //        Description = "Devices and gadgets"
+            //        NameEn = "Electronics",
+            //        DescriptionEn = "Devices and gadgets"
             //    }
             //    );
         }

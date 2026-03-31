@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Domain.Entities.Product;
 using EStoreX.Core.DTO.Brands.Response;
 using EStoreX.Core.DTO.Categories.Requests;
@@ -12,6 +12,7 @@ using EStoreX.Core.ServiceContracts.Categories;
 using EStoreX.Core.ServiceContracts.Common;
 using EStoreX.Core.Services.Common;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Localization;
 
 namespace EStoreX.Core.Services.Categories
 {
@@ -20,17 +21,19 @@ namespace EStoreX.Core.Services.Categories
         private readonly ICategoryRepository _categoryRepository;
         private readonly IEntityImageManager<Category> _imageManager;
         private readonly IImageService _imageService;
-        public CategoriesService(IMapper mapper, IUnitOfWork unitOfWork, IEntityImageManager<Category> imageManager, IImageService imageService) : base(unitOfWork, mapper)
+        private readonly IStringLocalizer<CategoriesService> _localizer;
+        public CategoriesService(IMapper mapper, IUnitOfWork unitOfWork, IEntityImageManager<Category> imageManager, IImageService imageService, IStringLocalizer<CategoriesService> localizer) : base(unitOfWork, mapper)
         {
             _categoryRepository = _unitOfWork.CategoryRepository;
             _imageManager = imageManager;
             _imageService = imageService;
+            _localizer = localizer;
         }
 
         public async Task<CategoryResponse> CreateCategoryAsync(CategoryRequest categoryRequest)
         {
             if (categoryRequest == null)
-                throw new ArgumentNullException(nameof(categoryRequest), "Category cannot be null");
+                throw new ArgumentNullException(nameof(categoryRequest), _localizer["CategoryRequired"].Value);
 
             ValidationHelper.ModelValidation(categoryRequest);
 
@@ -47,7 +50,7 @@ namespace EStoreX.Core.Services.Categories
         public async Task<bool> DeleteCategoryAsync(Guid id)
         {
             if (id == Guid.Empty)
-                throw new ArgumentException("Category ID cannot be empty", nameof(id));
+                throw new ArgumentException(_localizer["CategoryIdRequired"].Value, nameof(id));
 
             var category = await _categoryRepository.GetByIdAsync(id);
             if (category == null)
@@ -87,7 +90,7 @@ namespace EStoreX.Core.Services.Categories
         public async Task<CategoryResponseWithPhotos?> GetCategoryByIdAsync(Guid id)
         {
             if (id == Guid.Empty)
-                throw new ArgumentException("Category ID cannot be empty", nameof(id));
+                throw new ArgumentException(_localizer["CategoryIdRequired"].Value, nameof(id));
             var category = await _categoryRepository.GetByIdAsync(id, x  => x.Photos);
             if (category == null)
                 return null;
@@ -98,13 +101,13 @@ namespace EStoreX.Core.Services.Categories
         public async Task<CategoryResponse> UpdateCategoryAsync(UpdateCategoryDTO updateCategoryDto)
         {
             if(updateCategoryDto is null)
-                throw new ArgumentNullException(nameof(updateCategoryDto), "Category cannot be null");
+                throw new ArgumentNullException(nameof(updateCategoryDto), _localizer["CategoryRequired"].Value);
 
             ValidationHelper.ModelValidation(updateCategoryDto);
 
             var category = await _categoryRepository.GetByIdAsync(updateCategoryDto.Id);
             if (category == null)
-                throw new KeyNotFoundException($"Category with ID {updateCategoryDto.Id} not found.");
+                throw new KeyNotFoundException(string.Format(_localizer["CategoryNotFoundWithId"].Value, updateCategoryDto.Id));
 
             _mapper.Map(updateCategoryDto, category);
 
@@ -165,9 +168,9 @@ namespace EStoreX.Core.Services.Categories
         {
             var category = await _unitOfWork.CategoryRepository.GetByIdAsync(categoryId, c => c.Photos);
             if (category == null)
-                return ApiResponseFactory.NotFound("Category not found.");
+                return ApiResponseFactory.NotFound(_localizer["CategoryNotFound"].Value);
 
-            var folderName = category.Name.Replace(" ", "").ToLowerInvariant();
+            var folderName = category.NameEn.Replace(" ", "").ToLowerInvariant();
 
             return await _imageManager.AddImagesAsync(
                 categoryId,
@@ -193,10 +196,10 @@ namespace EStoreX.Core.Services.Categories
         {
             var category = await _unitOfWork.CategoryRepository.GetByIdAsync(categoryId, c => c.Photos);
             if (category == null)
-                return ApiResponseFactory.NotFound("Category not found.");
+                return ApiResponseFactory.NotFound(_localizer["CategoryNotFound"].Value);
 
             if (files == null || files.Count == 0)
-                return ApiResponseFactory.BadRequest("No files provided.");
+                return ApiResponseFactory.BadRequest(_localizer["NoFilesProvided"].Value);
 
             // Delete old images
             foreach (var photo in category.Photos.ToList())
@@ -205,7 +208,7 @@ namespace EStoreX.Core.Services.Categories
                 category.Photos.Remove(photo);
             }
 
-            var folderName = category.Name.Replace(" ", "").ToLowerInvariant();
+            var folderName = category.NameEn.Replace(" ", "").ToLowerInvariant();
 
             var formFileCollection = new FormFileCollection();
             foreach (var file in files)
@@ -223,7 +226,7 @@ namespace EStoreX.Core.Services.Categories
             }
 
             await _unitOfWork.CompleteAsync();
-            return ApiResponseFactory.Success("Images updated successfully.");
+            return ApiResponseFactory.Success(_localizer["ImagesUpdatedSuccessfully"].Value);
         }
 
     }

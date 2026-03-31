@@ -10,13 +10,20 @@ namespace EStoreX.Core.Mapping
         public CategoryMapping()
         {
             CreateMap<CategoryRequest, Category>();
-            CreateMap<Category, CategoryResponse>();
+            CreateMap<Category, CategoryResponse>()
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "ar" ? src.NameAr ?? src.NameEn : src.NameEn))
+                .ForMember(dest => dest.Description, opt => opt.MapFrom(src => System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "ar" ? src.DescriptionAr ?? src.DescriptionEn : src.DescriptionEn));
+
             CreateMap<UpdateCategoryDTO, Category>();
             CreateMap<Category, CategoryResponseWithPhotos>()
                 .ForMember(dest => dest.Photos,
                     opt => opt.MapFrom(src =>
                         src.Photos != null ? src.Photos : new List<Photo>()
-                    ));
+                    ))
+                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "ar" ? src.NameAr ?? src.NameEn : src.NameEn))
+                .ForMember(dest => dest.Description, opt => opt.MapFrom(src => System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "ar" ? src.DescriptionAr ?? src.DescriptionEn : src.DescriptionEn));
+
+
         }
     }
 }

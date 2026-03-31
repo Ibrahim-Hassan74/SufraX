@@ -1,4 +1,4 @@
-﻿using Asp.Versioning;
+using Asp.Versioning;
 using Domain.Entities.Product;
 using EStoreX.Core.DTO.Categories.Requests;
 using EStoreX.Core.DTO.Categories.Responses;
@@ -8,8 +8,10 @@ using EStoreX.Core.Helper;
 using EStoreX.Core.ServiceContracts.Categories;
 using EStoreX.Core.ServiceContracts.Common;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
+using EStoreX.API.Filters;
 
-namespace E_StoreX.API.Controllers.Admin
+namespace EStoreX.API.Controllers.Admin
 {
     /// <summary>
     /// Provides administrative operations for managing product categories in the E-StoreX platform.
@@ -28,15 +30,17 @@ namespace E_StoreX.API.Controllers.Admin
     {
         private readonly ICategoriesService _categoriesService;
         private readonly IExportService _exportService;
+        private readonly IStringLocalizer<SharedResource> _localizer;
         /// <summary>
         /// Initializes a new instance of the <see cref="CategoriesController"/> class.
         /// </summary>
-        /// <param name="categoriesService">Service for managing categories.</param>
         /// <param name="exportService">Service for exporting categories to files.</param>
-        public CategoriesController(ICategoriesService categoriesService, IExportService exportService)
+        /// <param name="localizer">localizer for shared resources.</param>
+        public CategoriesController(ICategoriesService categoriesService, IExportService exportService, IStringLocalizer<SharedResource> localizer)
         {
             _categoriesService = categoriesService;
             _exportService = exportService;
+            _localizer = localizer;
         }
         /// <summary>
         /// Creates a new category in the database.
@@ -78,7 +82,7 @@ namespace E_StoreX.API.Controllers.Admin
         public async Task<IActionResult> UpdateCategory([FromRoute] Guid Id, [FromBody] UpdateCategoryDTO categoryDTO)
         {
             if (Id != categoryDTO.Id)
-                return BadRequest(ApiResponseFactory.BadRequest("Id mismatch"));
+                return BadRequest(ApiResponseFactory.BadRequest(_localizer["IdMismatch"].Value));
 
             var res = await _categoriesService.UpdateCategoryAsync(categoryDTO);
 
@@ -104,7 +108,7 @@ namespace E_StoreX.API.Controllers.Admin
         {
             var result = await _categoriesService.DeleteCategoryAsync(Id);
             if (!result)
-                return BadRequest(ApiResponseFactory.BadRequest("Failed to delete category"));
+                return BadRequest(ApiResponseFactory.BadRequest(_localizer["CategoryDeletionFailed"].Value));
 
             return NoContent();
         }
@@ -124,7 +128,7 @@ namespace E_StoreX.API.Controllers.Admin
                 new CategoryBrand { CategoryId = categoryId, BrandId = brandId });
 
             if (!result)
-                return NotFound(ApiResponseFactory.BadRequest("check you brand and category Ids."));
+                return NotFound(ApiResponseFactory.BadRequest(_localizer["InvalidBrandOrCategoryIds"].Value));
 
             return NoContent();
         }
@@ -144,7 +148,7 @@ namespace E_StoreX.API.Controllers.Admin
                 new CategoryBrand { CategoryId = categoryId, BrandId = brandId });
 
             if (!result)
-                return BadRequest(ApiResponseFactory.BadRequest("Failed to unassign brand from category."));
+                return BadRequest(ApiResponseFactory.BadRequest(_localizer["BrandUnassignmentFailed"].Value));
 
             return NoContent();
         }
@@ -182,7 +186,7 @@ namespace E_StoreX.API.Controllers.Admin
                 ExportType.Csv => File(_exportService.ExportToCsv(categories), "text/csv", "categories.csv"),
                 ExportType.Excel => File(_exportService.ExportToExcel(categories), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "categories.xlsx"),
                 ExportType.Pdf => File(_exportService.ExportToPdf(categories), "application/pdf", "categories.pdf"),
-                _ => BadRequest(ApiResponseFactory.BadRequest("Unsupported export type"))
+                _ => BadRequest(ApiResponseFactory.BadRequest(_localizer["UnsupportedExportType"].Value))
             };
         }
         /// <summary>
