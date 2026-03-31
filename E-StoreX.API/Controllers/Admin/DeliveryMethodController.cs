@@ -1,4 +1,4 @@
-﻿using Asp.Versioning;
+using Asp.Versioning;
 using EStoreX.Core.DTO.Common;
 using EStoreX.Core.DTO.Orders.Requests;
 using EStoreX.Core.DTO.Orders.Responses;
@@ -7,8 +7,10 @@ using EStoreX.Core.Helper;
 using EStoreX.Core.ServiceContracts.Common;
 using EStoreX.Core.ServiceContracts.Orders;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
+using EStoreX.API.Filters;
 
-namespace E_StoreX.API.Controllers.Admin
+namespace EStoreX.API.Controllers.Admin
 {
     /// <summary>
     /// DeliveryMethodController handles admin operations related to delivery methods.
@@ -19,13 +21,16 @@ namespace E_StoreX.API.Controllers.Admin
     {
         private readonly IDeliveryMethodService _deliveryMethod;
         private readonly IExportService _exportService;
+        private readonly IStringLocalizer<SharedResource> _localizer;
         /// <summary>
         /// Initializes a new instance of the <see cref="DeliveryMethodController"/> class.
         /// </summary>
-        public DeliveryMethodController(IDeliveryMethodService deliveryMethod, IExportService exportService)
+        /// <param name="localizer">localizer for shared resources.</param>
+        public DeliveryMethodController(IDeliveryMethodService deliveryMethod, IExportService exportService, IStringLocalizer<SharedResource> localizer)
         {
             _deliveryMethod = deliveryMethod;
             _exportService = exportService;
+            _localizer = localizer;
         }
         /// <summary>
         /// Creates a new delivery method.
@@ -62,7 +67,7 @@ namespace E_StoreX.API.Controllers.Admin
         {
             var updated = await _deliveryMethod.UpdateAsync(id, request);
             if (updated == null)
-                return NotFound(ApiResponseFactory.NotFound());
+                return NotFound(ApiResponseFactory.NotFound(_localizer["DeliveryMethodNotFound"].Value));
             return Ok(updated);
         }
 
@@ -117,7 +122,7 @@ namespace E_StoreX.API.Controllers.Admin
                 ExportType.Csv => File(_exportService.ExportToCsv(deliveryMethods), "text/csv", "delivery-methods.csv"),
                 ExportType.Excel => File(_exportService.ExportToExcel(deliveryMethods), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "delivery-methods.xlsx"),
                 ExportType.Pdf => File(_exportService.ExportToPdf(deliveryMethods), "application/pdf", "delivery-methods.pdf"),
-                _ => BadRequest(ApiResponseFactory.BadRequest("Unsupported export type"))
+                _ => BadRequest(ApiResponseFactory.BadRequest(_localizer["UnsupportedExportType"].Value))
             };
         }
     }

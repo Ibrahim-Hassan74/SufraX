@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using EStoreX.Core.Domain.Entities.Orders;
 using EStoreX.Core.DTO.Orders.Requests;
 using EStoreX.Core.DTO.Orders.Responses;
@@ -6,16 +6,19 @@ using EStoreX.Core.RepositoryContracts.Common;
 using EStoreX.Core.RepositoryContracts.Orders;
 using EStoreX.Core.ServiceContracts.Orders;
 using EStoreX.Core.Services.Common;
+using Microsoft.Extensions.Localization;
 
 namespace EStoreX.Core.Services.Orders
 {
     public class DeliveryMethodService : BaseService, IDeliveryMethodService
     {
         private readonly IDeliveryMethodRepository _repository;
+        private readonly IStringLocalizer<DeliveryMethodService> _localizer;
 
-        public DeliveryMethodService(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper) 
+        public DeliveryMethodService(IUnitOfWork unitOfWork, IMapper mapper, IStringLocalizer<DeliveryMethodService> localizer) : base(unitOfWork, mapper) 
         {
             _repository = unitOfWork.DeliveryMethodRepository;
+            _localizer = localizer;
         }
         /// <inheritdoc/>
         public async Task<IEnumerable<DeliveryMethodResponse>> GetAllAsync()

@@ -1,4 +1,4 @@
-﻿using Asp.Versioning;
+using Asp.Versioning;
 using EStoreX.Core.DTO.Common;
 using EStoreX.Core.DTO.Orders.Responses;
 using EStoreX.Core.Enums;
@@ -6,8 +6,10 @@ using EStoreX.Core.Helper;
 using EStoreX.Core.ServiceContracts.Common;
 using EStoreX.Core.ServiceContracts.Orders;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
+using EStoreX.API.Filters;
 
-namespace E_StoreX.API.Controllers.Admin
+namespace EStoreX.API.Controllers.Admin
 {
     /// <summary>
     /// Provides functionality for managing and processing orders within the administrative context.
@@ -20,15 +22,19 @@ namespace E_StoreX.API.Controllers.Admin
     {
         private readonly IOrderService _orderService;
         private readonly IExportService _exportService;
+        private readonly IStringLocalizer<SharedResource> _localizer;
         /// <summary>
         /// Initializes a new instance of the <see cref="OrdersController"/> class with the specified order service.
         /// </summary>
         /// <param name="orderService">The service used to manage order-related operations.</param>
         /// <param name="exportService">Service to manage files.</param>
-        public OrdersController(IOrderService orderService, IExportService exportService)
+        /// <param name="exportService">Service to manage files.</param>
+        /// <param name="localizer">localizer for shared resources.</param>
+        public OrdersController(IOrderService orderService, IExportService exportService, IStringLocalizer<SharedResource> localizer)
         {
             _orderService = orderService;
             _exportService = exportService;
+            _localizer = localizer;
         }
         /// <summary>
         /// Retrieves all orders from the system.
@@ -82,7 +88,7 @@ namespace E_StoreX.API.Controllers.Admin
                 ExportType.Csv => File(_exportService.ExportToCsv(orders), "text/csv", "orders.csv"),
                 ExportType.Excel => File(_exportService.ExportToExcel(orders), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "orders.xlsx"),
                 ExportType.Pdf => File(_exportService.ExportToPdf(orders), "application/pdf", "orders.pdf"),
-                _ => BadRequest(ApiResponseFactory.BadRequest("Unsupported export type"))
+                _ => BadRequest(ApiResponseFactory.BadRequest(_localizer["UnsupportedExportType"].Value))
             };
         }
         /// <summary>
@@ -105,12 +111,12 @@ namespace E_StoreX.API.Controllers.Admin
         public async Task<IActionResult> GetSalesReport([FromQuery] DateTime startDate, [FromQuery] DateTime endDate)
         {
             if (startDate > endDate)
-                return BadRequest(ApiResponseFactory.BadRequest("Start date cannot be after end date."));
+                return BadRequest(ApiResponseFactory.BadRequest(_localizer["InvalidDateRange"].Value));
 
             var report = await _orderService.GetSalesReportAsync(startDate, endDate);
 
             if (report == null || report.TotalOrders == 0)
-                return NotFound(ApiResponseFactory.NotFound("No sales data available for this period."));
+                return NotFound(ApiResponseFactory.NotFound(_localizer["NoSalesData"].Value));
 
             return Ok(report);
         }
@@ -131,19 +137,19 @@ namespace E_StoreX.API.Controllers.Admin
         public async Task<IActionResult> ExportSalesReport([FromQuery] DateTime startDate, [FromQuery] DateTime endDate, ExportType type)
         {
             if (startDate > endDate)
-                return BadRequest(ApiResponseFactory.BadRequest("Start date cannot be after end date."));
+                return BadRequest(ApiResponseFactory.BadRequest(_localizer["InvalidDateRange"].Value));
 
             var report = await _orderService.GetSalesReportAsync(startDate, endDate);
 
             if (report == null || report.TotalOrders == 0)
-                return NotFound(ApiResponseFactory.NotFound("No sales data available for this period."));
+                return NotFound(ApiResponseFactory.NotFound(_localizer["NoSalesData"].Value));
 
             return type switch
             {
                 ExportType.Csv => File(_exportService.ExportToCsv(new List<SalesReportResponse> { report }), "text/csv", "sales-report.csv"),
                 ExportType.Excel => File(_exportService.ExportToExcel(new List<SalesReportResponse> { report }), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "sales-report.xlsx"),
                 ExportType.Pdf => File(_exportService.ExportToPdf(new List<SalesReportResponse> { report }), "application/pdf", "sales-report.pdf"),
-                _ => BadRequest(ApiResponseFactory.BadRequest("Unsupported export type"))
+                _ => BadRequest(ApiResponseFactory.BadRequest(_localizer["UnsupportedExportType"].Value))
             };
         }
 

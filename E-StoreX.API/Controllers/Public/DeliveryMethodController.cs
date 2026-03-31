@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Stripe;
 
-namespace E_StoreX.API.Controllers.Public
+namespace EStoreX.API.Controllers.Public
 {
     /// <summary>
     /// DeliveryMethodController handles operations related to delivery methods.
@@ -67,7 +67,7 @@ namespace E_StoreX.API.Controllers.Public
         /// Gets a delivery method by its name.
         /// </summary>
         /// <param name="name">The exact name of the delivery method to search for.</param>
-        /// <returns>The delivery method with the specified Name</returns>
+        /// <returns>The delivery method with the specified NameEn</returns>
         /// <response code="200">Returns the delivery method.</response>
         /// <response code="404">Delivery method not found.</response>
         /// <response code="401">Unauthorized user.</response>

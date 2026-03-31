@@ -18,7 +18,7 @@ namespace EStoreX.Infrastructure.Repository.Orders
         public async Task<DeliveryMethod?> GetByNameAsync(string name)
         {
             return await _context.DeliveryMethods
-                .FirstOrDefaultAsync(d => d.Name == name);
+                .FirstOrDefaultAsync(d => d.NameEn == name);
         }
     }
 }

@@ -1,13 +1,15 @@
-﻿using EStoreX.Core.DTO.Common;
+using EStoreX.Core.DTO.Common;
 using EStoreX.Core.DTO.Orders.Requests;
 using EStoreX.Core.DTO.Orders.Responses;
 using EStoreX.Core.Helper;
 using EStoreX.Core.ServiceContracts.Orders;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
+using EStoreX.API.Filters;
 using System.Security.Claims;
 
-namespace E_StoreX.API.Controllers.Public
+namespace EStoreX.API.Controllers.Public
 {
     /// <summary>
     /// Controller responsible for handling order-related operations.
@@ -17,13 +19,16 @@ namespace E_StoreX.API.Controllers.Public
     public class OrdersController : CustomControllerBase
     {
         private readonly IOrderService _orderService;
+        private readonly IStringLocalizer<SharedResource> _localizer;
         /// <summary>
         /// Initializes a new instance of the <see cref="OrdersController"/> class.
         /// </summary>
         /// <param name="orderService">The service that handles order-related operations.</param>
-        public OrdersController(IOrderService orderService)
+        /// <param name="localizer">localizer for shared resources.</param>
+        public OrdersController(IOrderService orderService, IStringLocalizer<SharedResource> localizer)
         {
             _orderService = orderService;
+            _localizer = localizer;
         }
 
         /// <summary>
@@ -47,7 +52,7 @@ namespace E_StoreX.API.Controllers.Public
             var email = User.FindFirst(ClaimTypes.Email)?.Value;
 
             if (string.IsNullOrWhiteSpace(email))
-                return NotFound(ApiResponseFactory.NotFound("User email not found in token."));
+                return NotFound(ApiResponseFactory.NotFound(_localizer["UserEmailNotFoundInToken"].Value));
 
             var createdOrder = await _orderService.CreateOrdersAsync(order, email);
 
@@ -68,7 +73,7 @@ namespace E_StoreX.API.Controllers.Public
         {
             var email = User.FindFirst(ClaimTypes.Email)?.Value;
             if (string.IsNullOrWhiteSpace(email))
-                return NotFound(ApiResponseFactory.NotFound("Invalid user credentials."));
+                return NotFound(ApiResponseFactory.NotFound(_localizer["InvalidUserCredentials"].Value));
             var orderResponse = await _orderService.GetAllOrdersAsync(email);
             return Ok(orderResponse);
         }
@@ -92,7 +97,7 @@ namespace E_StoreX.API.Controllers.Public
         {
             var email = User.FindFirst(ClaimTypes.Email)?.Value;
             if (string.IsNullOrWhiteSpace(email))
-                return NotFound(ApiResponseFactory.NotFound("Invalid user credentials."));
+                return NotFound(ApiResponseFactory.NotFound(_localizer["InvalidUserCredentials"].Value));
             var orderResponse = await _orderService.GetOrderByIdAsync(Id, email);
             return Ok(orderResponse);
         }

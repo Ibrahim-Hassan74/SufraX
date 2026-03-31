@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using EStoreX.Core.Domain.Entities.Orders;
 using EStoreX.Core.DTO.Orders.Requests;
 using EStoreX.Core.DTO.Orders.Responses;
@@ -8,6 +8,7 @@ using EStoreX.Core.RepositoryContracts.Orders;
 using EStoreX.Core.ServiceContracts.Common;
 using EStoreX.Core.ServiceContracts.Orders;
 using EStoreX.Core.Services.Common;
+using Microsoft.Extensions.Localization;
 
 namespace EStoreX.Core.Services.Orders
 {
@@ -15,21 +16,23 @@ namespace EStoreX.Core.Services.Orders
     {
         private readonly IOrderRepository _orderRepository;
         private readonly IPaymentService _paymentService;
-        public OrderService(IUnitOfWork unitOfWork, IMapper mapper, IPaymentService paymentService) : base(unitOfWork, mapper)
+        private readonly IStringLocalizer<OrderService> _localizer;
+        public OrderService(IUnitOfWork unitOfWork, IMapper mapper, IPaymentService paymentService, IStringLocalizer<OrderService> localizer) : base(unitOfWork, mapper)
         {
             _orderRepository = _unitOfWork.OrderRepository;
             _paymentService = paymentService;
+            _localizer = localizer;
         }
         /// <inheritdoc/>
         public async Task<OrderResponse> CreateOrdersAsync(OrderAddRequest order, string buyerEmail)
         {
             if (order == null)
             {
-                throw new ArgumentNullException(nameof(order), "Order cannot be null");
+                throw new ArgumentNullException(nameof(order), _localizer["OrderRequired"].Value);
             }
             if (string.IsNullOrEmpty(buyerEmail))
             {
-                throw new ArgumentException("Buyer email cannot be null or empty", nameof(buyerEmail));
+                throw new ArgumentException(_localizer["BuyerEmailRequired"].Value, nameof(buyerEmail));
             }
 
             ValidationHelper.ModelValidation(order);
@@ -37,7 +40,7 @@ namespace EStoreX.Core.Services.Orders
             var basket = await _unitOfWork.CustomerBasketRepository.GetBasketAsync(order.BasketId);
             if (basket == null)
             {
-                throw new InvalidOperationException("Basket not found");
+                throw new InvalidOperationException(_localizer["BasketNotFound"].Value);
             }
             var orderItems = new List<OrderItem>();
             var subTotal = 0m;
@@ -46,7 +49,7 @@ namespace EStoreX.Core.Services.Orders
             {
                 var product = await _unitOfWork.ProductRepository.GetByIdAsync(item.Id);
                 if(product is null)
-                    throw new InvalidOperationException($"Product with ID {item.Id} not found");
+                    throw new InvalidOperationException(string.Format(_localizer["ProductNotFoundWithId"].Value, item.Id));
 
                 var (unitPrice, discountAmount) = await _paymentService.GetDiscountedPriceAsync(product, item.Qunatity, basket);
 
@@ -55,7 +58,8 @@ namespace EStoreX.Core.Services.Orders
                     item.Qunatity,
                     item.Id,
                     item.Image,
-                    product.Name ?? "Unknown Product"
+                    product.NameEn ?? _localizer["UnknownProduct"].Value,
+                    product.NameAr ?? product.NameEn ?? _localizer["UnknownProduct"].Value
                 );
 
                 orderItems.Add(orderItem);
@@ -65,7 +69,7 @@ namespace EStoreX.Core.Services.Orders
 
             var deliveryMethod = await _orderRepository.GetDeliveryMethodByIdAsync(order.DeliveryMethodId);
             if (deliveryMethod == null)
-                throw new InvalidOperationException("Delivery method not found");
+                throw new InvalidOperationException(_localizer["DeliveryMethodNotFound"].Value);
 
             //var subTotal = orderItems.Sum(item => item.Price * item.Quantity);
             var shippingAddress = _mapper.Map<ShippingAddress>(order.ShippingAddress);
@@ -103,7 +107,7 @@ namespace EStoreX.Core.Services.Orders
         {
             if (string.IsNullOrWhiteSpace(buyerEmail))
             {
-                throw new ArgumentException("Buyer email cannot be null, empty, or whitespace", nameof(buyerEmail));
+                throw new ArgumentException(_localizer["BuyerEmailRequired"].Value, nameof(buyerEmail));
             }
 
             var orders = await _orderRepository.GetOrdersByBuyerEmailAsync(buyerEmail);
@@ -122,11 +126,11 @@ namespace EStoreX.Core.Services.Orders
         {
             if (Id == Guid.Empty)
             {
-                throw new ArgumentException("Order ID cannot be empty", nameof(Id));
+                throw new ArgumentException(_localizer["OrderIdRequired"].Value, nameof(Id));
             }
             if (string.IsNullOrWhiteSpace(buyerEmail))
             {
-                throw new ArgumentException("Buyer email cannot be null, empty, or whitespace", nameof(buyerEmail));
+                throw new ArgumentException(_localizer["BuyerEmailRequired"].Value, nameof(buyerEmail));
             }
             var order = await _orderRepository.GetOrderByIdAsync(Id, buyerEmail);
             return _mapper.Map<OrderResponse>(order);
@@ -156,7 +160,7 @@ namespace EStoreX.Core.Services.Orders
                 TotalCustomers = orders.Select(o => o.BuyerEmail).Distinct().Count(),
                 TopProducts = orders
                     .SelectMany(o => o.OrderItems)
-                    .GroupBy(oi => new { oi.ProductItemId, oi.ProductName })
+                    .GroupBy(oi => new { oi.ProductItemId, ProductName = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "ar" ? oi.ProductNameAr : oi.ProductNameEn })
                     .Select(g => new TopProductResponse
                     {
                         ProductId = g.Key.ProductItemId,
