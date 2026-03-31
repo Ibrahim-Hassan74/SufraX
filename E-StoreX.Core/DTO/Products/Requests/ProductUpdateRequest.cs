@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace EStoreX.Core.DTO.Products.Requests
@@ -8,7 +8,7 @@ namespace EStoreX.Core.DTO.Products.Requests
         /// <summary>
         /// Gets or sets the unique identifier for the product.
         /// </summary>
-        [Required(ErrorMessage = "{0} can't be blank")]
+        [Required(ErrorMessageResourceName = "RequiredProductId", ErrorMessageResourceType = typeof(EStoreX.Core.Resources.DTO.Products.ProductValidationMessages))]
         public Guid Id { get; set; }
     }
 }

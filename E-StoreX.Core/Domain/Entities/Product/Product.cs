@@ -9,10 +9,16 @@ namespace Domain.Entities.Product
     {
         [Required]
         [MaxLength(100)]
-        public string Name { get; set; } = string.Empty;
+        public string NameEn { get; set; } = string.Empty;
         [Required]
         [MaxLength(1000)]
-        public string Description { get; set; } = string.Empty;
+        public string DescriptionEn { get; set; } = string.Empty;
+        [Required]
+        [MaxLength(100)]
+        public string NameAr { get; set; } = string.Empty;
+        [Required]
+        [MaxLength(1000)]
+        public string DescriptionAr { get; set; } = string.Empty;
         [Range(0, double.MaxValue, ErrorMessage = "Price must be non-negative.")]
         public decimal NewPrice { get; set; }
         [Range(0, double.MaxValue, ErrorMessage = "Price must be non-negative.")]

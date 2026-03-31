@@ -1,10 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace EStoreX.Core.DTO.Products.Requests
 {
     public record PhotoRequest(
-        [Required]
-    [MaxLength(200)]
+        [Required(ErrorMessageResourceName = "RequiredProductName", ErrorMessageResourceType = typeof(EStoreX.Core.Resources.DTO.Products.ProductValidationMessages))]
+    [MaxLength(200, ErrorMessageResourceName = "MaxLengthImageName", ErrorMessageResourceType = typeof(EStoreX.Core.Resources.DTO.Products.ProductValidationMessages))]
     string ImageName);
 
 }
