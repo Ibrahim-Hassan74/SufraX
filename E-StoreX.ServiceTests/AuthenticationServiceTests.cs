@@ -11,10 +11,13 @@ using EStoreX.Core.RepositoryContracts.Common;
 using EStoreX.Core.ServiceContracts.Account;
 using EStoreX.Core.ServiceContracts.Common;
 using EStoreX.Core.Services.Account;
+using EStoreX.Core.Services.Common;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Localization;
 using Microsoft.IdentityModel.Tokens;
 using Moq;
 using System.ComponentModel.DataAnnotations;
@@ -38,6 +41,9 @@ namespace E_StoreX.ServiceTests
         private readonly Mock<IAuthenticationService> _authenticationServiceMock;
         private readonly Mock<IEntityImageManager<ApplicationUser>> _imageManagerMock;
         private readonly Mock<IImageService> _imageServiceMock;
+        private readonly Mock<IConfiguration> _configurationMock;
+        private readonly Mock<IStringLocalizer<AuthenticationService>> _localizerMock;
+
 
         public AuthenticationServiceTests()
         {
@@ -66,6 +72,8 @@ namespace E_StoreX.ServiceTests
             _mapperMock = new Mock<IMapper>();
             _imageManagerMock = new Mock<IEntityImageManager<ApplicationUser>>();
             _imageServiceMock = new Mock<IImageService>();
+            _configurationMock = new Mock<IConfiguration>();
+            _localizerMock = new Mock<IStringLocalizer<AuthenticationService>>();
 
             _authenticationService = new AuthenticationService(
                 _userManagerMock.Object,
@@ -78,7 +86,9 @@ namespace E_StoreX.ServiceTests
                 _userManagementServiceMock.Object,
                 _roleManagerMock.Object,
                 _imageManagerMock.Object,
-                _imageServiceMock.Object
+                _imageServiceMock.Object,
+                _configurationMock.Object,
+                _localizerMock.Object
             );
         }
 
@@ -88,7 +98,7 @@ namespace E_StoreX.ServiceTests
         public async Task RegisterAsync_ShouldReturnFailure_WhenDtoIsNull()
         {
             // Act
-            var result = await _authenticationService.RegisterAsync(null) as ApiErrorResponse;
+            var result = await _authenticationService.RegisterAsync(null, null) as ApiErrorResponse;
 
             // Assert
             result.Should().NotBeNull();
@@ -115,8 +125,9 @@ namespace E_StoreX.ServiceTests
                 .Setup(m => m.FindByEmailAsync(dto.Email))
                 .ReturnsAsync(new ApplicationUser());
 
+
             // Act
-            var result = await _authenticationService.RegisterAsync(dto) as ApiErrorResponse;
+            var result = await _authenticationService.RegisterAsync(dto, null) as ApiErrorResponse;
 
             // Assert
             result.Should().NotBeNull();
@@ -148,7 +159,7 @@ namespace E_StoreX.ServiceTests
                 .ReturnsAsync(IdentityResult.Failed(new IdentityError { Description = "Weak password" }));
 
             // Act
-            var result = await _authenticationService.RegisterAsync(dto) as ApiErrorResponse;
+            var result = await _authenticationService.RegisterAsync(dto, null) as ApiErrorResponse;
 
             // Assert
             result.Should().NotBeNull();
@@ -199,7 +210,7 @@ namespace E_StoreX.ServiceTests
                 .ReturnsAsync(IdentityResult.Success);
 
             // Act
-            var result = await _authenticationService.RegisterAsync(dto);
+            var result = await _authenticationService.RegisterAsync(dto, null);
 
             // Assert
             result.Should().NotBeNull();
@@ -243,7 +254,7 @@ namespace E_StoreX.ServiceTests
                 .ReturnsAsync(IdentityResult.Success);
 
             // Act
-            var result = await _authenticationService.RegisterAsync(dto);
+            var result = await _authenticationService.RegisterAsync(dto, null);
 
             // Assert
             _userManagerMock.Verify(m => m.GenerateEmailConfirmationTokenAsync(It.IsAny<ApplicationUser>()), Times.Once);
@@ -266,7 +277,7 @@ namespace E_StoreX.ServiceTests
             };
 
             // Act
-            Func<Task> act = async () => await _authenticationService.RegisterAsync(dto);
+            Func<Task> act = async () => await _authenticationService.RegisterAsync(dto, null);
 
             // Assert
             await act.Should().ThrowAsync<ArgumentException>()
@@ -312,7 +323,7 @@ namespace E_StoreX.ServiceTests
                 .ReturnsAsync(IdentityResult.Success);
 
             // Act
-            await _authenticationService.RegisterAsync(dto);
+            await _authenticationService.RegisterAsync(dto, null);
 
             // Assert
             _roleManagerMock.Verify(r => r.CreateAsync(It.Is<ApplicationRole>(x => x.Name == UserTypeOptions.User.ToString())), Times.Once);
@@ -359,7 +370,7 @@ namespace E_StoreX.ServiceTests
                 .ReturnsAsync(IdentityResult.Success);
 
             // Act
-            await _authenticationService.RegisterAsync(dto);
+            await _authenticationService.RegisterAsync(dto, null);
 
             // Assert
             _userManagerMock.Verify(m => m.AddToRoleAsync(It.IsAny<ApplicationUser>(), UserTypeOptions.User.ToString()), Times.Once);
@@ -397,7 +408,7 @@ namespace E_StoreX.ServiceTests
                 .ReturnsAsync(IdentityResult.Success);
 
             // Act
-            await _authenticationService.RegisterAsync(dto);
+            await _authenticationService.RegisterAsync(dto, null);
 
             // Assert
             _userManagerMock.Verify(m => m.GenerateEmailConfirmationTokenAsync(It.IsAny<ApplicationUser>()), Times.Once);
@@ -643,7 +654,7 @@ namespace E_StoreX.ServiceTests
                 .ReturnsAsync((ApplicationUser)null);
 
             // Act
-            var result = await _authenticationService.ForgotPasswordAsync(dto);
+            var result = await _authenticationService.ForgotPasswordAsync(dto, null);
 
             // Assert
             result.Should().NotBeNull();
@@ -661,7 +672,7 @@ namespace E_StoreX.ServiceTests
             _userManagerMock.Setup(x => x.FindByEmailAsync(dto.Email)).ReturnsAsync(user);
             _userManagerMock.Setup(x => x.IsEmailConfirmedAsync(user)).ReturnsAsync(false);
 
-            var result = await _authenticationService.ForgotPasswordAsync(dto);
+            var result = await _authenticationService.ForgotPasswordAsync(dto, null);
 
             result.Success.Should().BeFalse();
             result.StatusCode.Should().Be(400);
@@ -679,7 +690,7 @@ namespace E_StoreX.ServiceTests
             _userManagerMock.Setup(x => x.GetLoginsAsync(user))
                 .ReturnsAsync(new List<UserLoginInfo> { new UserLoginInfo("Google", "id", "Google") });
 
-            var result = await _authenticationService.ForgotPasswordAsync(dto);
+            var result = await _authenticationService.ForgotPasswordAsync(dto, null);
 
             result.Success.Should().BeFalse();
             result.StatusCode.Should().Be(400);
@@ -701,7 +712,7 @@ namespace E_StoreX.ServiceTests
             _userManagerMock.Setup(x => x.GetAuthenticationTokenAsync(user, "ResetPassword", "TokenTime"))
                 .ReturnsAsync(DateTime.UtcNow.ToString());
 
-            var result = await _authenticationService.ForgotPasswordAsync(dto);
+            var result = await _authenticationService.ForgotPasswordAsync(dto, null);
 
             result.Success.Should().BeFalse();
             result.StatusCode.Should().Be(429);
@@ -730,7 +741,7 @@ namespace E_StoreX.ServiceTests
 
             _httpContextAccessorMock.Setup(x => x.HttpContext).Returns(context);
 
-            var result = await _authenticationService.ForgotPasswordAsync(dto);
+            var result = await _authenticationService.ForgotPasswordAsync(dto, null);
 
             result.Success.Should().BeTrue();
             result.StatusCode.Should().Be(200);
@@ -764,7 +775,7 @@ namespace E_StoreX.ServiceTests
                 .Callback<EmailDTO>(email => sentEmail = email)
                 .Returns(Task.CompletedTask);
 
-            var result = await _authenticationService.ForgotPasswordAsync(dto);
+            var result = await _authenticationService.ForgotPasswordAsync(dto, null);
 
             sentEmail.Should().NotBeNull();
             sentEmail!.HtmlMessage.Should().Contain($"reset-password?userId={user.Id}");
@@ -1578,7 +1589,7 @@ namespace E_StoreX.ServiceTests
             var dto = new UpdateUserDTO
             {
                 UserId = user.Id.ToString(),
-                DisplayName = "New Name",
+                DisplayName = "New NameEn",
                 PhoneNumber = "123456789"
             };
 
@@ -1592,7 +1603,7 @@ namespace E_StoreX.ServiceTests
 
             // Assert
             result.Success.Should().BeTrue();
-            user.DisplayName.Should().Be("New Name");
+            user.DisplayName.Should().Be("New NameEn");
             user.PhoneNumber.Should().Be("123456789");
         }
 

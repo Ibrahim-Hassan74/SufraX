@@ -5,7 +5,9 @@ using EStoreX.Core.DTO.Basket;
 using EStoreX.Core.RepositoryContracts.Basket;
 using EStoreX.Core.RepositoryContracts.Common;
 using EStoreX.Core.Services.Basket;
+using EStoreX.Core.Services.Common;
 using FluentAssertions;
+using Microsoft.Extensions.Localization;
 using Moq;
 
 namespace E_StoreX.ServiceTests
@@ -16,13 +18,16 @@ namespace E_StoreX.ServiceTests
         private readonly Mock<IMapper> _mapperMock;
         private readonly BasketService _basketService;
         private readonly Mock<ICustomerBasketRepository> _customerBasketRepositoryMock;
+        private readonly Mock<IStringLocalizer<BasketService>> _localizerMock;
+
         public BasketServiceTests()
         {
             _unitOfWorkMock = new Mock<IUnitOfWork>();
             _mapperMock = new Mock<IMapper>();
             _customerBasketRepositoryMock = new Mock<ICustomerBasketRepository>();
             _unitOfWorkMock.Setup(u => u.CustomerBasketRepository).Returns(_customerBasketRepositoryMock.Object);
-            _basketService = new BasketService(_unitOfWorkMock.Object, _mapperMock.Object);
+            _localizerMock = new Mock<IStringLocalizer<BasketService>>();
+            _basketService = new BasketService(_unitOfWorkMock.Object, _mapperMock.Object, _localizerMock.Object);
         }
 
         #region GetBasketAsync Tests
@@ -103,7 +108,7 @@ namespace E_StoreX.ServiceTests
         {
             // Arrange
             var productId = Guid.NewGuid();
-            var product = new Product { Id = productId, Name = "Laptop", QuantityAvailable = 10, NewPrice = 1000 };
+            var product = new Product { Id = productId, NameEn = "Laptop", QuantityAvailable = 10, NewPrice = 1000 };
 
             var basketDto = new BasketAddRequest
             {
@@ -150,7 +155,7 @@ namespace E_StoreX.ServiceTests
         {
             // Arrange
             var productId = Guid.NewGuid();
-            var product = new Product { Id = productId, Name = "Phone", QuantityAvailable = 5, NewPrice = 500 };
+            var product = new Product { Id = productId, NameEn = "Phone", QuantityAvailable = 5, NewPrice = 500 };
 
             var basketDto = new BasketAddRequest
             {
@@ -195,7 +200,7 @@ namespace E_StoreX.ServiceTests
 
             };
 
-            var product = new Product { Id = productId, Name = "Test", NewPrice = 50, QuantityAvailable = 10, Description = "desc" };
+            var product = new Product { Id = productId, NameEn = "Test", NewPrice = 50, QuantityAvailable = 10, DescriptionEn = "desc" };
             var existingBasket = new CustomerBasket("basket1");
 
             _unitOfWorkMock.Setup(u => u.ProductRepository.GetByIdAsync(productId))
@@ -235,7 +240,7 @@ namespace E_StoreX.ServiceTests
 
             };
 
-            var product = new Product { Id = productId, Name = "Test", NewPrice = 100, QuantityAvailable = 10, Description = "desc" };
+            var product = new Product { Id = productId, NameEn = "Test", NewPrice = 100, QuantityAvailable = 10, DescriptionEn = "desc" };
             var existingBasket = new CustomerBasket("basket1")
             {
                 BasketItems = new List<BasketItem> { new BasketItem { Id = productId, Qunatity = 1, Price = 50 } }

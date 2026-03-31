@@ -7,8 +7,10 @@ using EStoreX.Core.RepositoryContracts.Common;
 using EStoreX.Core.RepositoryContracts.Products;
 using EStoreX.Core.ServiceContracts.Common;
 using EStoreX.Core.ServiceContracts.Products;
+using EStoreX.Core.Services.Common;
 using EStoreX.Core.Services.Products;
 using FluentAssertions;
+using Microsoft.Extensions.Localization;
 using Moq;
 
 namespace E_StoreX.ServiceTests
@@ -22,6 +24,7 @@ namespace E_StoreX.ServiceTests
         private readonly Mock<IMapper> _mapperMock;
         private readonly Mock<IEntityImageManager<Brand>> _entityImageManagerMock;
         private readonly Mock<IImageService> _imageServiceMock;
+        private readonly Mock<IStringLocalizer<BrandService>> _localizerMock;
 
         public BrandServiceTests()
         {
@@ -33,7 +36,8 @@ namespace E_StoreX.ServiceTests
             _imageServiceMock = new Mock<IImageService>();
             _unitOfWorkMock.Setup(uow => uow.BrandRepository)
                 .Returns(_brandRepositoryMock.Object);
-            _brandService = new BrandService(_unitOfWorkMock.Object, _mapperMock.Object, _entityImageManagerMock.Object, _imageServiceMock.Object);
+            _localizerMock = new Mock<IStringLocalizer<BrandService>>();
+            _brandService = new BrandService(_unitOfWorkMock.Object, _mapperMock.Object, _entityImageManagerMock.Object, _imageServiceMock.Object, _localizerMock.Object);
         }
 
         #region GetAllBrandsAsync Tests
@@ -44,8 +48,8 @@ namespace E_StoreX.ServiceTests
             // Arrange
             var brands = new List<Brand>
             {
-                new Brand { Id = Guid.NewGuid(), Name = "Brand 1" },
-                new Brand { Id = Guid.NewGuid(), Name = "Brand 2" }
+                new Brand { Id = Guid.NewGuid(), NameEn = "Brand 1" },
+                new Brand { Id = Guid.NewGuid(), NameEn = "Brand 2" }
             };
 
             _brandRepositoryMock
@@ -53,7 +57,7 @@ namespace E_StoreX.ServiceTests
                 .ReturnsAsync(brands);
 
             _mapperMock.Setup(m => m.Map<IEnumerable<BrandResponse>>(brands))
-                .Returns(brands.Select(b => new BrandResponse { Id = b.Id, Name = b.Name }));
+                .Returns(brands.Select(b => new BrandResponse { Id = b.Id, Name = b.NameEn }));
 
             // Act
             var result = await _brandService.GetAllBrandsAsync();
@@ -95,13 +99,13 @@ namespace E_StoreX.ServiceTests
         {
             // Arrange
             var brandId = Guid.NewGuid();
-            var brand = new Brand { Id = brandId, Name = "Test Brand" };
+            var brand = new Brand { Id = brandId, NameEn = "Test Brand" };
 
             _brandRepositoryMock
                 .Setup(r => r.GetByIdAsync(brandId, x => x.Photos))
                 .ReturnsAsync(brand);
 
-            _mapperMock.Setup(m => m.Map<BrandResponse?>(brand)).Returns(new BrandResponse() { Id = brand.Id, Name = brand.Name });
+            _mapperMock.Setup(m => m.Map<BrandResponse?>(brand)).Returns(new BrandResponse() { Id = brand.Id, Name = brand.NameEn });
 
             // Act
             var result = await _brandService.GetBrandByIdAsync(brandId);
@@ -167,7 +171,7 @@ namespace E_StoreX.ServiceTests
 
             _brandRepositoryMock
                 .Setup(r => r.AddAsync(It.IsAny<Brand>()))
-                .ReturnsAsync(new Brand() { Name = brandName, Id = Guid.NewGuid() });
+                .ReturnsAsync(new Brand() { NameEn = brandName, Id = Guid.NewGuid() });
 
             _unitOfWorkMock
                 .Setup(u => u.CompleteAsync())
@@ -178,7 +182,7 @@ namespace E_StoreX.ServiceTests
 
             // Assert
             result.Should().NotBeNull();
-            result.Name.Should().Be(brandName);
+            result.NameEn.Should().Be(brandName);
             result.Id.Should().NotBeEmpty();
 
             _brandRepositoryMock.Verify(r => r.GetByNameAsync(brandName), Times.Once);
@@ -209,7 +213,7 @@ namespace E_StoreX.ServiceTests
         {
             // Arrange
             var brandName = "Existing Brand";
-            var existingBrand = new Brand { Id = Guid.NewGuid(), Name = brandName };
+            var existingBrand = new Brand { Id = Guid.NewGuid(), NameEn = brandName };
 
             _brandRepositoryMock
                 .Setup(r => r.GetByNameAsync(brandName))
@@ -237,11 +241,11 @@ namespace E_StoreX.ServiceTests
             // Arrange
             var brandId = Guid.NewGuid();
             var newName = "Updated Brand";
-            var existingBrand = new Brand { Id = brandId, Name = "Old Brand" };
+            var existingBrand = new Brand { Id = brandId, NameEn = "Old Brand" };
 
             _brandRepositoryMock.Setup(r => r.GetByNameAsync(newName)).ReturnsAsync((Brand?)null);
             _brandRepositoryMock.Setup(r => r.GetByIdAsync(brandId)).ReturnsAsync(existingBrand);
-            _brandRepositoryMock.Setup(r => r.UpdateAsync(existingBrand)).ReturnsAsync(new Brand() { Id = brandId, Name = newName });
+            _brandRepositoryMock.Setup(r => r.UpdateAsync(existingBrand)).ReturnsAsync(new Brand() { Id = brandId, NameEn = newName });
             _unitOfWorkMock.Setup(u => u.CompleteAsync()).ReturnsAsync(1);
 
             // Act
@@ -250,7 +254,7 @@ namespace E_StoreX.ServiceTests
             // Assert
             result.Should().NotBeNull();
             result.Id.Should().Be(brandId);
-            result.Name.Should().Be(newName);
+            result.NameEn.Should().Be(newName);
 
             _brandRepositoryMock.Verify(r => r.GetByNameAsync(newName), Times.Once);
             _brandRepositoryMock.Verify(r => r.GetByIdAsync(brandId), Times.Once);
@@ -286,7 +290,7 @@ namespace E_StoreX.ServiceTests
             // Arrange
             var brandId = Guid.NewGuid();
             var newName = "Existing Brand";
-            var existingBrandWithSameName = new Brand { Id = Guid.NewGuid(), Name = newName };
+            var existingBrandWithSameName = new Brand { Id = Guid.NewGuid(), NameEn = newName };
 
             _brandRepositoryMock.Setup(r => r.GetByNameAsync(newName)).ReturnsAsync(existingBrandWithSameName);
 
@@ -337,7 +341,7 @@ namespace E_StoreX.ServiceTests
         {
             // Arrange
             var brandId = Guid.NewGuid();
-            var brand = new Brand { Id = brandId, Name = "Brand To Delete" };
+            var brand = new Brand { Id = brandId, NameEn = "Brand To Delete" };
 
             _brandRepositoryMock.Setup(r => r.GetByIdAsync(brandId)).ReturnsAsync(brand);
             _brandRepositoryMock.Setup(r => r.DeleteAsync(brandId)).ReturnsAsync(true);
@@ -401,15 +405,15 @@ namespace E_StoreX.ServiceTests
             var brandId = Guid.NewGuid();
             var categories = new List<Category>
             {
-                new Category { Id = Guid.NewGuid(), Name = "Category 1" },
-                new Category { Id = Guid.NewGuid(), Name = "Category 2" }
+                new Category { Id = Guid.NewGuid(), NameEn = "Category 1" },
+                new Category { Id = Guid.NewGuid(), NameEn = "Category 2" }
             };
 
             _brandRepositoryMock.Setup(r => r.GetCategoriesByBrandIdAsync(brandId))
                 .ReturnsAsync(categories);
 
             _mapperMock.Setup(m => m.Map<IEnumerable<CategoryResponse>>(categories))
-                .Returns(categories.Select(c => new CategoryResponse(c.Id, c.Name, "")));
+                .Returns(categories.Select(c => new CategoryResponse(c.Id, c.NameEn, "")));
 
             // Act
             var result = await _brandService.GetCategoriesByBrandIdAsync(brandId);
@@ -458,11 +462,11 @@ namespace E_StoreX.ServiceTests
         {
             // Arrange
             var brandName = "Test Brand";
-            var brand = new Brand { Id = Guid.NewGuid(), Name = brandName };
+            var brand = new Brand { Id = Guid.NewGuid(), NameEn = brandName };
 
             _brandRepositoryMock.Setup(r => r.GetByNameAsync(brandName))
                 .ReturnsAsync(brand);
-            _mapperMock.Setup(m => m.Map<BrandResponse?>(brand)).Returns(new BrandResponse() { Id = brand.Id, Name = brand.Name });
+            _mapperMock.Setup(m => m.Map<BrandResponse?>(brand)).Returns(new BrandResponse() { Id = brand.Id, Name = brand.NameEn });
 
             // Act
             var result = await _brandService.GetBrandByNameAsync(brandName);

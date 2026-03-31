@@ -10,6 +10,7 @@ using EStoreX.Core.ServiceContracts.Products;
 using EStoreX.Core.Services.Products;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Localization;
 using Moq;
 using System.ComponentModel.DataAnnotations;
 using System.Linq.Expressions;
@@ -25,6 +26,7 @@ namespace E_StoreX.ServiceTests
         private readonly Mock<IMapper> _mapperMock;
         private readonly Mock<IEntityImageManager<Product>> _imageManagerMock;
         private readonly Mock<IImageService> _imageServiceMock;
+        private readonly Mock<IStringLocalizer<ProductsService>> _localizerMock;
 
         public ProductsServiceTests()
         {
@@ -34,10 +36,11 @@ namespace E_StoreX.ServiceTests
             _imageManagerMock = new Mock<IEntityImageManager<Product>>();
             _imageServiceMock = new Mock<IImageService>();
             _mapperMock = new Mock<IMapper>();
+            _localizerMock = new Mock<IStringLocalizer<ProductsService>>();
             _unitOfWorkMock.Setup(u => u.ProductRepository)
                            .Returns(_productRepositoryMock.Object);
             _productsService = new ProductsService(_unitOfWorkMock.Object, _mapperMock.Object,
-                _imageManagerMock.Object, _imageServiceMock.Object);
+                _imageManagerMock.Object, _imageServiceMock.Object, _localizerMock.Object);
         }
         #region Helper Methods
         private ProductAddRequest CreateValidProductAddRequest()
@@ -49,8 +52,8 @@ namespace E_StoreX.ServiceTests
 
             return new ProductAddRequest
             {
-                Name = "Test Product",
-                Description = "This is a test product",
+                NameEn = "Test Product",
+                DescriptionEn = "This is a test product",
                 NewPrice = 100m,
                 OldPrice = 150m,
                 QuantityAvailable = 10,
@@ -63,8 +66,8 @@ namespace E_StoreX.ServiceTests
         {
             return new Product
             {
-                Name = r.Name,
-                Description = r.Description,
+                NameEn = r.NameEn,
+                DescriptionEn = r.DescriptionEn,
                 NewPrice = r.NewPrice,
                 OldPrice = r.OldPrice,
                 QuantityAvailable = r.QuantityAvailable,
@@ -77,8 +80,8 @@ namespace E_StoreX.ServiceTests
             return new ProductResponse
             {
                 Id = p.Id,
-                Name = p.Name,
-                Description = p.Description,
+                Name = p.NameEn,
+                Description = p.DescriptionEn,
                 NewPrice = p.NewPrice,
                 OldPrice = p.OldPrice,
                 QuantityAvailable = p.QuantityAvailable,
@@ -129,8 +132,8 @@ namespace E_StoreX.ServiceTests
             // Assert
             result.Should().NotBeNull();
             result.Id.Should().NotBeEmpty();
-            result.Name.Should().Be(request.Name);
-            result.Description.Should().Be(request.Description);
+            result.Name.Should().Be(request.NameEn);
+            result.Description.Should().Be(request.DescriptionEn);
             result.NewPrice.Should().Be(request.NewPrice);
             result.OldPrice.Should().Be(request.OldPrice);
             result.QuantityAvailable.Should().Be(request.QuantityAvailable);
@@ -232,8 +235,8 @@ namespace E_StoreX.ServiceTests
             // Arrange
             var products = new List<Product>
             {
-                new Product { Id = Guid.NewGuid(), Name = "Product 1" },
-                new Product { Id = Guid.NewGuid(), Name = "Product 2" }
+                new Product { Id = Guid.NewGuid(), NameEn = "Product 1" },
+                new Product { Id = Guid.NewGuid(), NameEn = "Product 2" }
             };
 
             var productResponses = new List<ProductResponse>
@@ -293,7 +296,7 @@ namespace E_StoreX.ServiceTests
             // Arrange
             var products = new List<Product>
             {
-                new Product { Id = Guid.NewGuid(), Name = "Product 1" }
+                new Product { Id = Guid.NewGuid(), NameEn = "Product 1" }
             };
 
             _productRepositoryMock
@@ -321,7 +324,7 @@ namespace E_StoreX.ServiceTests
         {
             // Arrange
             var productId = Guid.NewGuid();
-            var product = new Product { Id = productId, Name = "Test Product" };
+            var product = new Product { Id = productId, NameEn = "Test Product" };
             var productResponse = new ProductResponse { Id = productId, Name = "Test Product" };
 
             _productRepositoryMock
@@ -395,8 +398,8 @@ namespace E_StoreX.ServiceTests
             var request = new ProductUpdateRequest
             {
                 Id = productId,
-                Name = "Updated Product",
-                Description = "Updated Description",
+                NameEn = "Updated Product",
+                DescriptionEn = "Updated DescriptionEn",
                 NewPrice = 120m,
                 OldPrice = 150m,
                 QuantityAvailable = 10,
@@ -408,8 +411,8 @@ namespace E_StoreX.ServiceTests
             var existingProduct = new Product
             {
                 Id = productId,
-                Name = "Old Product",
-                Description = "Old Description",
+                NameEn = "Old Product",
+                DescriptionEn = "Old DescriptionEn",
                 NewPrice = 100m,
                 OldPrice = 150m,
                 QuantityAvailable = 10,
@@ -436,7 +439,7 @@ namespace E_StoreX.ServiceTests
             result.Should().NotBeNull();
             result.Id.Should().Be(productId);
             result.Name.Should().Be("Updated Product");
-            result.Description.Should().Be("Updated Description");
+            result.Description.Should().Be("Updated DescriptionEn");
 
             _productRepositoryMock.Verify(r => r.GetByIdAsync(productId, It.IsAny<Expression<Func<Product, object>>[]>()), Times.Once);
             _productRepositoryMock.Verify(r => r.UpdateProductAsync(existingProduct, request.Photos), Times.Once);
@@ -469,8 +472,8 @@ namespace E_StoreX.ServiceTests
             var request = new ProductUpdateRequest
             {
                 Id = productId,
-                Name = "Updated Product",
-                Description = "Updated Description",
+                NameEn = "Updated Product",
+                DescriptionEn = "Updated DescriptionEn",
                 NewPrice = 120m,
                 OldPrice = 150m,
                 QuantityAvailable = 10,
@@ -504,8 +507,8 @@ namespace E_StoreX.ServiceTests
             var query = new ProductQueryDTO { SearchString = "Test" };
             var products = new List<Product>
             {
-                new Product { Id = Guid.NewGuid(), Name = "Test Product 1" },
-                new Product { Id = Guid.NewGuid(), Name = "Test Product 2" }
+                new Product { Id = Guid.NewGuid(), NameEn = "Test Product 1" },
+                new Product { Id = Guid.NewGuid(), NameEn = "Test Product 2" }
             };
 
             var productResponses = new List<ProductResponse>
