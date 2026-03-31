@@ -1,13 +1,13 @@
-﻿using EStoreX.Core.Enums;
+using EStoreX.Core.Enums;
 using System.ComponentModel.DataAnnotations;
 
 namespace EStoreX.Core.DTO.Account.Requests
 {
     public class UpdateUserRoleDTO
     {
-        [Required(ErrorMessage = "User ID is required.")]
+        [Required(ErrorMessageResourceName = "RequiredUserId", ErrorMessageResourceType = typeof(EStoreX.Core.Resources.DTO.Account.AuthValidationMessages))]
         public string UserId { get; set; } = string.Empty;
-        [Required(ErrorMessage = "Role is required.")]
+        [Required(ErrorMessageResourceName = "RequiredRole", ErrorMessageResourceType = typeof(EStoreX.Core.Resources.DTO.Account.AuthValidationMessages))]
         public UserTypeOptions Role { get; set; }
     }
 }

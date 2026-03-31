@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace EStoreX.Core.DTO.Account.Requests
 {
@@ -10,20 +10,20 @@ namespace EStoreX.Core.DTO.Account.Requests
         /// <summary>
         /// The unique identifier of the user to confirm the email for.
         /// </summary>
-        [Required(ErrorMessage = "User ID is required.")]
+        [Required(ErrorMessageResourceName = "RequiredUserId", ErrorMessageResourceType = typeof(EStoreX.Core.Resources.DTO.Account.AuthValidationMessages))]
         public string UserId { get; set; } = string.Empty;
 
         /// <summary>
         /// The token used to confirm the user's email address.
         /// </summary>
-        [Required(ErrorMessage = "Confirmation token is required.")]
-        [MinLength(10, ErrorMessage = "The confirmation token must be at least 10 characters long.")]
+        [Required(ErrorMessageResourceName = "RequiredToken", ErrorMessageResourceType = typeof(EStoreX.Core.Resources.DTO.Account.AuthValidationMessages))]
+        [MinLength(10, ErrorMessageResourceName = "MinLengthToken", ErrorMessageResourceType = typeof(EStoreX.Core.Resources.DTO.Account.AuthValidationMessages))]
         public string Token { get; set; } = string.Empty;
 
         /// <summary>
         /// Optional URL to redirect the user to after confirmation.
         /// </summary>
-        [Url(ErrorMessage = "RedirectTo must be a valid URL.")]
+        [Url(ErrorMessageResourceName = "InvalidUrl", ErrorMessageResourceType = typeof(EStoreX.Core.Resources.DTO.Account.AuthValidationMessages))]
         public string? RedirectTo { get; set; }
     }
 }

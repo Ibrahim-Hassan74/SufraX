@@ -1,10 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace EStoreX.Core.DTO.Account.Requests
 {
     public class RegisterApiClientRequest
     {
-        [Required(ErrorMessage = "API Key is required.")]
+        [Required(ErrorMessageResourceName = "RequiredClientName", ErrorMessageResourceType = typeof(EStoreX.Core.Resources.DTO.Account.AuthValidationMessages))]
         public string ClientName { get; set; } = null!;
     }
 }

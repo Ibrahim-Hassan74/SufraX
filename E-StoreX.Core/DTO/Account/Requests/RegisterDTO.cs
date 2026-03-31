@@ -1,4 +1,4 @@
-﻿using EStoreX.Core.Enums;
+using EStoreX.Core.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Newtonsoft.Json;
@@ -8,24 +8,21 @@ namespace EStoreX.Core.DTO.Account.Requests
 {
     public class RegisterDTO
     {
-        [Required(ErrorMessage = "{0} can't be blank")]
-        [Display(Name = "First Name")]
+        [Required(ErrorMessageResourceName = "RequiredUserName", ErrorMessageResourceType = typeof(EStoreX.Core.Resources.DTO.Account.AuthValidationMessages))]
         public string? UserName { get; set; }
-        [Required(ErrorMessage = "{0} can't be blank")]
-        [EmailAddress(ErrorMessage = "{0} should be in a proper email address format")]
-        [Remote(action: "IsEmailAlreadyRegistered", controller: "Account", ErrorMessage = "Email is already use")]
+        [Required(ErrorMessageResourceName = "RequiredEmail", ErrorMessageResourceType = typeof(EStoreX.Core.Resources.DTO.Account.AuthValidationMessages))]
+        [EmailAddress(ErrorMessageResourceName = "InvalidEmail", ErrorMessageResourceType = typeof(EStoreX.Core.Resources.DTO.Account.AuthValidationMessages))]
+        [Remote(action: "IsEmailAlreadyRegistered", controller: "Account", ErrorMessageResourceName = "EmailAlreadyInUse", ErrorMessageResourceType = typeof(EStoreX.Core.Resources.DTO.Account.AuthValidationMessages))]
         public string? Email { get; set; }
-        [Required(ErrorMessage = "{0} can't be blank")]
-        [RegularExpression("^[0-9]*$", ErrorMessage = "{0} should contains numbers only")]
+        [Required(ErrorMessageResourceName = "RequiredPhone", ErrorMessageResourceType = typeof(EStoreX.Core.Resources.DTO.Account.AuthValidationMessages))]
         public string? Phone { get; set; }
-        [Required(ErrorMessage = "{0} can't be blank")]
-        [DataType(DataType.Password)]
-        [MinLength(6, ErrorMessage = "{0} should be at least 7 characters")]
+        [Required(ErrorMessageResourceName = "RequiredPassword", ErrorMessageResourceType = typeof(EStoreX.Core.Resources.DTO.Account.AuthValidationMessages))]
+        [StringLength(100, MinimumLength = 6, ErrorMessageResourceName = "MinLengthPassword", ErrorMessageResourceType = typeof(EStoreX.Core.Resources.DTO.Account.AuthValidationMessages))]
         public string? Password { get; set; }
-        [Required(ErrorMessage = "{0} can't be blank")]
+        [Required(ErrorMessageResourceName = "RequiredPassword", ErrorMessageResourceType = typeof(EStoreX.Core.Resources.DTO.Account.AuthValidationMessages))]
         [Display(Name = "Confirm Password")]
         [DataType(DataType.Password)]
-        [Compare("Password", ErrorMessage = "Passwords do not match")]
+        [Compare("Password", ErrorMessageResourceName = "PasswordsDoNotMatch", ErrorMessageResourceType = typeof(EStoreX.Core.Resources.DTO.Account.AuthValidationMessages))]
         public string? ConfirmPassword { get; set; }
     }
 }
