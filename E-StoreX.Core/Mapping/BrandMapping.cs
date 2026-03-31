@@ -9,7 +9,8 @@ namespace EStoreX.Core.Mapping
         public BrandMapping()
         {
             CreateMap<Brand, BrandResponse>()
-                .ForMember(dest => dest.Photos, opt => opt.MapFrom(src => src.Photos));
+                .ForMember(dest => dest.Photos, opt => opt.MapFrom(src => src.Photos))
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "ar" ? src.NameAr ?? src.NameEn : src.NameEn));
         }
     }
 }

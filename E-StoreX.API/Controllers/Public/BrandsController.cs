@@ -1,4 +1,4 @@
-﻿using Asp.Versioning;
+using Asp.Versioning;
 using Domain.Entities.Product;
 using EStoreX.Core.DTO.Brands.Response;
 using EStoreX.Core.DTO.Categories.Responses;
@@ -8,8 +8,10 @@ using EStoreX.Core.Helper;
 using EStoreX.Core.ServiceContracts.Products;
 using EStoreX.Core.Services.Products;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
+using EStoreX.API.Filters;
 
-namespace E_StoreX.API.Controllers.Public
+namespace EStoreX.API.Controllers.Public
 {
     /// <summary>
     /// Public controller for retrieving brand information in API version 1.0.
@@ -18,14 +20,17 @@ namespace E_StoreX.API.Controllers.Public
     public class BrandsController : CustomControllerBase
     {
         private readonly IBrandService _brandsService;
+        private readonly IStringLocalizer<SharedResource> _localizer;
 
         /// <summary>
         /// Initializes a new instance of <see cref="BrandsController"/>.
         /// </summary>
         /// <param name="brandsService">Service to manage brand operations.</param>
-        public BrandsController(IBrandService brandsService)
+        /// <param name="localizer">localizer for shared resources.</param>
+        public BrandsController(IBrandService brandsService, IStringLocalizer<SharedResource> localizer)
         {
             _brandsService = brandsService;
+            _localizer = localizer;
         }
 
         /// <summary>
@@ -55,7 +60,7 @@ namespace E_StoreX.API.Controllers.Public
         {
             var brand = await _brandsService.GetBrandByIdAsync(id);
             if (brand == null)
-                return NotFound(ApiResponseFactory.NotFound("Brand not found."));
+                return NotFound(ApiResponseFactory.NotFound(_localizer["BrandNotFound"].Value));
 
             return Ok(brand);
         }
@@ -77,7 +82,7 @@ namespace E_StoreX.API.Controllers.Public
         {
             var brand = await _brandsService.GetBrandByNameAsync(name);
             if (brand == null)
-                return NotFound(ApiResponseFactory.NotFound($"Brand Not found: {name}"));
+                return NotFound(ApiResponseFactory.NotFound(_localizer["BrandNotFoundWithName", name].Value));
             return Ok(brand);
         }
         /// <summary>

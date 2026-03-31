@@ -8,7 +8,7 @@ namespace EStoreX.Infrastructure.Data.Configuration
     {
         public void Configure(EntityTypeBuilder<Brand> builder)
         {
-            builder.HasIndex(b => b.Name).IsUnique();
+            builder.HasIndex(b => b.NameEn).IsUnique();
         }
     }
 }

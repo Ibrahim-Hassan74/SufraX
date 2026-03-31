@@ -6,9 +6,12 @@ namespace Domain.Entities.Product
 {
     public class Brand : BaseEntity<Guid>
     {
-        [Required(ErrorMessage = "Brand Name is required")]
+        [Required(ErrorMessage = "Brand NameEn is required")]
         [MaxLength(100)]
-        public string Name { get; set; } = string.Empty;
+        public string NameEn { get; set; } = string.Empty;
+        [Required(ErrorMessage = "Brand NameEn is required")]
+        [MaxLength(100)]
+        public string NameAr { get; set; } = string.Empty;
         [JsonIgnore]
         public ICollection<Product> Products { get; set; } = new List<Product>();
         [JsonIgnore]

@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Domain.Entities.Product;
 using EStoreX.Core.DTO.Brands.Response;
 using EStoreX.Core.DTO.Categories.Responses;
@@ -10,6 +10,7 @@ using EStoreX.Core.ServiceContracts.Common;
 using EStoreX.Core.ServiceContracts.Products;
 using EStoreX.Core.Services.Common;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Localization;
 
 namespace EStoreX.Core.Services.Products
 {
@@ -21,12 +22,14 @@ namespace EStoreX.Core.Services.Products
         private readonly IBrandRepository _brandRepository;
         private readonly IEntityImageManager<Brand> _imageManager;
         private readonly IImageService _imageService;
+        private readonly IStringLocalizer<BrandService> _localizer;
 
-        public BrandService(IUnitOfWork unitOfWork, IMapper mapper, IEntityImageManager<Brand> imageManager, IImageService imageService) : base(unitOfWork, mapper)
+        public BrandService(IUnitOfWork unitOfWork, IMapper mapper, IEntityImageManager<Brand> imageManager, IImageService imageService, IStringLocalizer<BrandService> localizer) : base(unitOfWork, mapper)
         {
             _brandRepository = _unitOfWork.BrandRepository;
             _imageManager = imageManager;
             _imageService = imageService;
+            _localizer = localizer;
         }
 
         /// <inheritdoc/>
@@ -42,7 +45,7 @@ namespace EStoreX.Core.Services.Products
         {
             if (brandId == Guid.Empty)
             {
-                throw new ArgumentException("Brand ID cannot be empty.", nameof(brandId));
+                throw new ArgumentException(_localizer["BrandIdRequired"].Value, nameof(brandId));
             }
             var res = await _brandRepository.GetByIdAsync(brandId, x => x.Photos);
             return _mapper.Map<BrandResponse?>(res);
@@ -53,17 +56,17 @@ namespace EStoreX.Core.Services.Products
         {
             if (string.IsNullOrWhiteSpace(name))
             {
-                throw new ArgumentException("Brand name cannot be null or empty.", nameof(name));
+                throw new ArgumentException(_localizer["BrandNameRequired"].Value, nameof(name));
             }
             if (await _brandRepository.GetByNameAsync(name) != null)
             {
-                throw new InvalidOperationException($"A brand with the name '{name}' already exists.");
+                throw new InvalidOperationException(string.Format(_localizer["BrandAlreadyExists"].Value, name));
             }
 
             var brand = new Brand
             {
                 Id = Guid.NewGuid(),
-                Name = name
+                NameEn = name
             };
 
             await _brandRepository.AddAsync(brand);
@@ -77,22 +80,22 @@ namespace EStoreX.Core.Services.Products
         {
             if (string.IsNullOrWhiteSpace(newName))
             {
-                throw new ArgumentException("New name cannot be null or empty.", nameof(newName));
+                throw new ArgumentException(_localizer["NewBrandNameRequired"].Value, nameof(newName));
             }
 
             var existingBrand = await _brandRepository.GetByNameAsync(newName);
             if (existingBrand != null && existingBrand.Id != brandId)
             {
-                throw new InvalidOperationException($"A brand with the name '{newName}' already exists.");
+                throw new InvalidOperationException(string.Format(_localizer["BrandAlreadyExists"].Value, newName));
             }
 
             var brand = await _brandRepository.GetByIdAsync(brandId);
             if (brand == null)
             {
-                throw new KeyNotFoundException($"Brand with ID {brandId} not found.");
+                throw new KeyNotFoundException(string.Format(_localizer["BrandNotFoundWithId"].Value, brandId));
             }
 
-            brand.Name = newName;
+            brand.NameEn = newName;
             await _brandRepository.UpdateAsync(brand);
             await _unitOfWork.CompleteAsync();
 
@@ -103,7 +106,7 @@ namespace EStoreX.Core.Services.Products
         public async Task<bool> DeleteBrandAsync(Guid brandId)
         {
             if (brandId == Guid.Empty)
-                throw new ArgumentException("Brand ID cannot be empty.", nameof(brandId));
+                throw new ArgumentException(_localizer["BrandIdRequired"].Value, nameof(brandId));
 
             var brand = await _brandRepository.GetByIdAsync(brandId);
             if (brand == null)
@@ -153,9 +156,9 @@ namespace EStoreX.Core.Services.Products
         {
             var brand = await _unitOfWork.BrandRepository.GetByIdAsync(brandId, b => b.Photos);
             if (brand == null)
-                return ApiResponseFactory.NotFound("Brand not found.");
+                return ApiResponseFactory.NotFound(_localizer["BrandNotFound"].Value);
 
-            var folderName = brand.Name.Replace(" ", "").ToLowerInvariant();
+            var folderName = brand.NameEn.Replace(" ", "").ToLowerInvariant();
 
             return await _imageManager.AddImagesAsync(
                 brandId,
@@ -181,10 +184,10 @@ namespace EStoreX.Core.Services.Products
         {
             var brand = await _unitOfWork.BrandRepository.GetByIdAsync(brandId, b => b.Photos);
             if (brand == null)
-                return ApiResponseFactory.NotFound("Brand not found.");
+                return ApiResponseFactory.NotFound(_localizer["BrandNotFound"].Value);
 
             if (files == null || files.Count == 0)
-                return ApiResponseFactory.BadRequest("No files provided.");
+                return ApiResponseFactory.BadRequest(_localizer["NoFilesProvided"].Value);
 
             // Delete old images
             foreach (var photo in brand.Photos.ToList())
@@ -193,7 +196,7 @@ namespace EStoreX.Core.Services.Products
                 brand.Photos.Remove(photo);
             }
 
-            var folderName = brand.Name.Replace(" ", "").ToLowerInvariant();
+            var folderName = brand.NameEn.Replace(" ", "").ToLowerInvariant();
 
             var formFileCollection = new FormFileCollection();
             foreach (var file in files)
@@ -211,7 +214,7 @@ namespace EStoreX.Core.Services.Products
             }
 
             await _unitOfWork.CompleteAsync();
-            return ApiResponseFactory.Success("Images updated successfully.");
+            return ApiResponseFactory.Success(_localizer["ImagesUpdatedSuccessfully"].Value);
         }
 
     }

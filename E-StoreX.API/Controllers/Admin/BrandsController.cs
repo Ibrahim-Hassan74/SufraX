@@ -1,4 +1,4 @@
-﻿using Asp.Versioning;
+using Asp.Versioning;
 using Domain.Entities.Product;
 using EStoreX.Core.DTO.Common;
 using EStoreX.Core.Enums;
@@ -7,8 +7,10 @@ using EStoreX.Core.ServiceContracts.Common;
 using EStoreX.Core.ServiceContracts.Products;
 using EStoreX.Core.Services.Products;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
+using EStoreX.API.Filters;
 
-namespace E_StoreX.API.Controllers.Admin
+namespace EStoreX.API.Controllers.Admin
 {
     /// <summary>
     /// Provides administrative operations for managing product brands in the E-StoreX platform.
@@ -25,16 +27,19 @@ namespace E_StoreX.API.Controllers.Admin
     {
         private readonly IBrandService _brandsService;
         private readonly IExportService _exportService;
+        private readonly IStringLocalizer<SharedResource> _localizer;
 
         /// <summary>
         /// Initializes a new instance of <see cref="BrandsController"/>.
         /// </summary>
         /// <param name="brandsService">Service to manage brand operations.</param>
         /// <param name="exportService">Service to manage files.</param>
-        public BrandsController(IBrandService brandsService, IExportService exportService)
+        /// <param name="localizer">localizer for shared resources.</param>
+        public BrandsController(IBrandService brandsService, IExportService exportService, IStringLocalizer<SharedResource> localizer)
         {
             _brandsService = brandsService;
             _exportService = exportService;
+            _localizer = localizer;
         }
 
         /// <summary>
@@ -52,7 +57,7 @@ namespace E_StoreX.API.Controllers.Admin
         public async Task<IActionResult> Create([FromBody] string name)
         {
             if (string.IsNullOrWhiteSpace(name))
-                return BadRequest(ApiResponseFactory.NotFound("Brand name cannot be empty."));
+                return BadRequest(ApiResponseFactory.NotFound(_localizer["BrandNameRequired"].Value));
 
             var brand = await _brandsService.CreateBrandAsync(name);
             return Ok(brand);
@@ -81,7 +86,7 @@ namespace E_StoreX.API.Controllers.Admin
             var updatedBrand = await _brandsService.UpdateBrandAsync(id, newName);
 
             if (updatedBrand == null)
-                return NotFound(ApiResponseFactory.NotFound("Brand not found."));
+                return NotFound(ApiResponseFactory.NotFound(_localizer["BrandNotFound"].Value));
 
             return Ok(updatedBrand);
         }
@@ -139,7 +144,7 @@ namespace E_StoreX.API.Controllers.Admin
                 ExportType.Csv => File(_exportService.ExportToCsv(brands), "text/csv", "brands.csv"),
                 ExportType.Excel => File(_exportService.ExportToExcel(brands), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "brands.xlsx"),
                 ExportType.Pdf => File(_exportService.ExportToPdf(brands), "application/pdf", "brands.pdf"),
-                _ => BadRequest(ApiResponseFactory.BadRequest("Unsupported export type"))
+                _ => BadRequest(ApiResponseFactory.BadRequest(_localizer["UnsupportedExportType"].Value))
             };
         }
         /// <summary>
