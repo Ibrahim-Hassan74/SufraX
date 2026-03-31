@@ -1,4 +1,4 @@
-﻿using Stripe;
+using Stripe;
 using EStoreX.Core.DTO.Common;
 using Microsoft.AspNetCore.Mvc;
 using EStoreX.Core.Domain.Options;
@@ -7,8 +7,10 @@ using Microsoft.AspNetCore.Authorization;
 using Domain.Entities.Baskets;
 using EStoreX.Core.ServiceContracts.Common;
 using EStoreX.Core.Helper;
+using Microsoft.Extensions.Localization;
+using EStoreX.API.Filters;
 
-namespace E_StoreX.API.Controllers.Public
+namespace EStoreX.API.Controllers.Public
 {
     /// <summary>
     /// Handles payment-related operations such as creating or updating Stripe payment intents.
@@ -21,6 +23,7 @@ namespace E_StoreX.API.Controllers.Public
     {
         private readonly IPaymentService _paymentService;
         private readonly ILogger<PaymentsController> _logger;
+        private readonly IStringLocalizer<SharedResource> _localizer;
         private readonly string _signingSecret;
         /// <summary>
         /// Initializes a new instance of the <see cref="PaymentsController"/> class.
@@ -29,12 +32,14 @@ namespace E_StoreX.API.Controllers.Public
         /// <param name="paymentService">Service for handling payment-related business logic.</param>
         /// <param name="options">Stripe configuration options (e.g., signing secret).</param>
         /// <param name="logger">Logger instance for logging payment events and errors.</param>
+        /// <param name="localizer">localizer for shared resources.</param>
         /// <exception cref="ArgumentNullException">Thrown if Stripe signing secret is not provided in configuration.</exception>
-        public PaymentsController(IPaymentService paymentService, IOptions<StripeSettings> options, ILogger<PaymentsController> logger)
+        public PaymentsController(IPaymentService paymentService, IOptions<StripeSettings> options, ILogger<PaymentsController> logger, IStringLocalizer<SharedResource> localizer)
         {
             _paymentService = paymentService;
             _signingSecret = options.Value.SigningSecret ?? throw new ArgumentNullException(nameof(options), "Stripe signing secret cannot be null.");
             _logger = logger;
+            _localizer = localizer;
         }
 
 
@@ -60,16 +65,16 @@ namespace E_StoreX.API.Controllers.Public
         {
             if (string.IsNullOrEmpty(basketId))
             {
-                return BadRequest(ApiResponseFactory.BadRequest("Basket ID cannot be null or empty."));
+                return BadRequest(ApiResponseFactory.BadRequest(_localizer["BasketIdRequired"].Value));
             }
             if (deliveryMethodId == Guid.Empty)
             {
-                return BadRequest(ApiResponseFactory.BadRequest("Invalid delivery method ID."));
+                return BadRequest(ApiResponseFactory.BadRequest(_localizer["InvalidDeliveryMethodId"].Value));
             }
             var basket = await _paymentService.CreateOrUpdatePaymentIntentAsync(basketId, deliveryMethodId);
             if (basket == null)
             {
-                return NotFound(ApiResponseFactory.NotFound("Basket not found."));
+                return NotFound(ApiResponseFactory.NotFound(_localizer["BasketNotFound"].Value));
             }
             var paymentIntentDto = new PaymentIntentDTO
             {

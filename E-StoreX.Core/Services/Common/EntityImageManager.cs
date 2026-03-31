@@ -1,10 +1,11 @@
-﻿using Domain.Entities.Product;
+using Domain.Entities.Product;
 using EStoreX.Core.DTO.Common;
 using EStoreX.Core.DTO.Products.Responses;
 using EStoreX.Core.Helper;
 using EStoreX.Core.RepositoryContracts.Common;
 using EStoreX.Core.ServiceContracts.Common;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Localization;
 
 namespace EStoreX.Core.Services.Common
 {
@@ -12,11 +13,13 @@ namespace EStoreX.Core.Services.Common
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IImageService _imageService;
+        private readonly IStringLocalizer<EntityImageManager<TEntity>> _localizer;
 
-        public EntityImageManager(IUnitOfWork unitOfWork, IImageService imageService)
+        public EntityImageManager(IUnitOfWork unitOfWork, IImageService imageService, IStringLocalizer<EntityImageManager<TEntity>> localizer)
         {
             _unitOfWork = unitOfWork;
             _imageService = imageService;
+            _localizer = localizer;
         }
         /// <inheritdoc/>
         public async Task<ApiResponse> GetImagesAsync(
@@ -26,10 +29,10 @@ namespace EStoreX.Core.Services.Common
         {
             var entity = await getEntityFunc(_unitOfWork, entityId);
             if (entity == null)
-                return ApiResponseFactory.NotFound($"{typeof(TEntity).Name} not found.");
+                return ApiResponseFactory.NotFound(string.Format(_localizer["EntityNotFound"].Value, typeof(TEntity).Name));
 
             var images = getImages(entity).Select(p => new PhotoInfo() { ImageName = p.ImageName, Id = p.Id }).ToList();
-            return ApiResponseFactory.Success("Images retrieved successfully.", images);
+            return ApiResponseFactory.Success(_localizer["ImagesRetrievedSuccessfully"].Value, images);
         }
 
         /// <inheritdoc/>
@@ -42,9 +45,9 @@ namespace EStoreX.Core.Services.Common
         {
             var entity = await getEntityFunc(_unitOfWork, entityId);
             if (entity == null)
-                return ApiResponseFactory.NotFound($"{typeof(TEntity).Name} not found.");
+                return ApiResponseFactory.NotFound(string.Format(_localizer["EntityNotFound"].Value, typeof(TEntity).Name));
             if (files == null || files.Count == 0)
-                return ApiResponseFactory.BadRequest("No files provided.");
+                return ApiResponseFactory.BadRequest(_localizer["NoFilesProvided"].Value);
 
             var formFiles = new FormFileCollection();
             foreach (var f in files) formFiles.Add(f);
@@ -53,7 +56,7 @@ namespace EStoreX.Core.Services.Common
             assignImages(entity, imagePaths);
 
             await _unitOfWork.CompleteAsync();
-            return ApiResponseFactory.Success("Images added successfully.");
+            return ApiResponseFactory.Success(_localizer["ImagesAddedSuccessfully"].Value);
         }
 
         /// <inheritdoc/>
@@ -67,9 +70,9 @@ namespace EStoreX.Core.Services.Common
         {
             var entity = await getEntityFunc(_unitOfWork, entityId);
             if (entity == null)
-                return ApiResponseFactory.NotFound($"{typeof(TEntity).Name} not found.");
+                return ApiResponseFactory.NotFound(string.Format(_localizer["EntityNotFound"].Value, typeof(TEntity).Name));
             if (files == null || files.Count == 0)
-                return ApiResponseFactory.BadRequest("No files provided.");
+                return ApiResponseFactory.BadRequest(_localizer["NoFilesProvided"].Value);
 
             // delete old
             foreach (var photo in getImages(entity).ToList())
@@ -86,7 +89,7 @@ namespace EStoreX.Core.Services.Common
             assignImages(entity, imagePaths);
 
             await _unitOfWork.CompleteAsync();
-            return ApiResponseFactory.Success("Images updated successfully.");
+            return ApiResponseFactory.Success(_localizer["ImagesUpdatedSuccessfully"].Value);
         }
 
         /// <inheritdoc/>
@@ -98,17 +101,17 @@ namespace EStoreX.Core.Services.Common
         {
             var entity = await getEntityFunc(_unitOfWork, entityId);
             if (entity == null)
-                return ApiResponseFactory.NotFound($"{typeof(TEntity).Name} not found.");
+                return ApiResponseFactory.NotFound(string.Format(_localizer["EntityNotFound"].Value, typeof(TEntity).Name));
 
             var photo = getImages(entity).FirstOrDefault(p => p.Id == photoId);
             if (photo == null)
-                return ApiResponseFactory.NotFound("Photo not found.");
+                return ApiResponseFactory.NotFound(_localizer["PhotoNotFound"].Value);
 
             _imageService.DeleteImageAsync(photo.ImageName);
             getImages(entity).Remove(photo);
 
             await _unitOfWork.CompleteAsync();
-            return ApiResponseFactory.Success("Image deleted successfully.");
+            return ApiResponseFactory.Success(_localizer["ImageDeletedSuccessfully"].Value);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using EStoreX.Core.Domain.IdentityEntities;
+using EStoreX.Core.Domain.IdentityEntities;
 using EStoreX.Core.DTO.Common;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -8,6 +8,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.Extensions.Localization;
 
 namespace EStoreX.Core.Services.Common
 {
@@ -16,11 +17,13 @@ namespace EStoreX.Core.Services.Common
     {
         private readonly IConfiguration _configuration;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IStringLocalizer<JwtService> _localizer;
 
-        public JwtService(IConfiguration configuration, UserManager<ApplicationUser> userManager)
+        public JwtService(IConfiguration configuration, UserManager<ApplicationUser> userManager, IStringLocalizer<JwtService> localizer)
         {
             _configuration = configuration;
             _userManager = userManager;
+            _localizer = localizer;
         }
 
         /// <inheritdoc/>
@@ -124,7 +127,7 @@ namespace EStoreX.Core.Services.Common
             if (securityToken is not JwtSecurityToken jwtSecurityToken ||
                 !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
             {
-                throw new SecurityTokenException("Invalid token");
+                throw new SecurityTokenException(_localizer["InvalidToken"].Value);
             }
 
             return claimsPrincipal;

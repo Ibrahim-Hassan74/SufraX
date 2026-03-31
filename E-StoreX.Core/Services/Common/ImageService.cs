@@ -1,4 +1,4 @@
-﻿using Domain.Entities.Product;
+using Domain.Entities.Product;
 using EStoreX.Core.Domain.IdentityEntities;
 using EStoreX.Core.DTO.Common;
 using EStoreX.Core.ServiceContracts.Common;
@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.FileProviders;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
+using Microsoft.Extensions.Localization;
 
 namespace EStoreX.Core.Services.Common
 {
@@ -14,23 +15,25 @@ namespace EStoreX.Core.Services.Common
     {
         private readonly IFileProvider _fileProvider;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IStringLocalizer<ImageService> _localizer;
 
-        public ImageService(IFileProvider fileProvider, IWebHostEnvironment webHostEnvironment)
-        {
-            _fileProvider = fileProvider;
-            _webHostEnvironment = webHostEnvironment;
-        }
+public ImageService(IFileProvider fileProvider, IWebHostEnvironment webHostEnvironment, IStringLocalizer<ImageService> localizer)
+{
+    _fileProvider = fileProvider;
+    _webHostEnvironment = webHostEnvironment;
+    _localizer = localizer;
+}
 
         public async Task<List<string>> AddImageAsync(IFormFileCollection files, string src)
         {
             var saveImageSrc = new List<string>();
             if (files == null || files.Count == 0)
             {
-                throw new ArgumentException("No files provided for image upload.", nameof(files));
+                throw new ArgumentException(_localizer["NoFilesProvided"].Value, nameof(files));
             }
             if (string.IsNullOrWhiteSpace(src))
             {
-                throw new ArgumentException("Source folder cannot be null or empty.", nameof(src));
+                throw new ArgumentException(_localizer["SourceFolderEmpty"].Value, nameof(src));
             }
             src = src.Replace(" ", "");
             var path = Path.Combine(_webHostEnvironment.WebRootPath, "Images", src);
@@ -88,7 +91,7 @@ namespace EStoreX.Core.Services.Common
         {
             if (string.IsNullOrWhiteSpace(src))
             {
-                throw new ArgumentException("Source path cannot be null or empty.", nameof(src));
+                throw new ArgumentException(_localizer["SourcePathEmpty"].Value, nameof(src));
             }
 
             var info = _fileProvider.GetFileInfo(src);
@@ -96,7 +99,7 @@ namespace EStoreX.Core.Services.Common
 
             if (!info.Exists)
             {
-                throw new FileNotFoundException("The specified image does not exist.", src);
+                throw new FileNotFoundException(_localizer["ImageDoesNotExist"].Value, src);
             }
 
             var root = info.PhysicalPath;

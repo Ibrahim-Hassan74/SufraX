@@ -1,4 +1,4 @@
-﻿using Domain.Entities.Baskets;
+using Domain.Entities.Baskets;
 using EStoreX.Core.BackgroundJobs.Interfaces;
 using EStoreX.Core.BackgroundJobs.Wrapper;
 using EStoreX.Core.Domain.Options;
@@ -8,6 +8,7 @@ using EStoreX.Core.ServiceContracts.Common;
 using Hangfire;
 using Microsoft.Extensions.Options;
 using Stripe;
+using Microsoft.Extensions.Localization;
 using MyProduct = Domain.Entities.Product.Product;
 
 namespace EStoreX.Core.Services.Common
@@ -19,20 +20,23 @@ namespace EStoreX.Core.Services.Common
         private readonly StripeSettings _stripeSettings;
         private readonly PaymentIntentService _paymentIntentService;
         private readonly IBackgroundJobClientWrapper _backgroundJobClient;
-        public PaymentService(IUnitOfWork unitOfWork, IOptions<StripeSettings> options, PaymentIntentService paymentIntentService, IBackgroundJobClientWrapper backgroundJobClient)
-        {
-            _unitOfWork = unitOfWork;
-            //_configuration = configuration;
-            _stripeSettings = options.Value;
-            _paymentIntentService = paymentIntentService;
-            _backgroundJobClient = backgroundJobClient;
-        }
+        private readonly IStringLocalizer<PaymentService> _localizer;
+
+public PaymentService(IUnitOfWork unitOfWork, IOptions<StripeSettings> options, PaymentIntentService paymentIntentService, IBackgroundJobClientWrapper backgroundJobClient, IStringLocalizer<PaymentService> localizer)
+{
+    _unitOfWork = unitOfWork;
+    //_configuration = configuration;
+    _stripeSettings = options.Value;
+    _paymentIntentService = paymentIntentService;
+    _backgroundJobClient = backgroundJobClient;
+    _localizer = localizer;
+}
         /// <inheritdoc/>
         public async Task<CustomerBasket> CreateOrUpdatePaymentIntentAsync(string basketId, Guid? deliveryMethodId)
         {
             var basket = await _unitOfWork.CustomerBasketRepository.GetBasketAsync(basketId);
             if (basket is null)
-                throw new Exception($"Basket with ID {basketId} not found.");
+                throw new KeyNotFoundException(string.Format(_localizer["BasketNotFound"].Value, basketId));
 
             StripeConfiguration.ApiKey = _stripeSettings.SecretKey; // _configuration["StripeSetting:SecretKey"];
             decimal shippingPrice = 0m;
@@ -47,9 +51,9 @@ namespace EStoreX.Core.Services.Common
             {
                 var product = await _unitOfWork.ProductRepository.GetByIdAsync(item.Id);
                 if (product is null)
-                    throw new Exception($"Product with ID {item.Id} not found.");
+                    throw new KeyNotFoundException(string.Format(_localizer["ProductNotFound"].Value, item.Id));
                 if(product.QuantityAvailable < item.Qunatity)
-                    throw new Exception($"Not enough stock for product {product.Name}");
+                    throw new InvalidOperationException(string.Format(_localizer["NotEnoughStock"].Value, product.NameEn));
 
                 item.Price = product.NewPrice;
                 var (unitPrice, discountAmount) = await GetDiscountedPriceAsync(product, item.Qunatity, basket);
@@ -102,7 +106,7 @@ namespace EStoreX.Core.Services.Common
             if (order is null) return false;
 
             if (order.Status != Status.Pending)
-                throw new InvalidOperationException("Order is not in a pending state.");
+                throw new InvalidOperationException(_localizer["OrderNotPending"].Value);
 
             foreach (var item in order.OrderItems)
             {
@@ -110,7 +114,7 @@ namespace EStoreX.Core.Services.Common
                 if (product == null) continue;
 
                 if (product.QuantityAvailable < item.Quantity)
-                    throw new InvalidOperationException($"Not enough stock for product {product.Name}");
+                    throw new InvalidOperationException(string.Format(_localizer["NotEnoughStock"].Value, product.NameEn));
 
                 product.QuantityAvailable -= item.Quantity;
                 product.SalesCount += item.Quantity;
