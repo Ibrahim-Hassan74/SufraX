@@ -1,11 +1,13 @@
-﻿using E_StoreX.API.Helper;
+using E_StoreX.API.Helper;
 using EStoreX.Core.DTO.Common;
 using EStoreX.Core.DTO.Products.Responses;
 using EStoreX.Core.Helper;
 using EStoreX.Core.ServiceContracts.Products;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
+using EStoreX.API.Filters;
 
-namespace E_StoreX.API.Controllers.Public
+namespace EStoreX.API.Controllers.Public
 {
     /// <summary>
     /// Handles product-related operations such as retrieving all products or fetching product details by ID.
@@ -13,13 +15,16 @@ namespace E_StoreX.API.Controllers.Public
     public class ProductsController : CustomControllerBase
     {
         private readonly IProductsService _productsService;
+        private readonly IStringLocalizer<SharedResource> _localizer;
         /// <summary>
         /// Initializes a new instance of the <see cref="ProductsController"/> class.
         /// </summary>
         /// <param name="productsService">Service for managing product operations.</param>
-        public ProductsController(IProductsService productsService)
+        /// <param name="localizer">localizer for shared resources.</param>
+        public ProductsController(IProductsService productsService, IStringLocalizer<SharedResource> localizer)
         {
             _productsService = productsService;
+            _localizer = localizer;
         }
 
         /// <summary>
@@ -66,7 +71,7 @@ namespace E_StoreX.API.Controllers.Public
         public async Task<ActionResult<ProductResponse>> GetProductById(Guid Id)
         {
             var product = await _productsService.GetProductByIdAsync(Id);
-            return product is not null ? Ok(product) : NotFound(ApiResponseFactory.NotFound("Not Found Product or invalid product Id"));
+            return product is not null ? Ok(product) : NotFound(ApiResponseFactory.NotFound(_localizer["ProductNotFoundOrInvalidId"].Value));
         }
         /// <summary>
         /// Retrieves all images associated with a specific product.
@@ -123,7 +128,7 @@ namespace E_StoreX.API.Controllers.Public
         {
             var response = await _productsService.GetFeaturedProductsAsync();
             if (!response.Any())
-                return NotFound(ApiResponseFactory.NotFound("No featured products found."));
+                return NotFound(ApiResponseFactory.NotFound(_localizer["NoFeaturedProducts"].Value));
             return Ok(response);
         }
     }

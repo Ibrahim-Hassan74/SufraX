@@ -33,13 +33,13 @@ namespace Repository.Products
             var photosDTO = new PhotosDTO()
             {
                 ProductId = product.Id,
-                Src = product.Name,
+                Src = product.NameEn,
                 FormFiles = formFiles
             };
             var photos = await _photosRepository.AddRangeAsync(photosDTO);
 
             #region Commented out code for image handling
-            //var imagePath = await _imageService.AddImageAsync(productRequest.Photos, productRequest.Name);
+            //var imagePath = await _imageService.AddImageAsync(productRequest.Photos, productRequest.NameEn);
 
             //var photos = imagePath.Select(path => new Photo
             //{
@@ -78,7 +78,7 @@ namespace Repository.Products
             PhotosDTO photosDTO = new PhotosDTO()
             {
                 ProductId = product.Id,
-                Src = product.Name,
+                Src = product.NameEn,
                 FormFiles = formFiles,
                 Photos = product.Photos
             };
@@ -116,29 +116,29 @@ namespace Repository.Products
                 {
                     case SearchByOptions.Name:
                         products = products.Where(p =>
-                            EF.Functions.FreeText(p.Name, query.SearchString) ||
-                            ApplicationDbContext.Soundex(p.Name) == ApplicationDbContext.Soundex(query.SearchString));
+                            EF.Functions.FreeText(p.NameEn, query.SearchString) ||
+                            ApplicationDbContext.Soundex(p.NameEn) == ApplicationDbContext.Soundex(query.SearchString));
                         break;
 
                     case SearchByOptions.Description:
                         products = products.Where(p =>
-                            EF.Functions.FreeText(p.Description, query.SearchString) ||
-                            ApplicationDbContext.Soundex(p.Description) == ApplicationDbContext.Soundex(query.SearchString));
+                            EF.Functions.FreeText(p.DescriptionEn, query.SearchString) ||
+                            ApplicationDbContext.Soundex(p.DescriptionEn) == ApplicationDbContext.Soundex(query.SearchString));
                         break;
 
                     case SearchByOptions.Category:
-                        products = products.Where(p => p.Category.Name.Contains(query.SearchString));
+                        products = products.Where(p => p.Category.NameEn.Contains(query.SearchString));
                         break;
 
                     case SearchByOptions.Brand:
-                        products = products.Where(p => p.Brand.Name.Contains(query.SearchString));
+                        products = products.Where(p => p.Brand.NameEn.Contains(query.SearchString));
                         break;
                     case SearchByOptions.None:
                     default:
-                        products = products.Where(p => EF.Functions.FreeText(p.Name, query.SearchString) ||
-                        EF.Functions.FreeText(p.Description, query.SearchString) ||
-                        ApplicationDbContext.Soundex(p.Name) == ApplicationDbContext.Soundex(query.SearchString) ||
-                        ApplicationDbContext.Soundex(p.Description) == ApplicationDbContext.Soundex(query.SearchString));
+                        products = products.Where(p => EF.Functions.FreeText(p.NameEn, query.SearchString) ||
+                        EF.Functions.FreeText(p.DescriptionEn, query.SearchString) ||
+                        ApplicationDbContext.Soundex(p.NameEn) == ApplicationDbContext.Soundex(query.SearchString) ||
+                        ApplicationDbContext.Soundex(p.DescriptionEn) == ApplicationDbContext.Soundex(query.SearchString));
                         break;
                 }
             }
@@ -173,10 +173,10 @@ namespace Repository.Products
 
             //switch (sortBy)
             //{
-            //    case var s when s == nameof(Product.Name):
+            //    case var s when s == nameof(Product.NameEn):
             //        products = isAscending
-            //            ? products.OrderBy(p => p.Name)
-            //            : products.OrderByDescending(p => p.Name);
+            //            ? products.OrderBy(p => p.NameEn)
+            //            : products.OrderByDescending(p => p.NameEn);
             //        break;
 
             //    case var s when s == nameof(Product.NewPrice) || s == "Price":
@@ -193,8 +193,8 @@ namespace Repository.Products
 
             //    case "Category":
             //        products = isAscending
-            //            ? products.OrderBy(p => p.Category.Name)
-            //            : products.OrderByDescending(p => p.Category.Name);
+            //            ? products.OrderBy(p => p.Category.NameEn)
+            //            : products.OrderByDescending(p => p.Category.NameEn);
             //        break;
 
             //    case nameof(Product.SalesCount):
@@ -214,8 +214,8 @@ namespace Repository.Products
             {
                 case ProductSortBy.Name:
                     products = isAscending
-                        ? products.OrderBy(p => p.Name)
-                        : products.OrderByDescending(p => p.Name);
+                        ? products.OrderBy(p => p.NameEn)
+                        : products.OrderByDescending(p => p.NameEn);
                     break;
 
                 case ProductSortBy.Price:
@@ -231,8 +231,8 @@ namespace Repository.Products
 
                 case ProductSortBy.Category:
                     products = isAscending
-                        ? products.OrderBy(p => p.Category.Name)
-                        : products.OrderByDescending(p => p.Category.Name);
+                        ? products.OrderBy(p => p.Category.NameEn)
+                        : products.OrderByDescending(p => p.Category.NameEn);
                     break;
 
                 case ProductSortBy.SalesCount:

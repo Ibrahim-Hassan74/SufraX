@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Domain.Entities.Product;
 using EStoreX.Core.DTO.Common;
 using EStoreX.Core.DTO.Products.Requests;
@@ -11,6 +11,7 @@ using EStoreX.Core.ServiceContracts.Common;
 using EStoreX.Core.ServiceContracts.Products;
 using EStoreX.Core.Services.Common;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Localization;
 
 namespace EStoreX.Core.Services.Products
 {
@@ -19,18 +20,20 @@ namespace EStoreX.Core.Services.Products
         private readonly IProductRepository _productRepository;
         private readonly IEntityImageManager<Product> _imageManager;
         private readonly IImageService _imageService;
-        public ProductsService(IUnitOfWork unitOfWork, IMapper mapper, IEntityImageManager<Product> imageManager, IImageService imageService) : base(unitOfWork, mapper)
+        private readonly IStringLocalizer<ProductsService> _localizer;
+        public ProductsService(IUnitOfWork unitOfWork, IMapper mapper, IEntityImageManager<Product> imageManager, IImageService imageService, IStringLocalizer<ProductsService> localizer) : base(unitOfWork, mapper)
         {
             _productRepository = unitOfWork.ProductRepository;
             _imageManager = imageManager;
             _imageService = imageService;
+            _localizer = localizer;
         }
         /// <inheritdoc/>
         public async Task<ProductResponse> CreateProductAsync(ProductAddRequest productRequest)
         {
             if (productRequest == null)
             {
-                throw new ArgumentNullException(nameof(productRequest), "Product request cannot be null.");
+                throw new ArgumentNullException(nameof(productRequest), _localizer["ProductRequestRequired"].Value);
             }
             ValidationHelper.ModelValidation(productRequest);
 
@@ -66,7 +69,7 @@ namespace EStoreX.Core.Services.Products
         {
             if (id == Guid.Empty)
             {
-                throw new ArgumentException("Product ID cannot be empty.", nameof(id));
+                throw new ArgumentException(_localizer["ProductIdRequired"].Value, nameof(id));
             }
 
             var product = await _productRepository.GetByIdAsync(id, x => x.Category, y => y.Photos, b => b.Brand);
@@ -83,7 +86,7 @@ namespace EStoreX.Core.Services.Products
         {
             if (productUpdateRequest == null)
             {
-                throw new ArgumentNullException(paramName: nameof(productUpdateRequest), "Product update request cannot be null.");
+                throw new ArgumentNullException(paramName: nameof(productUpdateRequest), _localizer["ProductUpdateRequestRequired"].Value);
             }
 
             ValidationHelper.ModelValidation(productUpdateRequest);
@@ -92,12 +95,14 @@ namespace EStoreX.Core.Services.Products
 
             if (findProduct == null)
             {
-                throw new KeyNotFoundException($"Product with ID {productUpdateRequest.Id} not found.");
+                throw new KeyNotFoundException(string.Format(_localizer["ProductNotFoundWithId"].Value, productUpdateRequest.Id));
             }
 
             findProduct.Id = productUpdateRequest.Id;
-            findProduct.Name = productUpdateRequest.Name;
-            findProduct.Description = productUpdateRequest.Description;
+            findProduct.NameEn = productUpdateRequest.NameEn;
+            findProduct.DescriptionEn = productUpdateRequest.DescriptionEn;
+            findProduct.NameAr = productUpdateRequest.NameAr;
+            findProduct.DescriptionAr = productUpdateRequest.DescriptionAr;
             findProduct.OldPrice = productUpdateRequest.OldPrice;
             findProduct.NewPrice = productUpdateRequest.NewPrice;
             findProduct.CategoryId = productUpdateRequest.CategoryId;
@@ -113,7 +118,7 @@ namespace EStoreX.Core.Services.Products
         {
             if (query == null)
             {
-                throw new ArgumentNullException(nameof(query), "Query cannot be null.");
+                throw new ArgumentNullException(nameof(query), _localizer["QueryRequired"].Value);
             }
 
             var (products, size) = await _productRepository.GetFilteredProductsAsync(query);
@@ -152,9 +157,9 @@ namespace EStoreX.Core.Services.Products
         {
             var product = await _unitOfWork.ProductRepository.GetByIdAsync(productId, p => p.Photos);
             if (product == null)
-                return ApiResponseFactory.NotFound("Product not found.");
+                return ApiResponseFactory.NotFound(_localizer["ProductNotFound"].Value);
 
-            var folderName = product.Name.Replace(" ", "");
+            var folderName = product.NameEn.Replace(" ", "");
 
             return await _imageManager.AddImagesAsync(
                 productId,
@@ -179,10 +184,10 @@ namespace EStoreX.Core.Services.Products
         {
             var product = await _unitOfWork.ProductRepository.GetByIdAsync(productId, p => p.Photos);
             if (product == null)
-                return ApiResponseFactory.NotFound("Product not found.");
+                return ApiResponseFactory.NotFound(_localizer["ProductNotFound"].Value);
 
             if (files == null || files.Count == 0)
-                return ApiResponseFactory.BadRequest("No files provided.");
+                return ApiResponseFactory.BadRequest(_localizer["NoFilesProvided"].Value);
 
             foreach (var photo in product.Photos.ToList())
             {
@@ -190,7 +195,7 @@ namespace EStoreX.Core.Services.Products
                 product.Photos.Remove(photo);
             }
 
-            var folderName = product.Name.Replace(" ", "").ToLowerInvariant();
+            var folderName = product.NameEn.Replace(" ", "").ToLowerInvariant();
 
             var formFileCollection = new FormFileCollection();
             foreach (var file in files)
@@ -208,13 +213,13 @@ namespace EStoreX.Core.Services.Products
             }
 
             await _unitOfWork.CompleteAsync();
-            return ApiResponseFactory.Success("Images updated successfully.");
+            return ApiResponseFactory.Success(_localizer["ImagesUpdatedSuccessfully"].Value);
         }
         /// <inheritdoc/>
         public async Task<ApiResponse> GetBestSellersAsync(int count)
         {
             if (count <= 0)
-                return ApiResponseFactory.BadRequest("Count must be greater than zero.");
+                return ApiResponseFactory.BadRequest(_localizer["CountMustBePositive"].Value);
             var filter = new ProductQueryDTO
             {
                 PageNumber = 1,
@@ -226,10 +231,10 @@ namespace EStoreX.Core.Services.Products
             var (bestSellers, totalCount) = await _unitOfWork.ProductRepository.GetFilteredProductsAsync(filter);
 
             if (!bestSellers.Any())
-                return ApiResponseFactory.NotFound("No products found.");
+                return ApiResponseFactory.NotFound(_localizer["NoProductsFound"].Value);
 
             var response = _mapper.Map<List<ProductResponse>>(bestSellers);
-            return ApiResponseFactory.Success("Best sellers retrieved successfully.", response);
+            return ApiResponseFactory.Success(_localizer["BestSellersRetrieved"].Value, response);
         }
         public async Task<IEnumerable<ProductResponse>> GetFeaturedProductsAsync()
         {

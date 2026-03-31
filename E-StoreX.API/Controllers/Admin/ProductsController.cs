@@ -1,4 +1,4 @@
-﻿using Asp.Versioning;
+using Asp.Versioning;
 using EStoreX.Core.DTO.Common;
 using EStoreX.Core.DTO.Products.Requests;
 using EStoreX.Core.DTO.Products.Responses;
@@ -7,8 +7,10 @@ using EStoreX.Core.Helper;
 using EStoreX.Core.ServiceContracts.Common;
 using EStoreX.Core.ServiceContracts.Products;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
+using EStoreX.API.Filters;
 
-namespace E_StoreX.API.Controllers.Admin
+namespace EStoreX.API.Controllers.Admin
 {
     /// <summary>
     /// Provides administrative operations for managing products in the E-StoreX application.
@@ -22,15 +24,18 @@ namespace E_StoreX.API.Controllers.Admin
     {
         private readonly IProductsService _productsService;
         private readonly IExportService _exportService;
+        private readonly IStringLocalizer<SharedResource> _localizer;
         /// <summary>
         /// Initializes a new instance of the <see cref="ProductsController"/> class.
         /// </summary>
         /// <param name="productsService">Service for handling product operations.</param>
         /// <param name="exportService">Service to manage files.</param>
-        public ProductsController(IProductsService productsService, IExportService exportService)
+        /// <param name="localizer">localizer for shared resources.</param>
+        public ProductsController(IProductsService productsService, IExportService exportService, IStringLocalizer<SharedResource> localizer)
         {
             _productsService = productsService;
             _exportService = exportService;
+            _localizer = localizer;
         }
         /// <summary>
         /// Creates a new product in the database.
@@ -69,7 +74,7 @@ namespace E_StoreX.API.Controllers.Admin
         [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<ProductResponse>> UpdateProduct([FromRoute] Guid id, [FromForm] ProductUpdateRequest productUpdateRequest)
         {
-            if (id != productUpdateRequest.Id) return BadRequest(ApiResponseFactory.BadRequest("Id must be equals"));
+            if (id != productUpdateRequest.Id) return BadRequest(ApiResponseFactory.BadRequest(_localizer["IdMismatch"].Value));
 
             var updatedProduct = await _productsService.UpdateProductAsync(productUpdateRequest);
             return Ok(updatedProduct);
@@ -95,14 +100,14 @@ namespace E_StoreX.API.Controllers.Admin
         public async Task<IActionResult> DeleteProduct(Guid id)
         {
             if (id == Guid.Empty)
-                return BadRequest(ApiResponseFactory.BadRequest("Invalid Product ID"));
+                return BadRequest(ApiResponseFactory.BadRequest(_localizer["InvalidProductId"].Value));
 
             var res = await _productsService.DeleteProductAsync(id);
 
             if (!res)
-                return NotFound(ApiResponseFactory.NotFound("Can't find any product with this ID"));
+                return NotFound(ApiResponseFactory.NotFound(_localizer["ProductNotFound"].Value));
 
-            return Ok(ApiResponseFactory.Success("Deleted Successfully"));
+            return Ok(ApiResponseFactory.Success(_localizer["DeletedSuccessfully"].Value));
         }
         /// <summary>
         /// Exports all products into the specified file format.
@@ -137,7 +142,7 @@ namespace E_StoreX.API.Controllers.Admin
                 ExportType.Csv => File(_exportService.ExportToCsv(products), "text/csv", "products.csv"),
                 ExportType.Excel => File(_exportService.ExportToExcel(products), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "products.xlsx"),
                 ExportType.Pdf => File(_exportService.ExportToPdf(products), "application/pdf", "products.pdf"),
-                _ => BadRequest(ApiResponseFactory.BadRequest("Unsupported export type"))
+                _ => BadRequest(ApiResponseFactory.BadRequest(_localizer["UnsupportedExportType"].Value))
             };
         }
         /// <summary>
@@ -228,8 +233,8 @@ namespace E_StoreX.API.Controllers.Admin
         {
             var result = await _productsService.SetFeaturedStatusAsync(id, isFeatured);
             if (!result)
-                return NotFound(ApiResponseFactory.NotFound("Product not found or invalid product Id"));
-            return Ok(ApiResponseFactory.Success($"Product {(isFeatured ? "marked as featured" : "removed from featured")} successfully."));
+                return NotFound(ApiResponseFactory.NotFound(_localizer["ProductNotFoundOrInvalidId"].Value));
+            return Ok(ApiResponseFactory.Success(isFeatured ? _localizer["ProductMarkedAsFeatured"].Value : _localizer["ProductRemovedFromFeatured"].Value));
         }
     }
 }
