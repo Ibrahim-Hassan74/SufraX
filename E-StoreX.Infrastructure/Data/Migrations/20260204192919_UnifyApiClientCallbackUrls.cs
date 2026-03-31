@@ -12,10 +12,21 @@ namespace EStoreX.Infrastructure.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             // OAuth
-            migrationBuilder.RenameColumn(
-                name: "OAuthLoginSuccessUrl",
-                table: "ApiClients",
-                newName: "OAuthCallbackUrl");
+            //migrationBuilder.RenameColumn(
+            //    name: "OAuthLoginSuccessUrl",
+            //    table: "ApiClients",
+            //    newName: "OAuthCallbackUrl");
+
+            migrationBuilder.Sql(@"
+            IF EXISTS (
+                SELECT 1 FROM sys.columns 
+                WHERE Name = 'OAuthLoginSuccessUrl'
+                AND Object_ID = Object_ID('ApiClients')
+            )
+            BEGIN
+                EXEC sp_rename 'ApiClients.OAuthLoginSuccessUrl', 'OAuthCallbackUrl', 'COLUMN';
+            END
+            ");
 
             migrationBuilder.DropColumn(
                 name: "OAuthLoginFailureUrl",

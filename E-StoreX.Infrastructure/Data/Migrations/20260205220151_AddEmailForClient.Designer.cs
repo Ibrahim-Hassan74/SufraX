@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EStoreX.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260204190903_AddOAuthAndSecurityCallbackUrlsToApiClient")]
-    partial class AddOAuthAndSecurityCallbackUrlsToApiClient
+    [Migration("20260205220151_AddEmailForClient")]
+    partial class AddEmailForClient
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -72,10 +72,7 @@ namespace EStoreX.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("AccountActivationFailureUrl")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("AccountActivationSuccessUrl")
+                    b.Property<string>("AccountActivationCallbackUrl")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ApiKey")
@@ -85,19 +82,16 @@ namespace EStoreX.Infrastructure.Migrations
                     b.Property<string>("ClientName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
-
-                    b.Property<string>("OAuthLoginFailureUrl")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("OAuthCallbackUrl")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PasswordResetFailureUrl")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PasswordResetSuccessUrl")
+                    b.Property<string>("PasswordResetCallbackUrl")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("UpdatedAt")
