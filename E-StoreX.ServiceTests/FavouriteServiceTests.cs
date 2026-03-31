@@ -5,8 +5,10 @@ using EStoreX.Core.DTO.Products.Responses;
 using EStoreX.Core.RepositoryContracts.Common;
 using EStoreX.Core.RepositoryContracts.Favourites;
 using EStoreX.Core.ServiceContracts.Favourites;
+using EStoreX.Core.Services.Common;
 using EStoreX.Core.Services.Favourites;
 using FluentAssertions;
+using Microsoft.Extensions.Localization;
 using Moq;
 
 namespace E_StoreX.ServiceTests
@@ -17,13 +19,16 @@ namespace E_StoreX.ServiceTests
         private readonly Mock<IMapper> _mapperMock;
         private readonly IFavouriteService _favouriteService;
         private readonly Mock<IFavouriteRepository> _favouriteRepositoryMock;
+        private readonly Mock<IStringLocalizer<FavouriteService>> _localizerMock;
+
         public FavouriteServiceTests()
         {
             _favouriteRepositoryMock = new Mock<IFavouriteRepository>();
             _unitOfWorkMock = new Mock<IUnitOfWork>();
             _mapperMock = new Mock<IMapper>();
+            _localizerMock = new Mock<IStringLocalizer<FavouriteService>>();
             _unitOfWorkMock.Setup(u => u.FavouriteRepository).Returns(_favouriteRepositoryMock.Object);
-            _favouriteService = new FavouriteService(_unitOfWorkMock.Object, _mapperMock.Object);
+            _favouriteService = new FavouriteService(_unitOfWorkMock.Object, _mapperMock.Object, _localizerMock.Object);
         }
 
         #region AddToFavouriteAsync Tests
@@ -172,8 +177,8 @@ namespace E_StoreX.ServiceTests
 
             var favourites = new List<Product>
             {
-                new Product { Id = Guid.NewGuid(), Name = "Product1" },
-                new Product { Id = Guid.NewGuid(), Name = "Product2" }
+                new Product { Id = Guid.NewGuid(), NameEn = "Product1" },
+                new Product { Id = Guid.NewGuid(), NameEn = "Product2" }
             };
 
             var expectedResponse = new List<ProductResponse>

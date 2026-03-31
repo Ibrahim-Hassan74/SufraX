@@ -4,8 +4,10 @@ using EStoreX.Core.DTO.Orders.Requests;
 using EStoreX.Core.DTO.Orders.Responses;
 using EStoreX.Core.RepositoryContracts.Common;
 using EStoreX.Core.RepositoryContracts.Orders;
+using EStoreX.Core.Services.Categories;
 using EStoreX.Core.Services.Orders;
 using FluentAssertions;
+using Microsoft.Extensions.Localization;
 using Moq;
 
 namespace E_StoreX.ServiceTests
@@ -16,13 +18,16 @@ namespace E_StoreX.ServiceTests
         private readonly Mock<IDeliveryMethodRepository> _repositoryMock;
         private readonly Mock<IMapper> _mapperMock;
         private readonly DeliveryMethodService _service;
+        private readonly Mock<IStringLocalizer<DeliveryMethodService>> _localizerMock;
+
         public DeliveryMethodServiceTests()
         {
             _mapperMock = new Mock<IMapper>();
             _repositoryMock = new Mock<IDeliveryMethodRepository>();
             _unitOfWorkMock = new Mock<IUnitOfWork>();
+            _localizerMock = new Mock<IStringLocalizer<DeliveryMethodService>>();
             _unitOfWorkMock.Setup(u => u.DeliveryMethodRepository).Returns(_repositoryMock.Object);
-            _service = new DeliveryMethodService(_unitOfWorkMock.Object, _mapperMock.Object);
+            _service = new DeliveryMethodService(_unitOfWorkMock.Object, _mapperMock.Object, _localizerMock.Object);
         }
 
         #region GetAllAsync Tests
@@ -33,8 +38,8 @@ namespace E_StoreX.ServiceTests
             // Arrange
             var deliveryMethods = new List<DeliveryMethod>
             {
-                new DeliveryMethod { Id = Guid.NewGuid(), Name = "Standard", Price = 50 },
-                new DeliveryMethod { Id = Guid.NewGuid(), Name = "Express", Price = 100 }
+                new DeliveryMethod { Id = Guid.NewGuid(), NameEn = "Standard", Price = 50 },
+                new DeliveryMethod { Id = Guid.NewGuid(), NameEn = "Express", Price = 100 }
             };
 
             var expectedResponses = new List<DeliveryMethodResponse>
@@ -86,7 +91,7 @@ namespace E_StoreX.ServiceTests
         {
             // Arrange
             var id = Guid.NewGuid();
-            var deliveryMethod = new DeliveryMethod { Id = id, Name = "Standard", Price = 50 };
+            var deliveryMethod = new DeliveryMethod { Id = id, NameEn = "Standard", Price = 50 };
             var expectedResponse = new DeliveryMethodResponse { Id = id, Name = "Standard", Price = 50 };
 
             _repositoryMock.Setup(r => r.GetByIdAsync(id)).ReturnsAsync(deliveryMethod);
@@ -127,8 +132,8 @@ namespace E_StoreX.ServiceTests
         public async Task CreateAsync_ShouldMapRequest_AddToRepository_SaveChanges_AndReturnResponse()
         {
             // Arrange
-            var request = new DeliveryMethodRequest { Name = "Express", Price = 100 };
-            var entity = new DeliveryMethod { Id = Guid.NewGuid(), Name = "Express", Price = 100 };
+            var request = new DeliveryMethodRequest { NameEn = "Express", Price = 100 };
+            var entity = new DeliveryMethod { Id = Guid.NewGuid(), NameEn = "Express", Price = 100 };
             var expectedResponse = new DeliveryMethodResponse { Id = entity.Id, Name = "Express", Price = 100 };
 
             _mapperMock.Setup(m => m.Map<DeliveryMethod>(request)).Returns(entity);
@@ -149,7 +154,7 @@ namespace E_StoreX.ServiceTests
         public async Task CreateAsync_ShouldAssignNewGuidToEntity()
         {
             // Arrange
-            var request = new DeliveryMethodRequest { Name = "Standard", Price = 50 };
+            var request = new DeliveryMethodRequest { NameEn = "Standard", Price = 50 };
             var entity = new DeliveryMethod(); // Guid.Empty by default
 
             _mapperMock.Setup(m => m.Map<DeliveryMethod>(request)).Returns(entity);
@@ -188,8 +193,8 @@ namespace E_StoreX.ServiceTests
         {
             // Arrange
             var id = Guid.NewGuid();
-            var entity = new DeliveryMethod { Id = id, Name = "Old", Price = 10 };
-            var request = new DeliveryMethodRequest { Name = "Updated", Price = 20 };
+            var entity = new DeliveryMethod { Id = id, NameEn = "Old", Price = 10 };
+            var request = new DeliveryMethodRequest { NameEn = "Updated", Price = 20 };
             var expectedResponse = new DeliveryMethodResponse { Id = id, Name = "Updated", Price = 20 };
 
             _repositoryMock.Setup(r => r.GetByIdAsync(id)).ReturnsAsync(entity);
@@ -232,7 +237,7 @@ namespace E_StoreX.ServiceTests
         {
             // Arrange
             var id = Guid.NewGuid();
-            var entity = new DeliveryMethod { Id = id, Name = "Express", Price = 50 };
+            var entity = new DeliveryMethod { Id = id, NameEn = "Express", Price = 50 };
 
             _repositoryMock.Setup(r => r.GetByIdAsync(id)).ReturnsAsync(entity);
 
@@ -271,7 +276,7 @@ namespace E_StoreX.ServiceTests
         {
             // Arrange
             var name = "Express";
-            var entity = new DeliveryMethod { Id = Guid.NewGuid(), Name = name, Price = 30 };
+            var entity = new DeliveryMethod { Id = Guid.NewGuid(), NameEn = name, Price = 30 };
             var expectedResponse = new DeliveryMethodResponse { Id = entity.Id, Name = name, Price = 30 };
 
             _repositoryMock.Setup(r => r.GetByNameAsync(name)).ReturnsAsync(entity);

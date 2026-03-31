@@ -9,8 +9,10 @@ using EStoreX.Core.RepositoryContracts.Common;
 using EStoreX.Core.RepositoryContracts.Orders;
 using EStoreX.Core.ServiceContracts.Common;
 using EStoreX.Core.ServiceContracts.Orders;
+using EStoreX.Core.Services.Common;
 using EStoreX.Core.Services.Orders;
 using FluentAssertions;
+using Microsoft.Extensions.Localization;
 using Moq;
 using System.Linq.Expressions;
 
@@ -24,15 +26,18 @@ namespace E_StoreX.ServiceTests
         private readonly Mock<IMapper> _mapperMock;
         private readonly IFixture _fixture;
         private readonly IOrderService _orderService;
+        private readonly Mock<IStringLocalizer<OrderService>> _localizerMock;
+
         public OrderServiceTests()
         {
             _fixture = new Fixture();
             _unitOfWorkMock = new Mock<IUnitOfWork>();
             _orderRepositoryMock = new Mock<IOrderRepository>();
             _paymentServiceMock = new Mock<IPaymentService>();
+            _localizerMock = new Mock<IStringLocalizer<OrderService>>();
             _mapperMock = new Mock<IMapper>();
             _unitOfWorkMock.Setup(u => u.OrderRepository).Returns(_orderRepositoryMock.Object);
-            _orderService = new OrderService(_unitOfWorkMock.Object, _mapperMock.Object, _paymentServiceMock.Object);
+            _orderService = new OrderService(_unitOfWorkMock.Object, _mapperMock.Object, _paymentServiceMock.Object, _localizerMock.Object);
         }
 
 
@@ -57,7 +62,7 @@ namespace E_StoreX.ServiceTests
                                    Qunatity = 2,
                                    Image = "image1.png",
                                    Name = "Product 1",
-                                   Description = "Description 1",
+                                   Description = "DescriptionEn 1",
                                    Price = 10.0m,
                                    Category = "Category 1"
 
@@ -119,7 +124,7 @@ namespace E_StoreX.ServiceTests
         [Fact]
         public async Task CreateOrdersAsync_ShouldThrowInvalidOperationException_WhenDeliveryMethodNotFound()
         {
-            var product = new Product { Id = Guid.NewGuid(), NewPrice = 100, Name = "Test Product" };
+            var product = new Product { Id = Guid.NewGuid(), NewPrice = 100, NameEn = "Test Product" };
             var basket = CreateValidCustomerBasket();
             basket.BasketItems = new List<BasketItem>
             {
@@ -129,7 +134,7 @@ namespace E_StoreX.ServiceTests
                     Qunatity = 2,
                     Image = "image1.png",
                     Name = "Product 1",
-                    Description = "Description 1",
+                    Description = "DescriptionEn 1",
                     Price = 10.0m,
                     Category = "Category 1"
                 }
@@ -151,7 +156,7 @@ namespace E_StoreX.ServiceTests
         [Fact]
         public async Task CreateOrdersAsync_ShouldDeleteExistingOrder_AndUpdatePaymentIntent()
         {
-            var product = new Product { Id = Guid.NewGuid(), NewPrice = 100, Name = "Product" };
+            var product = new Product { Id = Guid.NewGuid(), NewPrice = 100, NameEn = "Product" };
             var basket = CreateValidCustomerBasket();
             basket.BasketItems = new List<BasketItem>
             {
@@ -161,7 +166,7 @@ namespace E_StoreX.ServiceTests
                     Qunatity = 2,
                     Image = "image1.png",
                     Name = "Product 1",
-                    Description = "Description 1",
+                    Description = "DescriptionEn 1",
                     Price = 10.0m,
                     Category = "Category 1"
                 }
@@ -173,7 +178,7 @@ namespace E_StoreX.ServiceTests
                 {
                     Id = Guid.NewGuid(),
                     ProductItemId = product.Id,
-                    ProductName = product.Name
+                    ProductNameEn = product.NameEn
                 }
             };
             var existingOrder = new Order("buyer@example.com", 100, new ShippingAddress(), deliveryMethod, orderItems, basket.PaymentIntentId);
@@ -209,7 +214,7 @@ namespace E_StoreX.ServiceTests
         [Fact]
         public async Task CreateOrdersAsync_ShouldReturnOrderResponse_WhenOrderCreatedSuccessfully()
         {
-            var product = new Product { Id = Guid.NewGuid(), NewPrice = 50, Name = "Product" };
+            var product = new Product { Id = Guid.NewGuid(), NewPrice = 50, NameEn = "Product" };
             var basket = CreateValidCustomerBasket();
             basket.BasketItems = new List<BasketItem>
             {
@@ -219,7 +224,7 @@ namespace E_StoreX.ServiceTests
                     Qunatity = 2,
                     Image = "image1.png",
                     Name = "Product 1",
-                    Description = "Description 1",
+                    Description = "DescriptionEn 1",
                     Price = 10.0m,
                     Category = "Category 1"
                 }

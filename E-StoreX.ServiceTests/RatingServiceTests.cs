@@ -8,6 +8,7 @@ using EStoreX.Core.RepositoryContracts.Ratings;
 using EStoreX.Core.ServiceContracts.Ratings;
 using EStoreX.Core.Services.Ratings;
 using FluentAssertions;
+using Microsoft.Extensions.Localization;
 using Moq;
 
 namespace E_StoreX.ServiceTests
@@ -18,13 +19,15 @@ namespace E_StoreX.ServiceTests
         private readonly Mock<IMapper> _mapperMock;
         private readonly IRatingService _ratingService;
         private readonly Mock<IRatingRepository> _ratingRepositoryMock;
+        private readonly Mock<IStringLocalizer<RatingService>> _localizerMock;
         public RatingServiceTests()
         {
             _mapperMock = new Mock<IMapper>();
             _unitOfWorkMock = new Mock<IUnitOfWork>();
             _ratingRepositoryMock = new Mock<IRatingRepository>();
+            _localizerMock = new Mock<IStringLocalizer<RatingService>>();
             _unitOfWorkMock.Setup(r => r.RatingRepository).Returns(_ratingRepositoryMock.Object);
-            _ratingService = new RatingService(_unitOfWorkMock.Object, _mapperMock.Object);
+            _ratingService = new RatingService(_unitOfWorkMock.Object, _mapperMock.Object, _localizerMock.Object);
         }
 
         #region AddRatingAsync Tests

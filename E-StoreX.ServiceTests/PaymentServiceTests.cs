@@ -9,8 +9,10 @@ using EStoreX.Core.RepositoryContracts.Common;
 using EStoreX.Core.RepositoryContracts.Orders;
 using EStoreX.Core.RepositoryContracts.Products;
 using EStoreX.Core.Services.Common;
+using EStoreX.Core.Services.Products;
 using FluentAssertions;
 using Hangfire;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 using Moq;
 using Stripe;
@@ -27,6 +29,7 @@ namespace E_StoreX.ServiceTests
         private readonly Mock<IOrderRepository> _orderRepoMock;
         private readonly PaymentService _paymentService;
         private readonly Mock<IBackgroundJobClientWrapper> _backgroundJobClientMock;
+        private readonly Mock<IStringLocalizer<PaymentService>> _localizerMock;
 
         public PaymentServiceTests()
         {
@@ -53,8 +56,10 @@ namespace E_StoreX.ServiceTests
             _backgroundJobClientMock.Setup(b => b.Enqueue<IEmailJob>(It.IsAny<Expression<Action<IEmailJob>>>()))
                 .Verifiable();
 
+            _localizerMock = new Mock<IStringLocalizer<PaymentService>>();
+
             // Inject mock service
-            _paymentService = new PaymentService(_unitOfWorkMock.Object, _stripeSettingsOptions, _paymentIntentServiceMock.Object, _backgroundJobClientMock.Object);
+            _paymentService = new PaymentService(_unitOfWorkMock.Object, _stripeSettingsOptions, _paymentIntentServiceMock.Object, _backgroundJobClientMock.Object, _localizerMock.Object);
         }
         #region CreateOrUpdatePaymentIntentAsync Tests
         [Fact]
@@ -95,7 +100,7 @@ namespace E_StoreX.ServiceTests
                 BasketItems = new List<BasketItem> { new BasketItem { Id = productId, Qunatity = 5 } }
             };
 
-            var product = new Domain.Entities.Product.Product { Id = productId, Name = "Prod1", QuantityAvailable = 3, NewPrice = 100 };
+            var product = new Domain.Entities.Product.Product { Id = productId, NameEn = "Prod1", QuantityAvailable = 3, NewPrice = 100 };
 
             _unitOfWorkMock.Setup(u => u.CustomerBasketRepository.GetBasketAsync(basket.Id))
                            .ReturnsAsync(basket);
@@ -105,7 +110,7 @@ namespace E_StoreX.ServiceTests
             Func<Task> act = async () => await _paymentService.CreateOrUpdatePaymentIntentAsync(basket.Id, null);
 
             await act.Should().ThrowAsync<Exception>()
-                .WithMessage($"Not enough stock for product {product.Name}");
+                .WithMessage($"Not enough stock for product {product.NameEn}");
         }
 
         [Fact]
@@ -297,7 +302,7 @@ namespace E_StoreX.ServiceTests
             var product = new Domain.Entities.Product.Product
             {
                 Id = order.OrderItems.First().ProductItemId,
-                Name = "Laptop",
+                NameEn = "Laptop",
                 QuantityAvailable = 3
             };
 
@@ -374,7 +379,7 @@ namespace E_StoreX.ServiceTests
             var product = new Domain.Entities.Product.Product
             {
                 Id = productId,
-                Name = "Phone",
+                NameEn = "Phone",
                 QuantityAvailable = 5
             };
 
