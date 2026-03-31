@@ -1,196 +1,178 @@
-﻿using EStoreX.Core.Domain.Entities.Orders;
+using EStoreX.Core.Domain.Entities.Orders;
 using System.Text;
+using System.Globalization;
+using Res = EStoreX.Core.Resources.Services.Common.EmailTemplateService;
 
 namespace EStoreX.Core.Services.Common
 {
     public static class EmailTemplateService
     {
-        public static string GetConfirmationEmailTemplate(string? confirmationLink)
+        private static (string Lang, string Dir, string Align) GetHtmlAttributes(string? culture = null)
         {
+            if (!string.IsNullOrEmpty(culture))
+            {
+                try
+                {
+                    var cult = new CultureInfo(culture);
+                    CultureInfo.CurrentUICulture = cult;
+                    CultureInfo.CurrentCulture = cult;
+                }
+                catch { /* Fallback to default */ }
+            }
+
+            var isAr = CultureInfo.CurrentUICulture.Name.StartsWith("ar", StringComparison.OrdinalIgnoreCase);
+            return isAr ? ("ar", "rtl", "right") : ("en", "ltr", "left");
+        }
+        public static string GetConfirmationEmailTemplate(string? confirmationLink, string? culture = null)
+        {
+            var (lang, dir, align) = GetHtmlAttributes(culture);
+
             return $@"
-    <html lang='en'>
-    <head>
-        <meta charset='UTF-8'>
-        <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-        <style>
-            body {{
-                background-color: #f9fafb;
-                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-                margin: 0;
-                padding: 0;
-            }}
-            .container {{
-                max-width: 600px;
-                margin: 40px auto;
-                background: #fff;
-                border-radius: 12px;
-                box-shadow: 0 8px 20px rgba(0,0,0,0.05);
-                overflow: hidden;
-            }}
-            .header {{
-                background-color: #0e7490;
-                padding: 24px;
-                text-align: center;
-                color: #ffffff;
-                font-size: 24px;
-                font-weight: bold;
-                letter-spacing: 1px;
-            }}
-            .body {{
-                padding: 32px 24px;
-            }}
-            .body h2 {{
-                margin-bottom: 16px;
-                font-size: 22px;
-                color: #0f172a;
-            }}
-            .body p {{
-                color: #475569;
-                font-size: 15px;
-                line-height: 1.6;
-                margin-bottom: 24px;
-            }}
-            .cta {{
-                text-align: center;
-            }}
-            .cta a {{
-                display: inline-block;
-                padding: 12px 28px;
-                background-color: #0e7490;
-                color: #ffffff;
-                text-decoration: none;
-                border-radius: 6px;
-                font-weight: 600;
-                transition: background-color 0.3s ease;
-            }}
-            .cta a:hover {{
-                background-color: #0c637a;
-            }}
-            .footer {{
-                padding: 16px;
-                text-align: center;
-                font-size: 12px;
-                color: #94a3b8;
-                border-top: 1px solid #e2e8f0;
-                background-color: #f1f5f9;
-            }}
-        </style>
-    </head>
-    <body>
-        <div class='container'>
-            <div class='header'>E-StoreX</div>
-            <div class='body'>
-                <h2>Confirm Your Email</h2>
-                <p>Hi there,</p>
-                <p>Thanks for signing up with <strong>E-StoreX</strong>. Click the button below to confirm your email address and get started:</p>
-                <div class='cta'>
-                    <a href='{confirmationLink}'>Confirm Email</a>
-                </div>
-                <p>If you didn’t create this account, you can safely ignore this email.</p>
-            </div>
-            <div class='footer'>&copy; {DateTime.Now.Year} E-StoreX. Developed by Ibrahim Hassan.</div>
+<html lang='{lang}' dir='{dir}'>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+</head>
+
+<body dir='{dir}' style='margin:0;padding:0;background-color:#f9fafb;
+    font-family:Segoe UI,Tahoma,Geneva,Verdana,sans-serif;
+    direction:{dir};text-align:{align};'>
+
+    <div dir='{dir}' style='max-width:600px;margin:40px auto;background:#ffffff;
+        border-radius:12px;box-shadow:0 8px 20px rgba(0,0,0,0.05);
+        overflow:hidden;text-align:{align};direction:{dir};'>
+
+        <!-- Header -->
+        <div style='background-color:#0e7490;padding:24px;
+            text-align:center;color:#ffffff;font-size:24px;
+            font-weight:bold;letter-spacing:1px;'>
+            E-StoreX
         </div>
-    </body>
-    </html>";
+
+        <!-- Body -->
+        <div style='padding:32px 24px;text-align:{align};direction:{dir};'>
+
+            <h2 style='margin-bottom:16px;font-size:22px;color:#0f172a;'>
+                {Res.Confirmation_Title}
+            </h2>
+
+            <p style='color:#475569;font-size:15px;line-height:1.6;margin-bottom:16px;'>
+                {Res.Confirmation_Hi}
+            </p>
+
+            <p style='color:#475569;font-size:15px;line-height:1.6;margin-bottom:24px;'>
+                {Res.Confirmation_Body}
+            </p>
+
+            <div style='text-align:center;margin-bottom:24px;'>
+                <a href='{confirmationLink}'
+                   style='display:inline-block;padding:12px 28px;
+                   background-color:#0e7490;color:#ffffff;
+                   text-decoration:none;border-radius:6px;
+                   font-weight:600;'>
+                    {Res.Confirmation_Button}
+                </a>
+            </div>
+
+            <p style='color:#475569;font-size:14px;line-height:1.6;'>
+                {Res.Confirmation_Ignore}
+            </p>
+
+        </div>
+
+        <!-- Footer -->
+        <div style='padding:16px;text-align:center;font-size:12px;
+            color:#94a3b8;border-top:1px solid #e2e8f0;
+            background-color:#f1f5f9;direction:{dir};'>
+
+            {string.Format(Res.Footer_Copyright, DateTime.Now.Year)}
+
+        </div>
+
+    </div>
+
+</body>
+</html>";
         }
 
-        public static string GetPasswordResetEmailTemplate(string? resetLink)
+        public static string GetPasswordResetEmailTemplate(string? resetLink, string? culture = null)
         {
+            var (lang, dir, align) = GetHtmlAttributes(culture);
+
             return $@"
-    <html lang='en'>
-    <head>
-        <meta charset='UTF-8'>
-        <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-        <style>
-            body {{
-                background-color: #f9fafb;
-                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-                margin: 0;
-                padding: 0;
-            }}
-            .container {{
-                max-width: 600px;
-                margin: 40px auto;
-                background: #fff;
-                border-radius: 12px;
-                box-shadow: 0 8px 20px rgba(0,0,0,0.05);
-                overflow: hidden;
-            }}
-            .header {{
-                background-color: #e11d48;
-                padding: 24px;
-                text-align: center;
-                color: #ffffff;
-                font-size: 24px;
-                font-weight: bold;
-                letter-spacing: 1px;
-            }}
-            .body {{
-                padding: 32px 24px;
-            }}
-            .body h2 {{
-                margin-bottom: 16px;
-                font-size: 22px;
-                color: #0f172a;
-            }}
-            .body p {{
-                color: #475569;
-                font-size: 15px;
-                line-height: 1.6;
-                margin-bottom: 24px;
-            }}
-            .cta {{
-                text-align: center;
-            }}
-            .cta a {{
-                display: inline-block;
-                padding: 12px 28px;
-                background-color: #e11d48;
-                color: #ffffff;
-                text-decoration: none;
-                border-radius: 6px;
-                font-weight: 600;
-                transition: background-color 0.3s ease;
-            }}
-            .cta a:hover {{
-                background-color: #be123c;
-            }}
-            .footer {{
-                padding: 16px;
-                text-align: center;
-                font-size: 12px;
-                color: #94a3b8;
-                border-top: 1px solid #e2e8f0;
-                background-color: #f1f5f9;
-            }}
-        </style>
-    </head>
-    <body>
-        <div class='container'>
-            <div class='header'>E-StoreX</div>
-            <div class='body'>
-                <h2>Reset Your Password</h2>
-                <p>We received a request to reset the password for your E-StoreX account. Click the button below to continue:</p>
-                <div class='cta'>
-                    <a href='{resetLink}'>Reset Password</a>
-                </div>
-                <p>If you didn’t request a password reset, you can safely ignore this email. This link is valid for 10 minutes.</p>
-            </div>
-            <div class='footer'>&copy; {DateTime.Now.Year} E-StoreX. Developed by Ibrahim Hassan.</div>
+<html lang='{lang}' dir='{dir}'>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+</head>
+
+<body dir='{dir}' style='margin:0;padding:0;background-color:#f9fafb;
+    font-family:Segoe UI,Tahoma,Geneva,Verdana,sans-serif;
+    direction:{dir};text-align:{align};'>
+
+    <div dir='{dir}' style='max-width:600px;margin:40px auto;background:#ffffff;
+        border-radius:12px;box-shadow:0 8px 20px rgba(0,0,0,0.05);
+        overflow:hidden;text-align:{align};direction:{dir};'>
+
+        <!-- Header -->
+        <div style='background-color:#e11d48;padding:24px;
+            text-align:center;color:#ffffff;font-size:24px;
+            font-weight:bold;letter-spacing:1px;'>
+            E-StoreX
         </div>
-    </body>
-    </html>";
+
+        <!-- Body -->
+        <div style='padding:32px 24px;text-align:{align};direction:{dir};'>
+
+            <h2 style='margin-bottom:16px;font-size:22px;color:#0f172a;'>
+                {Res.PasswordReset_Title}
+            </h2>
+
+            <p style='color:#475569;font-size:15px;line-height:1.6;margin-bottom:24px;'>
+                {Res.PasswordReset_Body}
+            </p>
+
+            <div style='text-align:center;margin-bottom:24px;'>
+                <a href='{resetLink}' 
+                   style='display:inline-block;padding:12px 28px;
+                   background-color:#e11d48;color:#ffffff;
+                   text-decoration:none;border-radius:6px;
+                   font-weight:600;'>
+                    {Res.PasswordReset_Button}
+                </a>
+            </div>
+
+            <p style='color:#475569;font-size:14px;line-height:1.6;'>
+                {Res.PasswordReset_Ignore}
+            </p>
+
+        </div>
+
+        <!-- Footer -->
+        <div style='padding:16px;text-align:center;font-size:12px;
+            color:#94a3b8;border-top:1px solid #e2e8f0;
+            background-color:#f1f5f9;direction:{dir};'>
+
+            {string.Format(Res.Footer_Copyright, DateTime.Now.Year)}
+
+        </div>
+
+    </div>
+
+</body>
+</html>";
         }
 
-        public static string GetWeeklyNewsletterTemplate(string userName)
+        public static string GetWeeklyNewsletterTemplate(string userName, string? culture = null)
         {
+            var (lang, dir, align) = GetHtmlAttributes(culture);
             return $@"
 <!DOCTYPE html>
-<html lang='en'>
+<html lang='{lang}' dir='{dir}'>
   <head>
     <meta charset='UTF-8' />
     <meta name='viewport' content='width=device-width, initial-scale=1.0' />
-    <title>E-StoreX Weekly Newsletter</title>
+    <title>{Res.Newsletter_Title}</title>
     <style>
       body {{
         background-color: #f4f6f9;
@@ -198,6 +180,7 @@ namespace EStoreX.Core.Services.Common
         margin: 0;
         padding: 0;
         color: #1e293b;
+        text-align: {align};
       }}
       .container {{
         max-width: 650px;
@@ -235,7 +218,8 @@ namespace EStoreX.Core.Services.Common
       }}
       .highlight {{
         background-color: #fff7ed;
-        border-left: 5px solid #f97316;
+        border-left: {(dir == "rtl" ? "0" : "5px")} solid #f97316;
+        border-right: {(dir == "rtl" ? "5px" : "0")} solid #f97316;
         padding: 18px 20px;
         border-radius: 8px;
         margin-bottom: 26px;
@@ -296,48 +280,42 @@ namespace EStoreX.Core.Services.Common
       }}
     </style>
   </head>
-  <body>
+  <body dir='{dir}'>
     <div class='container'>
-      <div class='header'>✨ E-StoreX Weekly Newsletter</div>
+      <div class='header'>✨ {Res.Newsletter_Title}</div>
       <div class='body'>
-        <h2>Hi {userName}, 👋</h2>
-        <p>
-          We’re thrilled to share the latest updates and highlights from
-          <strong>E-StoreX</strong> this week.
-        </p>
+        <h2>{string.Format(Res.Newsletter_Greeting, userName)}</h2>
+        <p>{Res.Newsletter_Body}</p>
 
         <div class='highlight'>
-          🌟 Exciting new features are coming soon to improve your
-          experience.<br />
-          ⚡ Faster performance & smoother navigation across the platform.<br />
-          🤝 Thanks for being part of our growing community!
+          {Res.Newsletter_Highlight_Features}<br />
+          {Res.Newsletter_Highlight_Performance}<br />
+          {Res.Newsletter_Highlight_Community}
         </div>
 
-        <p>
-          Stay tuned — more updates, tips, and exclusive insights are on the way
-          🚀
-        </p>
+        <p>{Res.Newsletter_StayTuned}</p>
         <div class='cta'>
-          <a href='https://estorex.runasp.net/swagger/index.html'>Open Dashboard</a>
+          <a href='https://estorex.runasp.net/swagger/index.html'>{Res.Newsletter_OpenDashboard}</a>
         </div>
       </div>
       <div class='footer'>
-        &copy; {DateTime.Now.Year} E-StoreX. Developed by Ibrahim Hassan.
+        {string.Format(Res.Footer_Copyright, DateTime.Now.Year)}
       </div>
     </div>
   </body>
 </html>";
         }
 
-        public static string GetOrderConfirmationEmailTemplate(Order order)
+        public static string GetOrderConfirmationEmailTemplate(Order order, string? culture = null)
         {
+            var (lang, dir, align) = GetHtmlAttributes(culture);
             var itemsBuilder = new StringBuilder();
             foreach (var item in order.OrderItems)
             {
                 itemsBuilder.Append($@"
                 <tr>
-                    <td>{item.ProductName}</td>
-                    <td><img src='{item.MainImage}' alt='{item.ProductName}' style='width:50px; border-radius:6px;'/></td>
+                    <td>{(CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "ar" ? item.ProductNameAr : item.ProductNameEn)}</td>
+                    <td><img src='{item.MainImage}' alt='{(CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "ar" ? item.ProductNameAr : item.ProductNameEn)}' style='width:50px; border-radius:6px;'/></td>
                     <td>{item.Quantity}</td>
                     <td>{item.Price:C}</td>
                 </tr>");
@@ -345,11 +323,11 @@ namespace EStoreX.Core.Services.Common
             var discountRow = string.Empty;
             if (!string.IsNullOrEmpty(order.DiscountCode))
             {
-                discountRow = $@"<p><strong>Discount:</strong> {order.DiscountCode} (-{order.DiscountValue:C})</p>";
+                discountRow = $@"<p><strong>{Res.OrderConfirmation_Discount}</strong> {order.DiscountCode} (-{order.DiscountValue:C})</p>";
             }
 
             return $@"
-<html lang='en'>
+<html lang='{lang}' dir='{dir}'>
 <head>
     <meta charset='UTF-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1.0'>
@@ -360,6 +338,7 @@ namespace EStoreX.Core.Services.Common
             margin: 0;
             padding: 0;
             color: #1e293b;
+            text-align: {align};
         }}
         .container {{
             max-width: 650px;
@@ -401,13 +380,13 @@ namespace EStoreX.Core.Services.Common
             border: 1px solid #e5e7eb;
             padding: 10px;
             font-size: 14px;
-            text-align: left;
+            text-align: {align};
         }}
         table th {{
             background-color: #f1f5f9;
         }}
         .total {{
-            text-align: right;
+            text-align: {(dir == "rtl" ? "left" : "right")};
             font-size: 16px;
             font-weight: bold;
             margin-top: 15px;
@@ -422,25 +401,25 @@ namespace EStoreX.Core.Services.Common
         }}
     </style>
 </head>
-<body>
+<body dir='{dir}'>
     <div class='container'>
         <div class='header'>E-StoreX</div>
         <div class='body'>
-            <h2>Thank you for your order!</h2>
-            <p>Hi {order.Buyer.DisplayName},</p>
-            <p>Your order has been successfully placed on <strong>{order.OrderDate:MMMM dd, yyyy}</strong>.</p>
+            <h2>{Res.OrderConfirmation_Title}</h2>
+            <p>{string.Format(Res.OrderConfirmation_Hi, order.Buyer.DisplayName)}</p>
+            <p>{string.Format(Res.OrderConfirmation_PlacedOn, order.OrderDate.ToString("MMMM dd, yyyy"))}</p>
 
-            <p><strong>Order ID:</strong> {order.Id}</p>
-            <p><strong>Shipping Address:</strong> {order.ShippingAddress?.Street}, {order.ShippingAddress?.City}</p>
-            <p><strong>Delivery Method:</strong> {order.DeliveryMethod?.Name} ({order.DeliveryMethod?.Price:C})</p>
+            <p><strong>{Res.OrderConfirmation_OrderID}</strong> {order.Id}</p>
+            <p><strong>{Res.OrderConfirmation_ShippingAddress}</strong> {order.ShippingAddress?.Street}, {order.ShippingAddress?.City}</p>
+            <p><strong>{Res.OrderConfirmation_DeliveryMethod}</strong> {(CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "ar" ? order.DeliveryMethod?.NameAr : order.DeliveryMethod?.NameEn)} ({order.DeliveryMethod?.Price:C})</p>
 
             <table>
                 <thead>
                     <tr>
-                        <th>Product</th>
-                        <th>Image</th>
-                        <th>Qty</th>
-                        <th>Price</th>
+                        <th>{Res.OrderConfirmation_Table_Product}</th>
+                        <th>{Res.OrderConfirmation_Table_Image}</th>
+                        <th>{Res.OrderConfirmation_Table_Qty}</th>
+                        <th>{Res.OrderConfirmation_Table_Price}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -450,34 +429,35 @@ namespace EStoreX.Core.Services.Common
 
             {discountRow}
 
-            <p class='total'>Total: {order.GetTotal() - order.DiscountValue:C}</p>
+            <p class='total'>{Res.OrderConfirmation_Total} {order.GetTotal() - order.DiscountValue:C}</p>
 
-            <p>If you have any questions, just reply to this email — we’re happy to help!</p>
+            <p>{Res.OrderConfirmation_Questions}</p>
         </div>
         <div class='footer'>
-            &copy; {DateTime.Now.Year} E-StoreX. Developed by Ibrahim Hassan.
+            {string.Format(Res.Footer_Copyright, DateTime.Now.Year)}
         </div>
     </div>
 </body>
 </html>";
         }
 
-        public static string GetPaymentFailedEmailTemplate(Order order)
+        public static string GetPaymentFailedEmailTemplate(Order order, string? culture = null)
         {
+            var (lang, dir, align) = GetHtmlAttributes(culture);
             var itemsBuilder = new StringBuilder();
             foreach (var item in order.OrderItems)
             {
                 itemsBuilder.Append($@"
                 <tr>
-                    <td>{item.ProductName}</td>
-                    <td><img src='{item.MainImage}' alt='{item.ProductName}' style='width:50px; border-radius:6px;'/></td>
+                    <td>{(CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "ar" ? item.ProductNameAr : item.ProductNameEn)}</td>
+                    <td><img src='{item.MainImage}' alt='{(CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "ar" ? item.ProductNameAr : item.ProductNameEn)}' style='width:50px; border-radius:6px;'/></td>
                     <td>{item.Quantity}</td>
                     <td>{item.Price:C}</td>
                 </tr>");
             }
 
             return $@"
-<html lang='en'>
+<html lang='{lang}' dir='{dir}'>
 <head>
     <meta charset='UTF-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1.0'>
@@ -488,6 +468,7 @@ namespace EStoreX.Core.Services.Common
             margin: 0;
             padding: 0;
             color: #1e293b;
+            text-align: {align};
         }}
         .container {{
             max-width: 650px;
@@ -529,7 +510,7 @@ namespace EStoreX.Core.Services.Common
             border: 1px solid #e5e7eb;
             padding: 10px;
             font-size: 14px;
-            text-align: left;
+            text-align: {align};
         }}
         table th {{
             background-color: #f1f5f9;
@@ -539,7 +520,7 @@ namespace EStoreX.Core.Services.Common
             border-radius: 6px;
         }}
         .total {{
-            text-align: right;
+            text-align: {(dir == "rtl" ? "left" : "right")};
             font-size: 16px;
             font-weight: bold;
             margin-top: 15px;
@@ -554,22 +535,22 @@ namespace EStoreX.Core.Services.Common
         }}
     </style>
 </head>
-<body>
+<body dir='{dir}'>
     <div class='container'>
-        <div class='header'>Payment Failed ❌</div>
+        <div class='header'>{Res.PaymentFailed_Title}</div>
         <div class='body'>
-            <h2>We're sorry, {order.BuyerEmail}.</h2>
-            <p>Your payment for order <strong>#{order.Id}</strong> on <strong>{order.OrderDate:MMMM dd, yyyy}</strong> did not go through.</p>
-            <p>Please check your payment details and try again, or use a different payment method.</p>
+            <h2>{string.Format(Res.PaymentFailed_Hi, order.BuyerEmail)}</h2>
+            <p>{string.Format(Res.PaymentFailed_Body, order.Id, order.OrderDate.ToString("MMMM dd, yyyy"))}</p>
+            <p>{Res.PaymentFailed_Retry}</p>
 
-            <h3>Order Summary</h3>
+            <h3>{Res.PaymentFailed_Summary}</h3>
             <table>
                 <thead>
                     <tr>
-                        <th>Product</th>
-                        <th>Image</th>
-                        <th>Qty</th>
-                        <th>Price</th>
+                        <th>{Res.OrderConfirmation_Table_Product}</th>
+                        <th>{Res.OrderConfirmation_Table_Image}</th>
+                        <th>{Res.OrderConfirmation_Table_Qty}</th>
+                        <th>{Res.OrderConfirmation_Table_Price}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -577,12 +558,12 @@ namespace EStoreX.Core.Services.Common
                 </tbody>
             </table>
 
-            <p class='total'>Total: {order.GetTotal() - order.DiscountValue:C}</p>
+            <p class='total'>{Res.OrderConfirmation_Total} {order.GetTotal() - order.DiscountValue:C}</p>
 
-            <p>If the issue persists, please contact our support team and we’ll be happy to help you.</p>
+            <p>{Res.PaymentFailed_ContactSupport}</p>
         </div>
         <div class='footer'>
-            &copy; {DateTime.Now.Year} E-StoreX. Developed by Ibrahim Hassan.
+            {string.Format(Res.Footer_Copyright, DateTime.Now.Year)}
         </div>
     </div>
 </body>
@@ -591,25 +572,37 @@ namespace EStoreX.Core.Services.Common
         public static string GetDiscountEmailTemplate(
             string userName,
             string discountCode,
-            decimal? percentage,       
+            decimal? percentage,
             DateTime expiryDate,
-            decimal exampleOrderAmount = 500)
+            decimal exampleOrderAmount = 500,
+            string? culture = null)
         {
+            var (lang, dir, align) = GetHtmlAttributes(culture);
             string discountText = "";
 
             if (percentage.HasValue && percentage.Value > 0)
             {
                 var exampleSaving = exampleOrderAmount * (percentage.Value / 100);
-                discountText = $"Save {percentage.Value}% on your next order " +
-                               $"<br><small>(e.g. save {exampleSaving:C} on a {exampleOrderAmount:C} order)</small>";
+                if (CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "ar")
+                {
+                    discountText = $"وفر {percentage.Value}% على طلبك القادم " +
+                                   $"<br><small>(مثلاً وفر {exampleSaving:C} على طلب بقيمة {exampleOrderAmount:C})</small>";
+                }
+                else
+                {
+                    discountText = $"Save {percentage.Value}% on your next order " +
+                                   $"<br><small>(e.g. save {exampleSaving:C} on a {exampleOrderAmount:C} order)</small>";
+                }
             }
             else
             {
-                discountText = "Special discount just for you!";
+                discountText = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "ar"
+                    ? "خصم خاص لك فقط!"
+                    : "Special discount just for you!";
             }
 
             return $@"
-<html lang='en'>
+<html lang='{lang}' dir='{dir}'>
 <head>
   <meta charset='UTF-8'>
   <meta name='viewport' content='width=device-width, initial-scale=1.0'>
@@ -620,6 +613,7 @@ namespace EStoreX.Core.Services.Common
       margin: 0;
       padding: 0;
       color: #1e293b;
+      text-align: {align};
     }}
     .container {{
       max-width: 600px;
@@ -702,81 +696,79 @@ namespace EStoreX.Core.Services.Common
     }}
   </style>
 </head>
-<body>
+<body dir='{dir}'>
   <div class='container'>
-    <div class='header'>Exclusive Discount for You 🎉</div>
+    <div class='header'>{Res.Discount_Title}</div>
     <div class='body'>
-      <h2>Hi {userName},</h2>
-      <p>
-        As a valued member of <strong>E-StoreX</strong>, we’re excited to offer you a special discount!
-      </p>
+      <h2>{string.Format(Res.Discount_Hi, userName)}</h2>
+      <p>{Res.Discount_Intro}</p>
 
       <div class='discount-box'>
         <h3>{discountText}</h3>
         <div class='discount-code'>{discountCode}</div>
-        <p>Valid until: {expiryDate:MMMM dd, yyyy}</p>
+        <p>{string.Format(Res.Discount_ValidUntil, expiryDate.ToString("MMMM dd, yyyy"))}</p>
       </div>
 
-      <p>
-        Don’t miss this limited-time offer. Use the code at checkout and enjoy your savings 🚀
-      </p>
+      <p>{Res.Discount_Body}</p>
 
       <div class='cta'>
-        <a href='https://estorex.runasp.net/'>Shop Now</a>
+        <a href='https://estorex.runasp.net/'>{Res.Discount_ShopNow}</a>
       </div>
     </div>
     <div class='footer'>
-      &copy; {DateTime.Now.Year} E-StoreX. Developed by Ibrahim Hassan.
+      {string.Format(Res.Footer_Copyright, DateTime.Now.Year)}
     </div>
   </div>
 </body>
 </html>";
         }
-        public static string GetDailySalesReportTemplate(DateTime startDate, DateTime endDate)
+        public static string GetDailySalesReportTemplate(DateTime startDate, DateTime endDate, string? culture = null)
         {
+            var (lang, dir, align) = GetHtmlAttributes(culture);
             return $@"
-<html>
-  <body style='font-family:Segoe UI, sans-serif; background:#f9fafb; padding:20px;'>
+<html lang='{lang}' dir='{dir}'>
+  <body dir='{dir}' style='font-family:Segoe UI, sans-serif; background:#f9fafb; padding:20px; text-align: {align};'>
     <div style='max-width:600px;margin:auto;background:#fff;border-radius:12px;padding:20px;box-shadow:0 4px 10px rgba(0,0,0,0.05)'>
-      <h2 style='color:#2563eb'>📊 Daily Sales Report</h2>
-      <p>Hello Admin,</p>
-      <p>Please find attached the sales report for the period:</p>
-      <ul>
-        <li><strong>From:</strong> {startDate:yyyy-MM-dd}</li>
-        <li><strong>To:</strong> {endDate:yyyy-MM-dd}</li>
+      <h2 style='color:#2563eb'>{Res.SalesReport_Title}</h2>
+      <p>{Res.SalesReport_Greeting}</p>
+      <p>{Res.SalesReport_Body}</p>
+      <ul style='list-style-position: inside; padding: 0;'>
+        <li><strong>{Res.SalesReport_From}</strong> {startDate:yyyy-MM-dd}</li>
+        <li><strong>{Res.SalesReport_To}</strong> {endDate:yyyy-MM-dd}</li>
       </ul>
-      <p>You can download and review the Excel file attached below.</p>
+      <p>{Res.SalesReport_Download}</p>
       <p style='margin-top:30px;font-size:12px;color:#94a3b8;text-align:center'>
-        &copy; {DateTime.Now.Year} E-StoreX. Developed by Ibrahim Hassan.
+        {string.Format(Res.Footer_Copyright, DateTime.Now.Year)}
       </p>
     </div>
   </body>
 </html>";
         }
 
-        public static string GetTeaserEmailTemplate(string userName)
+        public static string GetTeaserEmailTemplate(string userName, string? culture = null)
         {
+            var (lang, dir, align) = GetHtmlAttributes(culture);
             return $@"
-<html lang='en'>
+<html lang='{lang}' dir='{dir}'>
 <head>
     <meta charset='UTF-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1.0'>
     <style>
-        body {{ margin: 0; padding: 0; background-color: #f1f5f9; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }}
+        body {{ margin: 0; padding: 0; background-color: #f1f5f9; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; text-align: {align}; }}
         .wrapper {{ width: 100%; background-color: #f1f5f9; padding: 30px 0; }}
         .main-card {{ width: 95%; max-width: 550px; background-color: #ffffff; margin: 0 auto; border-radius: 24px; overflow: hidden; box-shadow: 0 10px 30px rgba(2, 159, 174, 0.12); border: 1px solid #e2e8f0; }}
         
         .hero-header {{ background: linear-gradient(135deg, #029fae 0%, #007d8a 100%); padding: 50px 20px; text-align: center; }}
         .brand-name {{ color: #ffffff; font-size: 30px; font-weight: 800; letter-spacing: 3px; margin: 0; text-transform: uppercase; }}
         
-        .content-area {{ padding: 45px 35px; text-align: center; }}
+        .content-area {{ padding: 45px 35px; text-align: {align}; }}
         .headline {{ font-size: 30px; font-weight: 800; color: #1e293b; line-height: 1.2; margin-bottom: 20px; letter-spacing: -0.5px; }}
         .sub-text {{ font-size: 16px; line-height: 1.7; color: #475569; margin-bottom: 25px; }}
         
         .mystery-box {{ background-color: #f0fdfa; border-radius: 20px; padding: 35px 20px; border: 2px dashed #029fae; margin: 30px 0; }}
         .secret-text {{ font-weight: 700; color: #029fae; font-size: 22px; text-transform: uppercase; letter-spacing: 1.5px; }}
         
-        .btn-container {{ margin-top: 35px; }}
+        .btn-container {{ margin-top: 35px; text-align: center; }}
         .primary-btn {{ background-color: #029fae; color: #ffffff !important; padding: 18px 45px; text-decoration: none; border-radius: 50px; font-weight: 700; font-size: 16px; display: inline-block; box-shadow: 0 5px 15px rgba(2, 159, 174, 0.3); }}
         
         .footer {{ padding: 35px; text-align: center; color: #94a3b8; font-size: 13px; line-height: 1.6; border-top: 1px solid #f1f5f9; }}
@@ -789,7 +781,7 @@ namespace EStoreX.Core.Services.Common
         }}
     </style>
 </head>
-<body>
+<body dir='{dir}'>
     <div class='wrapper'>
         <div class='main-card'>
             <div class='hero-header'>
@@ -797,36 +789,96 @@ namespace EStoreX.Core.Services.Common
             </div>
             
             <div class='content-area'>
-                <h2 class='headline'>Shhh... It's a Secret. 😉</h2>
-                <p class='sub-text'>Hi {userName},</p>
+                <h2 class='headline'>{Res.Teaser_Headline}</h2>
+                <p class='sub-text'>{string.Format(Res.Teaser_Hi, userName)}</p>
                 <p class='sub-text'>
-                    Something is happening behind closed doors at <strong>E-StoreX</strong>. 
-                    We aren't ready to show the world yet, but we wanted <strong>you</strong> to be the first to know that it's coming.
+                    {Res.Teaser_Body}
                 </p>
 
                 <div class='mystery-box'>
-                    <span class='secret-text'>Coming Soon</span>
-                    <p style='margin-top:12px; color: #64748b; font-size: 14px; line-height: 1.4;'>No spoilers. No leaks.<br>Just greatness.</p>
+                    <span class='secret-text'>{Res.Teaser_ComingSoon}</span>
+                    <p style='margin-top:12px; color: #64748b; font-size: 14px; line-height: 1.4;'>{Res.Teaser_MysteryText}</p>
                 </div>
 
                 <p class='sub-text' style='font-style: italic; font-size: 14px;'>
-                    Keep this email safe. You’ll need it when the clock hits zero.
+                    {Res.Teaser_SafeEmail}
                 </p>
 
                 <div class='btn-container'>
-                    <a href='#' class='primary-btn'>I'm Ready</a>
+                    <a href='#' class='primary-btn'>{Res.Teaser_ReadyBtn}</a>
                 </div>
             </div>
 
             <div class='footer'>
-                <strong>E-StoreX Mystery Launch</strong><br>
-                Curated by Ibrahim Hassan<br>
-                &copy; {DateTime.Now.Year} All Rights Reserved.
+                <strong>{Res.Teaser_FooterBrand}</strong><br>
+                {Res.Teaser_FooterCuratedBy}<br>
+                {string.Format(Res.Footer_Copyright, DateTime.Now.Year)}
             </div>
         </div>
     </div>
 </body>
 </html>";
         }
+
+        public static string GetContactMessageTemplate(
+    string name,
+    string email,
+    string subject,
+    string message,
+    string? culture = null)
+        {
+            var (lang, dir, align) = GetHtmlAttributes(culture);
+            return $@"
+<html lang='{lang}' dir='{dir}'>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <style>
+        body {{ margin: 0; padding: 0; background-color: #f1f5f9; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; text-align: {align}; }}
+        .wrapper {{ width: 100%; background-color: #f1f5f9; padding: 30px 0; }}
+        .main-card {{ width: 95%; max-width: 550px; background-color: #ffffff; margin: 0 auto; border-radius: 24px; overflow: hidden; box-shadow: 0 10px 30px rgba(2, 159, 174, 0.12); border: 1px solid #e2e8f0; }}
+
+        .hero-header {{ background: linear-gradient(135deg, #029fae 0%, #007d8a 100%); padding: 40px 20px; text-align: center; }}
+        .brand-name {{ color: #ffffff; font-size: 28px; font-weight: 800; letter-spacing: 3px; margin: 0; text-transform: uppercase; }}
+
+        .content-area {{ padding: 40px 30px; }}
+        .headline {{ font-size: 24px; font-weight: 700; color: #1e293b; margin-bottom: 20px; }}
+        .info-row {{ font-size: 15px; color: #475569; margin-bottom: 12px; }}
+        .message-box {{ background-color: #f8fafc; border-radius: 12px; padding: 20px; border: 1px solid #e2e8f0; margin-top: 20px; white-space: pre-line; }}
+
+        .footer {{ padding: 30px; text-align: center; color: #94a3b8; font-size: 13px; border-top: 1px solid #f1f5f9; }}
+    </style>
+</head>
+<body>
+    <div class='wrapper'>
+        <div class='main-card'>
+
+            <div class='hero-header'>
+                <h1 class='brand-name'>E-StoreX</h1>
+            </div>
+
+            <div class='content-area'>
+                <h2 class='headline'>{Res.ContactMessage_Title}</h2>
+
+                <p class='info-row'><strong>{Res.ContactMessage_Table_Name}</strong> {name}</p>
+                <p class='info-row'><strong>{Res.ContactMessage_Table_Email}</strong> {email}</p>
+                <p class='info-row'><strong>{Res.ContactMessage_Table_Subject}</strong> {subject}</p>
+
+                <div class='message-box'>
+                    {message}
+                </div>
+            </div>
+
+            <div class='footer'>
+                {Res.ContactMessage_Footer}<br>
+                {string.Format(Res.Footer_Copyright, DateTime.Now.Year)}
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>";
+        }
+
     }
 }

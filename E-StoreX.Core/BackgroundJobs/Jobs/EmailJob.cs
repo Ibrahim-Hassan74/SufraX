@@ -1,13 +1,15 @@
-﻿using EStoreX.Core.BackgroundJobs.Interfaces;
+using EStoreX.Core.BackgroundJobs.Interfaces;
 using EStoreX.Core.DTO.Account.Requests;
 using EStoreX.Core.DTO.Orders.Responses;
 using EStoreX.Core.RepositoryContracts.Common;
+using EStoreX.Core.Resources.Services.Common;
 using EStoreX.Core.ServiceContracts.Account;
 using EStoreX.Core.ServiceContracts.Common;
 using EStoreX.Core.ServiceContracts.Orders;
-using EStoreX.Core.Services.Common;
 using Hangfire.Console;
 using Hangfire.Server;
+using Microsoft.Extensions.Configuration;
+using Res = EStoreX.Core.Resources.Services.Common.EmailTemplateService;
 
 namespace EStoreX.Core.BackgroundJobs.Jobs
 {
@@ -40,8 +42,8 @@ namespace EStoreX.Core.BackgroundJobs.Jobs
                 var email = new EmailDTO
                 {
                     Email = user.Email,
-                    Subject = "✨ Your Weekly E-StoreX Highlights Are Here!",
-                    HtmlMessage = EmailTemplateService.GetWeeklyNewsletterTemplate(user.DisplayName)
+                    Subject = Res.Newsletter_Subject,
+                    HtmlMessage = Services.Common.EmailTemplateService.GetWeeklyNewsletterTemplate(user.DisplayName)
                 };
                 await _emailSender.SendEmailAsync(email);
 
@@ -69,8 +71,8 @@ namespace EStoreX.Core.BackgroundJobs.Jobs
                     var email = new EmailDTO
                     {
                         Email = user.Email,
-                        Subject = "Shhh... It's a Secret 😉",
-                        HtmlMessage = EmailTemplateService.GetTeaserEmailTemplate(user.DisplayName)
+                        Subject = Res.Teaser_Subject,
+                        HtmlMessage = Services.Common.EmailTemplateService.GetTeaserEmailTemplate(user.DisplayName)
                     };
 
                     await _emailSender.SendEmailAsync(email);
@@ -99,8 +101,8 @@ namespace EStoreX.Core.BackgroundJobs.Jobs
             var email = new EmailDTO
             {
                 Email = order.BuyerEmail,
-                Subject = "🛒 Order Confirmation - E-StoreX",
-                HtmlMessage = EmailTemplateService.GetOrderConfirmationEmailTemplate(order)
+                Subject = Res.OrderConfirmation_Subject,
+                HtmlMessage = Services.Common.EmailTemplateService.GetOrderConfirmationEmailTemplate(order)
             };
 
             await _emailSender.SendEmailAsync(email);
@@ -119,8 +121,8 @@ namespace EStoreX.Core.BackgroundJobs.Jobs
             var email = new EmailDTO
             {
                 Email = order.BuyerEmail,
-                Subject = "⚠️ Payment Failed - E-StoreX",
-                HtmlMessage = EmailTemplateService.GetPaymentFailedEmailTemplate(order)
+                Subject = Res.PaymentFailed_Subject,
+                HtmlMessage = Services.Common.EmailTemplateService.GetPaymentFailedEmailTemplate(order)
             };
 
             await _emailSender.SendEmailAsync(email);
@@ -155,8 +157,8 @@ namespace EStoreX.Core.BackgroundJobs.Jobs
                 var email = new EmailDTO
                 {
                     Email = user.Email,
-                    Subject = "🔥 Exclusive Discount Just for You!",
-                    HtmlMessage = EmailTemplateService.GetDiscountEmailTemplate(
+                    Subject = Res.Discount_Subject,
+                    HtmlMessage = Services.Common.EmailTemplateService.GetDiscountEmailTemplate(
                         user.DisplayName,
                         activeDiscounts.Code,
                         activeDiscounts.Percentage,
@@ -202,8 +204,8 @@ namespace EStoreX.Core.BackgroundJobs.Jobs
                 var email = new EmailDTO
                 {
                     Email = admin.Email,
-                    Subject = $"📈 Daily Sales Report ({startDate:yyyy-MM-dd})",
-                    HtmlMessage = EmailTemplateService.GetDailySalesReportTemplate(startDate, endDate),
+                    Subject = string.Format(Res.SalesReport_Subject, startDate.ToString("yyyy-MM-dd")),
+                    HtmlMessage = Services.Common.EmailTemplateService.GetDailySalesReportTemplate(startDate, endDate),
                     Attachments = new List<EmailAttachmentDTO>
                     {
                         new EmailAttachmentDTO
