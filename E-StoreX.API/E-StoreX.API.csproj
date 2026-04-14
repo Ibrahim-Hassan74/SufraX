@@ -10,13 +10,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="wwwroot\Images\AppleIPhone16ProMaxSingleSIM256GB\8GB - 6.9 5G Mobile Phone - Desert Titanium\**" />
-    <Content Remove="wwwroot\Images\AppleIPhone16ProMaxSingleSIM256GB\8GB - 6.9 5G Mobile Phone - Desert Titanium\**" />
-    <EmbeddedResource Remove="wwwroot\Images\AppleIPhone16ProMaxSingleSIM256GB\8GB - 6.9 5G Mobile Phone - Desert Titanium\**" />
-    <None Remove="wwwroot\Images\AppleIPhone16ProMaxSingleSIM256GB\8GB - 6.9 5G Mobile Phone - Desert Titanium\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Asp.Versioning.Mvc" Version="8.1.0" />
     <PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.15" />
@@ -39,6 +32,10 @@
       <Generator></Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Resources\SharedResource.ar.resx" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\Images\" />
   </ItemGroup>
 
 </Project>

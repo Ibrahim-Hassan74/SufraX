@@ -1,5 +1,6 @@
 ﻿using Asp.Versioning;
 using EStoreX.API.Filters;
+using EStoreX.API.Identity;
 using EStoreX.Core.Domain.IdentityEntities;
 using EStoreX.Core.Domain.Options;
 using EStoreX.Core.Helper;
@@ -110,6 +111,7 @@ namespace EStoreX.API.StartupExtensions
                 options.Password.RequireLowercase = true;
                 options.Password.RequireDigit = true;
             })
+                .AddErrorDescriber<CustomIdentityErrorDescriber>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders()
                 .AddUserStore<UserStore<ApplicationUser, ApplicationRole, ApplicationDbContext, Guid>>()
