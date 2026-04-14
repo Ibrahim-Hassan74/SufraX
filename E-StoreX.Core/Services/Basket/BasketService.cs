@@ -157,20 +157,24 @@ namespace EStoreX.Core.Services.Basket
         /// <inheritdoc/>
         public async Task<CustomerBasketDTO?> AddItemToBasketAsync(BasketAddRequest request)
         {
-            var product = await _unitOfWork.ProductRepository.GetByIdAsync(request.BasketItem.Id);
+            var product = await _unitOfWork.ProductRepository.GetByIdAsync(request.BasketItem.Id, p => p.Category);
             if (product is null || product.QuantityAvailable < request.BasketItem.Qunatity || request.BasketItem.Qunatity <= 0)
                 return null;
 
             var newItem = new BasketItem
             {
                 Id = request.BasketItem.Id,
-                NameEn = product.NameEn,
-                NameAr = product.NameAr,
-                Price = product.NewPrice,
-                DescriptionEn = product.DescriptionEn,
-                DescriptionAr = product.DescriptionAr,
+                Name = request.BasketItem.Name, // Preserve original input
+                Description = request.BasketItem.Description, // Preserve original input
+                NameEn = !string.IsNullOrEmpty(product.NameEn) ? product.NameEn : request.BasketItem.Name,
+                NameAr = !string.IsNullOrEmpty(product.NameAr) ? product.NameAr : request.BasketItem.Name,
+                Price = product.NewPrice > 0 ? product.NewPrice : request.BasketItem.Price,
+                DescriptionEn = !string.IsNullOrEmpty(product.DescriptionEn) ? product.DescriptionEn : request.BasketItem.Description,
+                DescriptionAr = !string.IsNullOrEmpty(product.DescriptionAr) ? product.DescriptionAr : request.BasketItem.Description,
                 Qunatity = request.BasketItem.Qunatity,
-                Category = request.BasketItem.Category,
+                Category = product.Category?.NameEn ?? request.BasketItem.Category ?? "Unknown",
+                CategoryEn = product.Category?.NameEn ?? request.BasketItem.Category,
+                CategoryAr = product.Category?.NameAr ?? request.BasketItem.Category,
                 Image = request.BasketItem.Image,
             };
 

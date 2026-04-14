@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Domain.Entities.Baskets;
 using EStoreX.Core.DTO.Basket;
 
@@ -22,7 +22,12 @@ namespace EStoreX.Core.Mapping
                     opt => opt.MapFrom(src =>
                         System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "ar"
                             ? src.DescriptionAr ?? src.DescriptionEn
-                            : src.DescriptionEn));
+                            : src.DescriptionEn))
+                .ForMember(dest => dest.Category,
+                    opt => opt.MapFrom(src =>
+                        System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "ar"
+                            ? src.CategoryAr ?? src.CategoryEn ?? src.Category
+                            : src.CategoryEn ?? src.Category));
         }
     }
 }
