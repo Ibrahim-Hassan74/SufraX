@@ -61,8 +61,8 @@ namespace E_StoreX.ServiceTests
                                    Id = Guid.NewGuid(),
                                    Qunatity = 2,
                                    Image = "image1.png",
-                                   Name = "Product 1",
-                                   Description = "DescriptionEn 1",
+                                   NameEn = "Product 1",
+                                   DescriptionEn = "DescriptionEn 1",
                                    Price = 10.0m,
                                    Category = "Category 1"
 
@@ -133,8 +133,8 @@ namespace E_StoreX.ServiceTests
                     Id = product.Id,
                     Qunatity = 2,
                     Image = "image1.png",
-                    Name = "Product 1",
-                    Description = "DescriptionEn 1",
+                    NameEn = "Product 1",
+                    DescriptionEn = "DescriptionEn 1",
                     Price = 10.0m,
                     Category = "Category 1"
                 }
@@ -165,8 +165,8 @@ namespace E_StoreX.ServiceTests
                     Id = product.Id,
                     Qunatity = 2,
                     Image = "image1.png",
-                    Name = "Product 1",
-                    Description = "DescriptionEn 1",
+                    NameEn = "Product 1",
+                    DescriptionEn = "DescriptionEn 1",
                     Price = 10.0m,
                     Category = "Category 1"
                 }
@@ -223,8 +223,8 @@ namespace E_StoreX.ServiceTests
                     Id = product.Id,
                     Qunatity = 2,
                     Image = "image1.png",
-                    Name = "Product 1",
-                    Description = "DescriptionEn 1",
+                    NameEn = "Product 1",
+                    DescriptionEn = "DescriptionEn 1",
                     Price = 10.0m,
                     Category = "Category 1"
                 }

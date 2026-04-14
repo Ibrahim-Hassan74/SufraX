@@ -6,11 +6,17 @@ namespace Domain.Entities.Baskets
     public class BasketItem : BaseEntity<Guid>
     {
         [Required(ErrorMessageResourceName = "RequiredBasketName", ErrorMessageResourceType = typeof(EStoreX.Core.Resources.DTO.Basket.BasketValidationMessages))]
-        [StringLength(100, ErrorMessageResourceName = "MaxLengthBasketName", ErrorMessageResourceType = typeof(EStoreX.Core.Resources.DTO.Basket.BasketValidationMessages))]
-        public string Name { get; set; }
+        [StringLength(500, ErrorMessageResourceName = "MaxLengthBasketName", ErrorMessageResourceType = typeof(EStoreX.Core.Resources.DTO.Basket.BasketValidationMessages))]
+        public string NameEn { get; set; }
 
-        [StringLength(500, ErrorMessageResourceName = "MaxLengthBasketDescription", ErrorMessageResourceType = typeof(EStoreX.Core.Resources.DTO.Basket.BasketValidationMessages))]
-        public string Description { get; set; }
+        [StringLength(2000, ErrorMessageResourceName = "MaxLengthBasketDescription", ErrorMessageResourceType = typeof(EStoreX.Core.Resources.DTO.Basket.BasketValidationMessages))]
+        public string DescriptionEn { get; set; }
+        [Required(ErrorMessageResourceName = "RequiredBasketName", ErrorMessageResourceType = typeof(EStoreX.Core.Resources.DTO.Basket.BasketValidationMessages))]
+        [StringLength(500, ErrorMessageResourceName = "MaxLengthBasketName", ErrorMessageResourceType = typeof(EStoreX.Core.Resources.DTO.Basket.BasketValidationMessages))]
+        public string NameAr { get; set; }
+
+        [StringLength(2000, ErrorMessageResourceName = "MaxLengthBasketDescription", ErrorMessageResourceType = typeof(EStoreX.Core.Resources.DTO.Basket.BasketValidationMessages))]
+        public string DescriptionAr { get; set; }
 
         [Range(1, int.MaxValue, ErrorMessageResourceName = "InvalidQuantityMin", ErrorMessageResourceType = typeof(EStoreX.Core.Resources.DTO.Basket.BasketValidationMessages))]
         public int Qunatity { get; set; }

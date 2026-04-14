@@ -8,7 +8,21 @@ namespace EStoreX.Core.Mapping
     {
         public BasketMapping()
         {
-            CreateMap<CustomerBasket, CustomerBasketDTO>().ReverseMap();
+            CreateMap<CustomerBasket, CustomerBasketDTO>()
+                .ForMember(dest => dest.BasketItems,
+                    opt => opt.MapFrom(src => src.BasketItems));
+
+            CreateMap<BasketItem, BasketItemResponse>()
+                .ForMember(dest => dest.Name,
+                    opt => opt.MapFrom(src =>
+                        System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "ar"
+                            ? src.NameAr ?? src.NameEn
+                            : src.NameEn))
+                .ForMember(dest => dest.Description,
+                    opt => opt.MapFrom(src =>
+                        System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "ar"
+                            ? src.DescriptionAr ?? src.DescriptionEn
+                            : src.DescriptionEn));
         }
     }
 }
